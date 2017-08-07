@@ -1,14 +1,737 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="jahrmando.github.com/feed.xml" rel="self" type="application/atom+xml" /><link href="jahrmando.github.com/" rel="alternate" type="text/html" /><updated>2017-08-07T16:45:40-05:00</updated><id>jahrmando.github.com/</id><title type="html">Tech Monkey</title><subtitle>An Accidental Engineer • Tech Monkey • #Linux #DevOps #Programmer #Infosec
-</subtitle><entry><title type="html">Welcome to Jekyll!</title><link href="jahrmando.github.com/jekyll/update/2017/08/07/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2017-08-07T12:11:28-05:00</published><updated>2017-08-07T12:11:28-05:00</updated><id>jahrmando.github.com/jekyll/update/2017/08/07/welcome-to-jekyll</id><content type="html" xml:base="jahrmando.github.com/jekyll/update/2017/08/07/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="jahrmando.github.com/feed.xml" rel="self" type="application/atom+xml" /><link href="jahrmando.github.com/" rel="alternate" type="text/html" /><updated>2017-08-07T17:23:17-05:00</updated><id>jahrmando.github.com/</id><title type="html">Tech Monkey</title><subtitle>An Accidental Engineer • Tech Monkey • #Linux #DevOps #Programmer #Infosec
+</subtitle><entry><title type="html">Aplicación de parches en VMware ESXi 5.x</title><link href="jahrmando.github.com/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x.html" rel="alternate" type="text/html" title="Aplicación de parches en VMware ESXi 5.x" /><published>2017-02-20T12:00:12-06:00</published><updated>2017-02-20T12:00:12-06:00</updated><id>jahrmando.github.com/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x</id><content type="html" xml:base="jahrmando.github.com/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x.html">&lt;p&gt;Este proceso se hace por medio de &lt;strong&gt;SSH&lt;/strong&gt;. Se tiene que activar desde el &lt;strong&gt;VMware vShepere Client&lt;/strong&gt;:&lt;/p&gt;
 
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Server&amp;gt;Configuration&amp;gt;SecurityProfiles&amp;gt;Services&amp;gt;Properties
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+&lt;h3&gt;Apagar todas las maquinas virtuales&lt;/h3&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;Antes de entrar a modo de mantenimiento es necesario apagar todas las maquinas virtuales o migrarlos si es posible.&lt;/p&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
+&lt;h3&gt;Descargar el parche y subirlo a un storage del servidor&lt;/h3&gt;
+
+&lt;p&gt;Antes ya debemos haber descargado el parche (archivo .zip) en el sitio web de VMWare (&lt;a href=&quot;https://my.vmware.com/group/vmware/patch#search&quot; target=&quot;_blank&quot;&gt;https://my.vmware.com/group/vmware/patch#search&lt;/a&gt;)
+&lt;!-- more --&gt;
+Entramos por SSH al servidor y nos vamos al diretorio /vmfs/volumes donde se encuentran los DATASTOREs, en ese directorio subiremos el parche.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cd /vmfs/volumes
+/vmfs/volumes # ls -l
+lrwxr-xr-x    1 root     root            35 Dec 12 16:44 datastore2 -&amp;gt; 56d31905-1dc9ed10-1632-549f35076b4a
+lrwxr-xr-x    1 root     root            35 Dec 12 16:44 datastore1 -&amp;gt; 56d196bb-3ae3f27e-44c3-549f35076b4a
+/vmfs/volumes # cd datastore1/
+/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a # 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Creamos un directorio llamado UPDATE para subir el patch en ese directorio&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a # mkdir UPDATE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora desde nuestro equipo subimos el patch por medio de SCP:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ scp update-patch.zip root@10.0.0.X:/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a/UPDATE/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Entrar en modo de mantenimiento&lt;/h3&gt;
+
+&lt;p&gt;Entramos por SSH a nuestro VMware y lo ponemos en modo de mantenimiento&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;~ # vim-cmd hostsvc/maintenance_mode_enter 
+'vim.Task:haTask-ha-host-vim.HostSystem.enterMaintenanceMode-306994658'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Actualizar el servidor&lt;/h3&gt;
+
+&lt;p&gt;Procedemos a instalar el parche anteriormente subido al VMware&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;~ # esxcli software vib install -d /vmfs/volumes/datastore1/UPDATE/update-patch.zip 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Importante revisar que nuestro resultado de la ejecucion haya sido &lt;strong&gt;The update completed successfully&lt;/strong&gt; como se muestra en la salida siguiente:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Installation Result
+   Message: The update completed successfully, but the system needs to be rebooted for the changes to be effective.
+   Reboot Required: true
+   VIBs Installed: VMware_bootbank_esx-base...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reiniciar&lt;/h3&gt;
+
+&lt;p&gt;Es necesario reiniciar el servidor correr los cambios aplicados.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;~ # reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Esto nos sacara de nuestra sesion SSH y tendremos que volver a iniciar una sesion cuando el servidor termine de reiniciar para continuar.&lt;/p&gt;
+
+&lt;h3&gt;Salir del modo de mantenimiento&lt;/h3&gt;
+
+&lt;p&gt;Estando por SSH salimos del modo de mantenimiento&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;~ # vim-cmd hostsvc/maintenance_mode_exit
+'vim.Task:haTask-ha-host-vim.HostSystem.exitMaintenanceMode-499940104'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Y ahora nos toca iniciar las maquinas virtuales o volverlas a migrar.&lt;/p&gt;</content><author><name></name></author><category term="vmware" /><category term="devops" /><summary type="html">Este proceso se hace por medio de SSH. Se tiene que activar desde el VMware vShepere Client:</summary></entry><entry><title type="html">Clonación y migración en tiempo real (live migrations) de instancias virtuales Qemu/KVM</title><link href="jahrmando.github.com/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live.html" rel="alternate" type="text/html" title="Clonación y migración en tiempo real (live migrations) de instancias virtuales Qemu/KVM" /><published>2015-12-09T11:33:06-06:00</published><updated>2015-12-09T11:33:06-06:00</updated><id>jahrmando.github.com/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live</id><content type="html" xml:base="jahrmando.github.com/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live.html">&lt;h3 id=&quot;clonar-una-maquina&quot;&gt;Clonar una maquina&lt;/h3&gt;
+&lt;p&gt;Hacer una copia del cliente &lt;strong&gt;VM1&lt;/strong&gt; teniendo como resultado un cliente con el nombre de &lt;strong&gt;VM1_clone&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Es necesario suspender ó apagar al cliente para poder clonarlo.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ virsh suspend VM1
+Dominio VM1 suspendido
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Para clonar una instancia virtual lo hacemos con el comando &lt;code&gt;virt-clone&lt;/code&gt;. Explicando un poco las opciones básicas seleccionadas acontinuación:&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;code&gt;-o&lt;/code&gt;, nombramos el cliente que vamos a clonar&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-n&lt;/code&gt;, es el nombre del nuevo cliente clonado &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-f&lt;/code&gt;, es la dirección absoluta de la nueva imagen de almacenamiento.&lt;/li&gt;
+&lt;/ul&gt;&lt;pre&gt;&lt;code&gt;$ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.img
+Asignando 'VM1_clone.img' | 40 GB 04:52
+Clone 'VM1_clone' created successfully.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;!-- more --&gt;
+&lt;p&gt;Al terminar la ejecucion del comando anterior con &lt;code&gt;virsh resume&lt;/code&gt; reanudamos nuestro cliente que esta pausado.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ virsh resume VM1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;migracion-de-cliente-en-vivo-live&quot;&gt;Migración de cliente en vivo (Live)&lt;/h3&gt;
+&lt;p&gt;La migración en vivo nos es de utilidad cuando requerimos mover el cliente de su &amp;lsquo;servidor virtual&amp;rsquo; hacia otro sin necesidad de apagar el cliente, esto es completamente transparente y es casi nulo que se note la migración.&lt;/p&gt;
+&lt;p&gt;Requisitos previos:&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;El medio de almacenamiento del cliente debe estar corriendo sobre un sistema de almacenamiento en red como:&lt;ul&gt;&lt;li&gt;iSCSI&lt;/li&gt;
+&lt;li&gt;NFS&lt;/li&gt;
+&lt;li&gt;GFS2&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Ambos servicios Qemu/KVM deben ser tener la misma versión y las mismas actualizaciones.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Primero debemos tener una configuración para la resolución de host. En este ejemplo nuestros servidores &lt;strong&gt;&lt;em&gt;Qemu/KVM&lt;/em&gt;&lt;/strong&gt; tienen la siguiente información asignada:&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;virt1 tiene asignado la IP 10.0.0.1&lt;/li&gt;
+&lt;li&gt;virt2 tiene asignado la IP 10.0.0.2&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;En &lt;strong&gt;&lt;em&gt;ambos servidores&lt;/em&gt;&lt;/strong&gt; tendremos configurado el archivo &lt;strong&gt;host&lt;/strong&gt; para que resuelva sus nombres de dominio locales asignados.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ vim /etc/hosts
+127.0.0.1   localhost localhost.localdomain
+::1         localhost localhost.localdomain
+10.0.0.1   virt1
+10.0.0.2   virt2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;En este ejemplo usaremos un servicio &lt;strong&gt;NFS&lt;/strong&gt; como &lt;strong&gt;&lt;em&gt;storage pool&lt;/em&gt;&lt;/strong&gt;, este contiene nuestras imagenes de discos de nuestras instancias virtuales.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Ambos servidores Qemu/KVM deben tener montado en el mismo directorio el recurso NFS.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;La sintaxis del comando de migración (&lt;code&gt;virsh migrate&lt;/code&gt;) es la siguiente:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ virsh migrate --live --persistent Guest URLConnection
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;&lt;li&gt;Donde &lt;strong&gt;&lt;em&gt;Guest&lt;/em&gt;&lt;/strong&gt;, es el nombre del cliente a migrar.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;em&gt;URLConnection&lt;/em&gt;&lt;/strong&gt; es la URL de conexión hacia el servidor destino, ejemplo: &lt;strong&gt;&lt;em&gt;qemu+ssh://hostname/system&lt;/em&gt;&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;La opcion &lt;code&gt;--persistent&lt;/code&gt; nos hara el movimiento permanente. De lo contrario si esta opcion no es puesta al apagar el cliente en el servidor destino se eliminara las configuraciones.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Listamos las instancias virtuales que se esta ejecutando en &lt;strong&gt;virt1&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(virt1)$ virsh list
+ Id    Nombre                         Estado
+----------------------------------------------------
+ 1     VM1                            ejecutando
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora migramos &lt;strong&gt;VM1&lt;/strong&gt; del servidor &lt;strong&gt;virt1&lt;/strong&gt; al servidor &lt;strong&gt;virt2&lt;/strong&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(virt1)$ virsh migrate --live --persistent VM1 qemu+ssh://virt2/system
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Notese que el comando anterior usa el servicio SSH y de manera implicita conecta usando el usuario root. Si quisieramos &lt;strong&gt;&lt;em&gt;usar otro usuario&lt;/em&gt;&lt;/strong&gt; ante ponemos al nombre del hostname el usuario. Por ejemplo: &lt;strong&gt;&lt;em&gt;qemu+ssh://admin@virt2/system&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Listamos las instancias virtuales y observamos que &lt;strong&gt;VM1&lt;/strong&gt; esta apagado en &lt;strong&gt;virt1&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(virt1)$ virsh list --all
+ Id    Nombre                         Estado
+----------------------------------------------------
+ -     VM1                            apagado
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Y ahora listamos las instancias virtuales y vemos a &lt;strong&gt;VM1&lt;/strong&gt; que ya se encuentra &lt;strong&gt;&lt;em&gt;ejecutandose&lt;/em&gt;&lt;/strong&gt; en &lt;strong&gt;virt2&lt;/strong&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(virt2)$ virsh list --all
+ Id    Nombre                         Estado
+----------------------------------------------------
+ 1     VM1                            ejecutando
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Ahora nos queda una instancia de &lt;strong&gt;&lt;em&gt;VM1&lt;/em&gt;&lt;/strong&gt; en &lt;strong&gt;&lt;em&gt;virt1&lt;/em&gt;&lt;/strong&gt; que podemos eliminar si deseamos, siempre y cuando &lt;strong&gt;NO borremos la imagen&lt;/strong&gt; del medio de almacenamiento ya que se tiene asociado en la instancia alojada en &lt;strong&gt;&lt;em&gt;virt2&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name></name></author><category term="qemu" /><category term="kvm" /><category term="DevOps" /><category term="virtual machine" /><summary type="html">Clonar una maquina Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone. Es necesario suspender ó apagar al cliente para poder clonarlo. $ virsh suspend VM1 Dominio VM1 suspendido</summary></entry><entry><title type="html">Análisis del rendimiento de Linux en 60 Segundos</title><link href="jahrmando.github.com/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento.html" rel="alternate" type="text/html" title="Análisis del rendimiento de Linux en 60 Segundos" /><published>2015-12-04T11:30:32-06:00</published><updated>2015-12-04T11:30:32-06:00</updated><id>jahrmando.github.com/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento</id><content type="html" xml:base="jahrmando.github.com/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento.html">&lt;p&gt;Un excelente articulo sobre como poder detectar rapidamente anomalias en el rendimiento de nuestro servidor &lt;strong&gt;&lt;em&gt;Linux&lt;/em&gt;&lt;/strong&gt;, 60 Segundos pueden ser significativos para resolver incidentes en ambientes productivos y que estos no escalen a problemas mucho mayores.&lt;/p&gt;	
+&lt;p&gt;
+&lt;a href=&quot;http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html&quot;&gt;The Netflix Tech Blog: Análisis del rendimiento de Linux en 60 Segundos&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;Les dejo el &lt;strong&gt;cheatsheet&lt;/strong&gt; de comando, las cuales nos explican en el articulo el como interpretar los datos de salida de cada uno.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ uptime
+$ dmesg | tail
+$ vmstat 1
+$ mpstat -P ALL 1
+$ pidstat 1
+$ iostat -xz 1
+$ free -m
+$ sar -n DEV 1
+$ sar -n TCP,ETCP 1
+$ top
+&lt;/code&gt;&lt;/pre&gt;</content><author><name></name></author><category term="DevOps" /><category term="linux" /><summary type="html">Un excelente articulo sobre como poder detectar rapidamente anomalias en el rendimiento de nuestro servidor Linux, 60 Segundos pueden ser significativos para resolver incidentes en ambientes productivos y que estos no escalen a problemas mucho mayores. The Netflix Tech Blog: Análisis del rendimiento de Linux en 60 Segundos Les dejo el cheatsheet de comando, las cuales nos explican en el articulo el como interpretar los datos de salida de cada uno.</summary></entry><entry><title type="html">Administrando replicación en PostgreSQL con REPMGR</title><link href="jahrmando.github.com/2015/05/15/replicacion-postgresql-con-repmgr-centos.html" rel="alternate" type="text/html" title="Administrando replicación en PostgreSQL con REPMGR" /><published>2015-05-15T18:48:11-05:00</published><updated>2015-05-15T18:48:11-05:00</updated><id>jahrmando.github.com/2015/05/15/replicacion-postgresql-con-repmgr-centos</id><content type="html" xml:base="jahrmando.github.com/2015/05/15/replicacion-postgresql-con-repmgr-centos.html">&lt;p&gt;Como sabemos en PostgreSQL podemos tener una configuracion de replicación maestro-esclavo (&lt;em&gt;hot-standby&lt;/em&gt;) de forma facil, pero esta configuración no nos provee un &lt;strong&gt;failover&lt;/strong&gt; o recuperación del maestro. Tenemos varias &lt;a href=&quot;https://wiki.postgresql.org/wiki/Clustering&quot; target=&quot;_blank&quot;&gt;alternativas&lt;/a&gt; que junto con PostgreSQL nos pueden proveer estas características.&lt;/p&gt;
+
+&lt;p&gt;Sin embargo aquí hablaremos de &lt;a href=&quot;http://www.repmgr.org&quot; target=&quot;_blank&quot;&gt;REPMGR&lt;/a&gt; que es una herramienta para poder administrar la replicación &lt;em&gt;hot-standby&lt;/em&gt; de PostgreSQL, nos ofrece características como poder cambiar de modo esclavo a maestro de forma manual ó automática, capacidad de que los esclavos del cluster sigan al nuevo maestro y poder recuperar al maestro.&lt;/p&gt;
+
+&lt;p&gt;En esta publicación realizaremos los siguientes ejercicios:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;Configurar nodo maestro y dos esclavos&lt;/li&gt;
+&lt;li&gt;Realizar failover manual&lt;/li&gt;
+&lt;li&gt;Promover un nodo esclavo a maestro&lt;/li&gt;
+&lt;li&gt;Hacer que los nodos esclavo sigan al nuevo maestro&lt;/li&gt;
+&lt;li&gt;Recuperar el nodo maestro como esclavo&lt;/li&gt;
+&lt;/ul&gt;&lt;h2&gt;Instalación&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En esta publicación manejaremos &lt;strong&gt;PostgreSQL 9.2&lt;/strong&gt; y &lt;strong&gt;CentOS 6.x&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;En &lt;strong&gt;todos&lt;/strong&gt; nuestros nodos debemos instalar los siguientes paquetes:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;postgresql92-server&lt;/li&gt;
+&lt;li&gt;postgresql92-contrib&lt;/li&gt;
+&lt;li&gt;repmgr92&lt;/li&gt;
+&lt;li&gt;rsync&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Estos paquetes se encuentra dentro del &lt;a href=&quot;http://yum.postgresql.org/repopackages.php&quot; target=&quot;_blank&quot;&gt;repositorio oficial de postgresql&lt;/a&gt; (ha excepción de &lt;em&gt;rsync&lt;/em&gt;) que debes instalar antes para poder encontrar los paquetes que se listan arriba.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# yum install postgresql92-server postgresql92-contrib repmgr92 rsync -y
+# chkconfig postgresql-9.2 on
+# service postgresql-9.2 initdb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Antes de empezar, tenga encuentra la siguiente estructura de configuración de red de los nodos.&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Nombre&lt;/th&gt;
+  &lt;th&gt;IP&lt;/th&gt;
+  &lt;th&gt;Hostname&lt;/th&gt;
+&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;nodo1&lt;/td&gt;
+  &lt;td&gt;192.168.1.1&lt;/td&gt;
+  &lt;td&gt;nodo1.example.com&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;nodo2&lt;/td&gt;
+  &lt;td&gt;192.168.1.2&lt;/td&gt;
+  &lt;td&gt;nodo2.example.com&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;nodo3&lt;/td&gt;
+  &lt;td&gt;192.168.1.3&lt;/td&gt;
+  &lt;td&gt;nodo3.example.com&lt;/td&gt;
+&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;p&gt;El nodo &lt;strong&gt;&lt;em&gt;maestro&lt;/em&gt;&lt;/strong&gt; sera el &lt;strong&gt;&lt;em&gt;nodo1&lt;/em&gt;&lt;/strong&gt; y los demás los esclavos (standby).&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;h2&gt;Configuraciones&lt;/h2&gt;
+
+&lt;h3&gt;Configuraciones del nodo maestro&lt;/h3&gt;
+
+&lt;p&gt;Iniciamos el servicio en el nodo1&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# service postgresql-9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Creamos un usuario y la base de datos que usara &lt;em&gt;REPMGR&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE ROLE repmgr_usr LOGIN SUPERUSER;
+CREATE DATABASE repmgr_db OWNER repmgr_usr;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Instalamos las funciones necesarias para la base de datos de &lt;em&gt;REPMGR&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ su - postgres
+$ psql -f /usr/pgsql-9.2/share/contrib/repmgr_funcs.sql repmgr_db
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Configuración de accesos al servicio &lt;em&gt;postgresql&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+# Acceso nodo1
+host    repmgr_db       repmgr_usr  192.168.1.1/32         trust
+host    replication     repmgr_usr  192.168.1.1/32         trust
+# Acceso nodo2
+host    repmgr_db       repmgr_usr  192.168.1.2/32         trust
+host    replication     repmgr_usr  192.168.1.2/32         trust
+# Acceso nodo3
+host    repmgr_db       repmgr_usr  192.168.1.3/32         trust
+host    replication     repmgr_usr  192.168.1.3/32         trust
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En la publicación estaremos usando &lt;a href=&quot;http://www.vim.org/&quot; target=&quot;_blank&quot;&gt;VIM&lt;/a&gt; para editar los archivos de configuración desde terminal. Siéntase en libertad de usar la que mas le acomode (gedit, emacs, nano, etc).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Configuraciones generales del servicio.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data/postgresql.conf
+listen_addresses='*'
+wal_level = 'hot_standby'
+archive_mode = on
+archive_command = 'cd .'
+max_wal_senders = 10
+wal_keep_segments = 5000
+hot_standby = on
+shared_preload_libraries = 'repmgr_funcs'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Reiniciar el servicio para cargas las nuevas configuraciones&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# service postgresql-9.2 restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Configuraciones adicionales&lt;/h3&gt;
+
+&lt;p&gt;Estas configuraciones nos aseguran la conectividad entre los nodos y es importante realizar para el correcto funcionamiento del cluster.&lt;/p&gt;
+
+&lt;h4&gt;Configuración de hostnames (opcional)&lt;/h4&gt;
+
+&lt;p&gt;Si no contamos con un servicio de dominio (DNS) para poder asignarle a los servidores un dominio valido podemos usar la resolución por medio del archivo &lt;em&gt;/etc/hosts&lt;/em&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# vim /etc/hosts
+192.168.1.1 nodo1.example.com
+192.168.1.2 nodo2.example.com
+192.168.1.3 nodo3.example.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Asegure de hacer la misma configuración para todos los nodos del cluster.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4&gt;Inicio de sesión SSH private-key&lt;/h4&gt;
+
+&lt;p&gt;Esta configuración es indispensable, ya que los archivos base de &lt;em&gt;postgresql&lt;/em&gt; se van ha sincronizar con la herramienta &lt;em&gt;rsync&lt;/em&gt; y este utilizara este tipo de acceso con los nodos.&lt;/p&gt;
+
+&lt;p&gt;Siguiendo en el &lt;em&gt;nodo1&lt;/em&gt; configuramos de las siguiente forma, iniciamos una sesión del usuario &lt;strong&gt;&lt;em&gt;postgres&lt;/em&gt;&lt;/strong&gt; y generamos sus llaves de acceso y lo agregamos entre las llaves autorizadas.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ su - postgres
+$ ssh-keygen
+$ cat ~/.ssh/id_rsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys
+$ chmod 600 ~/.ssh/authorized_keys
+$ exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Cuando genere la llave no le asigne frase de acceso (passphrase).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Ahora vamos a enviarle las llaves (publica y privada) y la lista de llaves autorizadas a todos los nodos que estarán en el cluster.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# rsync -avz ~postgres/.ssh/authorized_keys nodo2.example.com:~postgres/.ssh/
+# rsync -avz ~postgres/.ssh/authorized_keys nodo3.example.com:~postgres/.ssh/
+
+# rsync -avz ~postgres/.ssh/id_rsa* nodo2.example.com:~postgres/.ssh/
+# rsync -avz ~postgres/.ssh/id_rsa* nodo3.example.com:~postgres/.ssh/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note que las llaves enviadas son para el usuario &lt;em&gt;postgres&lt;/em&gt;, este usuario es el que se va conectar a otros nodos usando ssh (rsync) sin requerir contraseña.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;Registrando el nodo maestro&lt;/h3&gt;
+
+&lt;p&gt;Antes de registrar al nodo maestro necesitamos configurar la herramienta &lt;em&gt;REPMGR&lt;/em&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# vi /etc/repmgr/9.2/repmgr.conf
+cluster=mi_cluster
+node=1
+node_name=nodo1
+conninfo='host=nodo1.example.com dbname=repmgr_db user=repmgr_usr'
+logfile='/tmp/repmgr-9.2.log'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora registramos el nodo maestro de la siguiente forma.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf master register --verbose
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Registrando nodos standby (esclavos)&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Estas configuraciones se realizan en cada servidor esclavo del cluster.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Estando conectado en el nodo esclavo (nodo2) lo primero es clonar al nodo maestro (nodo1) y luego &lt;em&gt;REPMGR&lt;/em&gt; se encargara de configurarlo como esclavo (recovery.conf).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ /usr/pgsql-9.2/bin/repmgr -d repmgr_db -U repmgr_usr standby clone nodo1.example.com --verbose
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Iniciamos el servicio postgresql.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# service postgresql-9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Editamos la configuración de &lt;em&gt;REPMGR&lt;/em&gt; (configuración del &lt;strong&gt;nodo2&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# vim /etc/repmgr/9.2/repmgr.conf
+cluster=mi_cluster
+node=2
+node_name=nodo2
+conninfo='host=nodo2.example.com dbname=repmgr_db user=repmgr_usr'
+logfile='/tmp/repmgr-9.2.log'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora registramos nuestro esclavo.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf standby register --verbose
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Podemos verificamos el registro del nodo de la siguiente manera.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf cluster show
+Role      | Connection String 
+* master  | host=nodo1.example.com user=repmgr_usr dbname=repmgr_db
+standby   | host=nodo2.example.com user=repmgr_usr dbname=repmgr_db
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Failover manual&lt;/h2&gt;
+
+&lt;p&gt;Ahora realizamos el siguiente ejercicio, haremos que el &lt;em&gt;nodo1&lt;/em&gt; se detenga para promover al &lt;em&gt;nodo2&lt;/em&gt; a maestro y después hacer que los demás nodos sigan al nuevo maestro (nodo 2).&lt;/p&gt;
+
+&lt;h3&gt;Promover al nodo2 a maestro&lt;/h3&gt;
+
+&lt;p&gt;Antes de promover este nodo detenemos el nodo maestro para simular la baja del servidor.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# poweroff
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora nos conectamos al &lt;em&gt;nodo2&lt;/em&gt; y vamos a promoverlo como nodo maestro.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf --verbose standby promote
+$ exit
+# service postgresql-9.2 restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Reconfigurar los nodos para seguir al nuevo maestro&lt;/h3&gt;
+
+&lt;p&gt;Realizamos lo siguiente en cada &lt;strong&gt;&lt;em&gt;nodo esclavo&lt;/em&gt;&lt;/strong&gt; para que puedan seguir al nuevo nodo maestro.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf standby follow 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Volver al nodo1 a esclavo&lt;/h3&gt;
+
+&lt;p&gt;Detener servicio postgresql, al iniciar el servidor maestro es posible que este inicie automáticamente.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# service postgresql-9.2 stop
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Clonar a partir del nuevo maestro.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -d repmgr_db -U repmgr_usr --verbose standby clone node2.example.com --ignore-rsync-warning --force
+$ exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Iniciamos el servicio&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# service postgresql-9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Tips extras&lt;/h3&gt;
+
+&lt;p&gt;Revisar el estado de replicación en nuestro servidor maestro&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ su - postgres
+$ psql -x -c &quot;select * from pg_stat_replication;&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Resolución de problemas&lt;/h2&gt;
+
+&lt;ul&gt;&lt;li&gt;Host key verification failed. Error al clonar con el nodo maestro&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Es posible que sea la primera ves que intentas una conexión &lt;strong&gt;&lt;em&gt;ssh&lt;/em&gt;&lt;/strong&gt; con el servidor maestro.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ su - postgres
+$ ssh nodo1.example.com
+The authenticity of host 'nodo2.example.com (192.168.1.2)' can't be established.
+RSA key fingerprint is xx:8e:2e:e9:d0:xx:5d:7b:48:d3:25:xx:18:50:b7:xx.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'nodo1.example.com' (RSA) to the list of known hosts.
+Welcome to your server.
+&lt;/code&gt;&lt;/pre&gt;</content><author><name></name></author><category term="postgresql" /><category term="centos" /><category term="DevOps" /><category term="howto" /><summary type="html">Como sabemos en PostgreSQL podemos tener una configuracion de replicación maestro-esclavo (hot-standby) de forma facil, pero esta configuración no nos provee un failover o recuperación del maestro. Tenemos varias alternativas que junto con PostgreSQL nos pueden proveer estas características.</summary></entry><entry><title type="html">Manejar un estado de mantemiento con NGINX</title><link href="jahrmando.github.com/2015/03/27/sitio-en-mantenimiento-con-nginx.html" rel="alternate" type="text/html" title="Manejar un estado de mantemiento con NGINX" /><published>2015-03-27T11:03:19-06:00</published><updated>2015-03-27T11:03:19-06:00</updated><id>jahrmando.github.com/2015/03/27/sitio-en-mantenimiento-con-nginx</id><content type="html" xml:base="jahrmando.github.com/2015/03/27/sitio-en-mantenimiento-con-nginx.html">&lt;p&gt;Crear un estado de &amp;ldquo;&lt;em&gt;Mantenimiento de sitio&lt;/em&gt;&amp;rdquo; es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente &lt;em&gt;offline&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;La idea es poder intercambiar rápidamente a un &amp;rsquo;&lt;em&gt;estado de mantenimiento&lt;/em&gt;&amp;rsquo; de sitio controlado por una sentencia &lt;strong&gt;IF&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Todas las configuraciones se hacen dentro de la directiva de configuración &lt;code&gt;server&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Definimos una variable llamada &lt;code&gt;$maintenance&lt;/code&gt; que nos servirá para poder controlar el estatus de nuestro sitio.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;set $maintenance TRUE;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora en &lt;strong&gt;todas&lt;/strong&gt; nuestras directivas &lt;strong&gt;location&lt;/strong&gt; de nuestra configuración de sitio pondremos en la parte inicial una sentencia condicional &lt;code&gt;IF&lt;/code&gt; que en caso de ser igual a &lt;strong&gt;TRUE&lt;/strong&gt; retornaremos un &lt;a href=&quot;http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#5xx_Server_Error&quot; target=&quot;_blank&quot;&gt;error 503&lt;/a&gt; (usado para manejar el estatus de servicio temporalmente inhabilitado o en mantenimiento), caso contrario continuara con el flujo.&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;location / {
+    # Mantenimiento
+    if ($maintenance = TRUE){ return 503; }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Toca definir como manejaremos el &lt;em&gt;estatus 503&lt;/em&gt; esto con la variable de configuración &lt;code&gt;error_page&lt;/code&gt; (&lt;a href=&quot;http://nginx.org/en/docs/http/ngx_http_core_module.html#error_page&quot; target=&quot;_blank&quot;&gt;info&lt;/a&gt;) que nos permite manipular la respuesta que se dará cuando un &lt;em&gt;código de error&lt;/em&gt; ocurra.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;error_page 503 /503.html;
+location = /503.html {
+    root /path/to/error/templates/;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Creamos un archivo &lt;strong&gt;&lt;em&gt;503.html&lt;/em&gt;&lt;/strong&gt; que nos servirá para desplegar el mensaje de &lt;em&gt;estado de mantenimiento&lt;/em&gt;, dentro de la directiva &lt;strong&gt;&lt;em&gt;location&lt;/em&gt;&lt;/strong&gt; tenemos la variable &lt;strong&gt;&lt;em&gt;root&lt;/em&gt;&lt;/strong&gt; donde pondremos el directorio absoluto de la carpeta donde se aloja nuestro archivo &lt;em&gt;html&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Solo nos queda guardar nuestros cambios y reiniciar el servicio &lt;em&gt;NGINX&lt;/em&gt; para probar la configuración.&lt;/p&gt;
+
+&lt;p&gt;Para volver al estado &lt;strong&gt;&lt;em&gt;online&lt;/em&gt;&lt;/strong&gt; de nuestro sitio solo necesitamos cambiar el valor a nuestra variable &lt;code&gt;$maintenance&lt;/code&gt; de &lt;em&gt;TRUE&lt;/em&gt; a &lt;em&gt;FALSE&lt;/em&gt; (o cualquier otro valor) y reiniciar el servicio &lt;em&gt;NGINX&lt;/em&gt;.&lt;/p&gt;</content><author><name></name></author><category term="nginx" /><category term="howto" /><summary type="html">Crear un estado de &amp;ldquo;Mantenimiento de sitio&amp;rdquo; es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline.</summary></entry><entry><title type="html">Como conectarse a Hipchat desde IRSSI</title><link href="jahrmando.github.com/2015/03/21/como-conectarse-hipchat-desde-irssi.html" rel="alternate" type="text/html" title="Como conectarse a Hipchat desde IRSSI" /><published>2015-03-21T13:27:13-06:00</published><updated>2015-03-21T13:27:13-06:00</updated><id>jahrmando.github.com/2015/03/21/como-conectarse-hipchat-desde-irssi</id><content type="html" xml:base="jahrmando.github.com/2015/03/21/como-conectarse-hipchat-desde-irssi.html">&lt;p&gt;Para aquellos que quieran integrar su servicio &lt;a href=&quot;https://www.hipchat.com&quot; target=&quot;_blank&quot;&gt;HipChat&lt;/a&gt; (o practicamente cualquier servicio XMPP) al programa &lt;a href=&quot;http://www.irssi.org/&quot; target=&quot;_blank&quot;&gt;irssi&lt;/a&gt;, espero les sea de utilidad.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Esta configuración la probé en un Fedora 21 de 64Bits.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Instalamos algunas dependencias necesarias para compilar el modulo.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo yum install loudmouth-devel irssi-devel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Modulo irssi-xmpp&lt;/h2&gt;
+
+&lt;p&gt;Nos descargamos la ultima versión de &lt;a href=&quot;http://cybione.org/~irssi-xmpp/&quot; target=&quot;_blank&quot;&gt;irssi-xmpp&lt;/a&gt;, ya que esa contiene un &lt;em&gt;bugfix&lt;/em&gt; que nos permitirá conectarnos exitosamente.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ wget &lt;a href=&quot;http://cybione.org/~irssi-xmpp/files/irssi-xmpp-0.52.tar.gz&quot; target=&quot;_blank&quot;&gt;http://cybione.org/~irssi-xmpp/files/irssi-xmpp-0.52.tar.gz&lt;/a&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Extraemos los archivos del archivo y desde una terminal nos cambiamos al directorio donde lo extraimos.&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;Compilamos el modulo &lt;strong&gt;irssi-xmpp&lt;/strong&gt; de la siguiente forma:&lt;/p&gt;
+
+&lt;p&gt;Necesitamos saber en que directorio esta &lt;strong&gt;&lt;em&gt;irssi-config.h&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo find / -name irssi-config.h
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yo lo encontre en &lt;strong&gt;/usr/include/irssi/irssi-config.h&lt;/strong&gt;, ahora edito el archivo &lt;em&gt;config.mk&lt;/em&gt; y agrego el directorio que esta antes de &lt;strong&gt;include&lt;/strong&gt; y lo agrego a la variable &lt;strong&gt;&lt;em&gt;PREFIX&lt;/em&gt;&lt;/strong&gt; del archivo.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vim config.mk
+# paths
+PREFIX ?= /usr
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;si nuestro sistema es de &lt;em&gt;64bits&lt;/em&gt; edite en el archivo anterior en la variable &lt;strong&gt;&lt;em&gt;IRSSI_LIB&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IRSSI_LIB ?= ${PREFIX}/lib64/irssi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora compilamos e instalamos con los siguientes comandos.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ make
+$ sudo make install1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Desde terminal muévase hasta la carpeta donde se instalo los módulos&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd /usr/lib/irssi/modules
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ó para los de 64bits.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd /usr/lib64/irssi/modules
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Creamos el siguiente link.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo ln -s libxmpp_core.so libXMPP_core.so
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Configuración IRSSI&lt;/h2&gt;
+
+&lt;p&gt;Ahora toca el turno de configurar &lt;strong&gt;IRSSI&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;El siguiente comando hará que se cargue el modulo &lt;strong&gt;&lt;em&gt;irssi-xmpp&lt;/em&gt;&lt;/strong&gt; al inicio de * irssi*&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ echo &quot;load xmpp&quot; &amp;amp;gt;&amp;amp;gt; ~/.irssi/startup
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Abrimos el archivo de configuración de irssi, usando &lt;code&gt;vim&lt;/code&gt; o cualquier editor abrimos el archivo &lt;strong&gt;&lt;em&gt;~/.irssi/config&lt;/em&gt;&lt;/strong&gt; que esta en tu carpeta de usuario. Los datos lo tomamos de configuracion de HipChat los tomamos del &lt;a href=&quot;https://hipchat.com/account/xmpp&quot; target=&quot;_blank&quot;&gt;panel de usuario&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Configuramos una instancia &lt;em&gt;servers&lt;/em&gt; para el servicio hipchat:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;servers = (
+  {
+    address = &quot;chat.hipchat.com&quot;;
+    chatnet = &quot;hipchat&quot;;
+    port = &quot;5223&quot;;
+    password = &quot;mipasswordhipchat&quot;;
+    use_ssl = &quot;yes&quot;;
+    ssl_verify = &quot;no&quot;;
+    autoconnect = &quot;yes&quot;;
+  }
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Creamos una instancia &lt;em&gt;network&lt;/em&gt; para el servidor:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;chatnets = {
+  hipchat = { 
+        type = &quot;XMPP&quot;; 
+        nick = &quot;Username@chat.hipchat.com&quot;; 
+    };
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Damos de alta a los canales en los que estemos agregados, estos los consultamos desde el &lt;a href=&quot;https://hipchat.com/rooms&quot; target=&quot;_blank&quot;&gt;panel de rooms&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;channels = (
+  {
+    name = &quot;XMPP_JID@conf.hipchat.com&quot;;
+    chatnet = &quot;hipchat&quot;;
+    autojoin = &quot;yes&quot;;
+  }
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora necesitamos poner nuestro &lt;strong&gt;&lt;em&gt;nickname&lt;/em&gt;&lt;/strong&gt; del canal, para esto tiene que ser nuestro nombre completo registrado en &lt;strong&gt;HipChat&lt;/strong&gt;, en mi caso &lt;strong&gt;&lt;em&gt;Armando Uch&lt;/em&gt;&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;settings = {
+  &quot;irc/core&quot; = { 
+    alternate_nick = &quot;Armando Uch&quot;;
+    };
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora solo queda iniciar el programa &lt;strong&gt;irssi&lt;/strong&gt;.&lt;/p&gt;</content><author><name></name></author><category term="howto" /><category term="irssi" /><category term="hipchat" /><summary type="html">Para aquellos que quieran integrar su servicio HipChat (o practicamente cualquier servicio XMPP) al programa irssi, espero les sea de utilidad.</summary></entry><entry><title type="html">Excelente cheat sheet de VIM</title><link href="jahrmando.github.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim.html" rel="alternate" type="text/html" title="Excelente cheat sheet de VIM" /><published>2015-03-13T20:34:09-06:00</published><updated>2015-03-13T20:34:09-06:00</updated><id>jahrmando.github.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim</id><content type="html" xml:base="jahrmando.github.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim.html">&lt;p&gt;Excelente cheat sheet para principiantes de #VIM (y no generen cadenas aleatorias para poder salir del editor 😁)&lt;/p&gt;
+&lt;img src=&quot;/tumblr_files/tumblr_nl6kgxBjbX1qcyjxwo1_1280.png&quot;/&gt;&lt;br/&gt;</content><author><name></name></author><category term="vim" /><category term="programming" /><category term="protip" /><summary type="html">Excelente cheat sheet para principiantes de #VIM (y no generen cadenas aleatorias para poder salir del editor 😁)</summary></entry><entry><title type="html">Instalación y configuración del servicio NGINX y PHP-FPM en CentOS 7</title><link href="jahrmando.github.com/2015/02/11/instalacion-nginx-php-en-centos.html" rel="alternate" type="text/html" title="Instalación y configuración del servicio NGINX y PHP-FPM en CentOS 7" /><published>2015-02-11T11:02:00-06:00</published><updated>2015-02-11T11:02:00-06:00</updated><id>jahrmando.github.com/2015/02/11/instalacion-nginx-php-en-centos</id><content type="html" xml:base="jahrmando.github.com/2015/02/11/instalacion-nginx-php-en-centos.html">&lt;p&gt;Este manual nos permitirá configurar un servicio &lt;b&gt;HTTP&lt;/b&gt; usando &lt;i&gt;NGINX&lt;/i&gt; y con soporte &lt;b&gt;PHP&lt;/b&gt; usando &lt;i&gt;PHP-FPM&lt;/i&gt;.&lt;/p&gt;&lt;figure&gt;&lt;img alt=&quot;image&quot; src=&quot;http://68.media.tumblr.com/77cd84044dafd00b6fa9007d606c856a/tumblr_inline_njlfxj9yua1qc746e.png&quot;/&gt;&lt;/figure&gt;&lt;blockquote&gt;&lt;p&gt;Las configuraciones presentadas funcionan bajo el esquema de seguridad &lt;b&gt;SELinux.&lt;/b&gt;&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Instalemos el servicio &lt;i&gt;NGINX&lt;/i&gt; desde los repositorios &lt;i&gt;EPEL&lt;/i&gt;.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ sudo yum install nginx --enablerepo epel&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Si no tiene el repositorio &lt;i&gt;EPEL&lt;/i&gt; configurado hágalo desde &lt;a href=&quot;http://www.cyberciti.biz/faq/installing-rhel-epel-repo-on-centos-redhat-7-x/&quot; target=&quot;_blank&quot;&gt;aquí&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Ahora vamos a habilitar el servicio en el inicio de sistema con el comando &lt;code&gt;enable&lt;/code&gt; y después iniciamos el servicio (&lt;code&gt;start&lt;/code&gt;).&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ sudo systemctl enable nginx.service&lt;br/&gt;$ sudo systemctl start nginx.service&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Por defecto &lt;i&gt;CentOS 7&lt;/i&gt; trae el servicio &lt;i&gt;firewalld&lt;/i&gt; como servicio de muro de fuego, &lt;i&gt;firewalld&lt;/i&gt; maneja perfiles de servicio para habilitar puertos por lo cual vamos ha habilitar el perfil &lt;b&gt;&lt;i&gt;http&lt;/i&gt;&lt;/b&gt; que nos abre el puerto &lt;i&gt;80/TCP&lt;/i&gt;.&lt;/p&gt;&lt;!-- more --&gt;&lt;pre&gt;&lt;code&gt;$ sudo firewall-cmd --zone=public --add-service=http --permanent&lt;br/&gt;$ sudo firewall-cmd --reload&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Podemos ver el estatus del firewall usando el comando &lt;code&gt;firewall-cmd --list-all&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Configuración de NGINX&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Ahora vamos a configurar el &lt;i&gt;NGINX&lt;/i&gt;, primero creamos una carpeta llamada &lt;i&gt;sites-enabled&lt;/i&gt; que sera el directorio donde &lt;i&gt;NGINX&lt;/i&gt; cargará configuraciones.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ sudo mkdir /etc/nginx/sites-enabled&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;El esquema como buena practica, es que nosotros crearemos los archivos desde el directorio &lt;b&gt;&lt;i&gt;/etc/nginx/conf.d&lt;/i&gt;&lt;/b&gt; y &amp;ldquo;&lt;i&gt;activaremos&lt;/i&gt;&amp;rdquo; la configuracion creando un acceso directo de la configuracion apuntando a &lt;b&gt;&lt;i&gt;/etc/nginx/sites-enabled&lt;/i&gt;&lt;/b&gt;.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Ejemplo&lt;/i&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ ln -s /etc/nginx/conf.d/misitio.conf /etc/nginx/sites-enabled/misitio.conf&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;De esta manera nos es mas fácil desactivar sitios sin borrar sus archivos de configuración.&lt;/p&gt;&lt;p&gt;Antes de iniciar la edición del archivo principal de configuracion de &lt;i&gt;NGINX&lt;/i&gt; respaldamos la configuracion inicial.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Configuramos de la siguiente manera, siga las instrucción de los comentarios del archivo.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ sudo vim /etc/nginx/nginx.confuser  nginx;worker_processes  4;                        # Ajuste de acuerdo al numero de CPUs
+
+#error_log  /var/log/nginx/error.log;
+#error_log  /var/log/nginx/error.log  notice;
+#error_log  /var/log/nginx/error.log  info;
+error_log  /var/log/nginx/error.log  warn;  # Logs a nivel de advertencia
+
+pid        /run/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
+                      '$status $body_bytes_sent &quot;$http_referer&quot; '
+                      '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile    on;
+    tcp_nopush  on;                         # Optimiza el rendimiento de sendfile
+    keepalive_timeout  65;                      # Ajuste de tiempo de espera
+    gzip  on;                                   # Reduce la cantidad de datos a transferir
+
+    include /etc/nginx/sites-enabled/*.conf;    # Directorio de configuraciones
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;b&gt;Configuración de php-fpm (Soporte FastCGI para PHP)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;El servicio &lt;a href=&quot;http://php-fpm.org&quot; target=&quot;_blank&quot;&gt;php-fpm&lt;/a&gt; nos da el soporte para sitios web hechos en &lt;i&gt;PHP&lt;/i&gt;. Procedamos a instalar php-fpm y los módulos PHP necesarios para su función.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ sudo yum install php-fpm php-common php-cli php-pear php-pdo php-gd php-mbstring php-xml php-pecl-apc --enablerepo epel
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ahora editamos el archivo de configuracion de &lt;i&gt;php-fpm&lt;/i&gt;. Configuraciones importantes en la variable &lt;code&gt;listen&lt;/code&gt; donde declaramos el socket del servicio y las variables &lt;code&gt;user&lt;/code&gt; y &lt;code&gt;group&lt;/code&gt;.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ vim /etc/php-fpm.d/www.conf
+;listen = 127.0.0.1:9000
+listen = /var/run/php5-fpm.sock
+
+;user = apache
+;group = apache
+user = nginx
+group = nginx
+
+request_terminate_timeout = 65
+
+security.limit_extensions = .php .php3 .php4 .php5
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Creamos directorios indispensables para el servicio y le asignamos los permisos correspondientes.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ mkdir -p /var/lib/php/{session,tmp}
+$ chmod 750 -R /var/lib/php/
+$ chown nginx:nginx -R /var/lib/php/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ahora agregamos el siguiente archivo, este contiene configuraciones de seguridad que he recopilado y que nos permite agregarle un extra de seguridad.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ vim /etc/php.d/security.ini
+; Ocultar version de PHP
+expose_php=Off
+; Ocultar errores
+display_errors=Off
+; Bloquear subidas de archivos
+;file_uploads=Off
+; ó limitar los archivos a subir
+file_uploads=On
+upload_max_filesize=1M
+; Bloquear ejecucion remota via ftp,http
+allow_url_fopen=Off
+allow_url_include=Off
+; Desactivar (Obsoleto a partir de PHP 5.4.0)
+magic_quotes_gpc=Off
+; Limita los paquetes POST, (Default 8M)
+post_max_size=1M
+; Control de recursos
+max_execution_time =  30
+max_input_time = 30
+memory_limit = 8M
+; Desactivar funciones que podrían ser explotadas
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen,curl_multi_exec,parse_ini_file,show_source
+; Directorio temporal
+upload_tmp_dir = /var/lib/php/tmp/
+; Limitar la ejecución a php en directorio
+open_basedir = /home/www/
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;&lt;p&gt;Para esta prueba no deshabilitamos &lt;b&gt;phpinfo&lt;/b&gt; en la variable &lt;b&gt;disable_functions&lt;/b&gt; para poder realizar la prueba, recomiendo agregarlo una vez terminada las pruebas.
+Estas opciones las puede ajustar a su criterio.&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Habilitamos el servicio en el inicio de sistema e iniciamos el servicio.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ systemctl enable php-fpm.service
+$ systemctl start php-fpm.service
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;b&gt;Configuración de un sitio de prueba&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Lo primero que haremos es crear el archivo de configuración de nuestro sitio en &lt;i&gt;NGINX&lt;/i&gt; (recuerde que estas van en el directorio &lt;i&gt;/etc/nginx/conf.d&lt;/i&gt;).&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ vim /etc/nginx/conf.d/test.conf
+server {
+    listen       80 default;
+    server_name  localhost;
+
+    ## Deshabilitamos que imprima la version de NGINX ##
+    server_tokens off;
+
+    ## Registros del virtualhost ##
+    access_log  /var/log/nginx/test.access.log;
+    error_log  /var/log/nginx/test.error.log;
+
+    ## Metodos validos ##
+    if ($request_method !~ ^(GET|HEAD|POST)$ ) {
+         return 444;
+    }
+
+    location / {
+        ## Los index validos, entre ellos el .php
+        index  index.html index.htm index.php;
+
+        ## Directorio del sitio
+        root  /home/www/test/public_html;
+
+        ## Soporte PHP ##
+        location ~ \.php$ {
+                root            public_html;
+                fastcgi_pass    unix:/var/run/php5-fpm.sock;    #Socket de php-fpm
+                fastcgi_index   index.php;
+                fastcgi_param   SCRIPT_FILENAME  /home/www/test/public_html$fastcgi_script_name;
+                include         /etc/nginx/fastcgi_params;
+        }
+
+        ## Denegar accesos a archivos ocultos ##
+        location ~ /\. { deny  all; }
+
+        ## Bloquear logs de archivos estaticos ###
+        location ~* \.(jpg|jpeg|gif|png|css|js|ico|xml)$ {
+                access_log        off;
+                log_not_found     off;
+                expires           360d;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Usted puede ver que estamos declarando que los archivos de nuestro sitio estaran alojados en &lt;b&gt;&lt;i&gt;/home/www&lt;/i&gt;&lt;/b&gt;.&lt;/p&gt;&lt;p&gt;Ahora lo que haremos es activar nuestra configuración nginx de prueba, para esto creamos un enlace directo hacia &lt;i&gt;/etc/nginx/sites-enabled&lt;/i&gt; que es donde se &lt;i&gt;NGINX&lt;/i&gt; carga los archivos de configuracion (como lo declaramos anteriormente).&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ ln -s /etc/nginx/conf.d/test.conf /etc/nginx/sites-enabled/test.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Creamos el directorio donde alojaremos nuestros sitio&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ mkdir -p /home/www/test/public_html
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Creamos un archivo &lt;i&gt;php&lt;/i&gt; donde ejecutaremos la funcion &lt;code&gt;phpinfo()&lt;/code&gt; para compobrar que este funcionando correctamente.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ vim /home/www/test/public_html/index.php
+&amp;lt;?php
+        phpinfo();
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Asignamos permisos adecuados.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ chmod 750 -R /home/www
+$ chown nginx:nginx -R /home/www
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Permisos necesarios para &lt;b&gt;SELinux&lt;/b&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ semanage fcontext -a -t httpd_sys_content_t &quot;/home/www(.*)&quot;
+$ restorecon -R -v /home/www/
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;&lt;p&gt;No olvide asignar los permisos que se mencionan anteriormente para cada proyecto &lt;i&gt;PHP&lt;/i&gt; que configure.&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Reiniciamos el servicio para cargar todo&lt;/p&gt;&lt;pre&gt;&lt;code&gt;$ systemctl restart nginx.service
+&lt;/code&gt;&lt;/pre&gt;</content><author><name></name></author><category term="howto" /><category term="nginx" /><category term="php" /><category term="centos" /><category term="devops" /><summary type="html">Este manual nos permitirá configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.Las configuraciones presentadas funcionan bajo el esquema de seguridad SELinux.Instalemos el servicio NGINX desde los repositorios EPEL.$ sudo yum install nginx --enablerepo epelSi no tiene el repositorio EPEL configurado hágalo desde aquíAhora vamos a habilitar el servicio en el inicio de sistema con el comando enable y después iniciamos el servicio (start).$ sudo systemctl enable nginx.service$ sudo systemctl start nginx.servicePor defecto CentOS 7 trae el servicio firewalld como servicio de muro de fuego, firewalld maneja perfiles de servicio para habilitar puertos por lo cual vamos ha habilitar el perfil http que nos abre el puerto 80/TCP.$ sudo firewall-cmd --zone=public --add-service=http --permanent$ sudo firewall-cmd --reloadPodemos ver el estatus del firewall usando el comando firewall-cmd --list-all.Configuración de NGINXAhora vamos a configurar el NGINX, primero creamos una carpeta llamada sites-enabled que sera el directorio donde NGINX cargará configuraciones.$ sudo mkdir /etc/nginx/sites-enabledEl esquema como buena practica, es que nosotros crearemos los archivos desde el directorio /etc/nginx/conf.d y &amp;ldquo;activaremos&amp;rdquo; la configuracion creando un acceso directo de la configuracion apuntando a /etc/nginx/sites-enabled.Ejemplo:$ ln -s /etc/nginx/conf.d/misitio.conf /etc/nginx/sites-enabled/misitio.confDe esta manera nos es mas fácil desactivar sitios sin borrar sus archivos de configuración.Antes de iniciar la edición del archivo principal de configuracion de NGINX respaldamos la configuracion inicial.$ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.oldConfiguramos de la siguiente manera, siga las instrucción de los comentarios del archivo.$ sudo vim /etc/nginx/nginx.confuser nginx;worker_processes 4; # Ajuste de acuerdo al numero de CPUs</summary></entry><entry><title type="html">Como limpiar las particiones de intercambio SWAP</title><link href="jahrmando.github.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap.html" rel="alternate" type="text/html" title="Como limpiar las particiones de intercambio SWAP" /><published>2015-01-27T14:51:39-06:00</published><updated>2015-01-27T14:51:39-06:00</updated><id>jahrmando.github.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap</id><content type="html" xml:base="jahrmando.github.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap.html">&lt;p&gt;Suele suceder que un proceso finalizado nos deje ocupado parte o casi toda la partición &lt;em&gt;swap&lt;/em&gt;. Si requiere depurar ese espacio para eso utilizamos el comando &lt;code&gt;swapoff&lt;/code&gt;, este desactiva una partición &lt;em&gt;swap&lt;/em&gt; y volcara todo archivo que se este usando a espacio de &lt;em&gt;ram&lt;/em&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ swapoff -a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Tenga encuenta tener suficiente espacio en &lt;em&gt;RAM&lt;/em&gt; para poder volcar los datos de &lt;em&gt;swap&lt;/em&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ahora tenemos que reactivar nuestras &lt;em&gt;swap&lt;/em&gt;, esto lo hacemos con el comando &lt;code&gt;swapon&lt;/code&gt; de la siguiente forma.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ swapon -a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Este comando leerá nuestras particiones &lt;em&gt;swap&lt;/em&gt; declaradas en el archivo &lt;em&gt;/etc/fstab&lt;/em&gt; y las montara.&lt;/p&gt;</content><author><name></name></author><category term="protips" /><category term="sysadmin" /><category term="linux" /><summary type="html">Suele suceder que un proceso finalizado nos deje ocupado parte o casi toda la partición swap. Si requiere depurar ese espacio para eso utilizamos el comando swapoff, este desactiva una partición swap y volcara todo archivo que se este usando a espacio de ram. $ swapoff -a Tenga encuenta tener suficiente espacio en RAM para poder volcar los datos de swap. Ahora tenemos que reactivar nuestras swap, esto lo hacemos con el comando swapon de la siguiente forma. $ swapon -a Este comando leerá nuestras particiones swap declaradas en el archivo /etc/fstab y las montara.</summary></entry><entry><title type="html">Autocompletado de comandos con bash en CentOS</title><link href="jahrmando.github.com/2015/01/20/autocompletado-bash-en-centos.html" rel="alternate" type="text/html" title="Autocompletado de comandos con bash en CentOS" /><published>2015-01-20T13:47:00-06:00</published><updated>2015-01-20T13:47:00-06:00</updated><id>jahrmando.github.com/2015/01/20/autocompletado-bash-en-centos</id><content type="html" xml:base="jahrmando.github.com/2015/01/20/autocompletado-bash-en-centos.html">&lt;p&gt;Cuando usamos distribuciones &lt;strong&gt;&lt;em&gt;Linux&lt;/em&gt;&lt;/strong&gt; (&lt;em&gt;Fedora, Debian, OpenSuse, etc&lt;/em&gt;) nos acostumbramos ha tener auto-completado en la terminal, ya que esta característica viene por defecto, pero en &lt;strong&gt;CentOS&lt;/strong&gt; (al menos en la versión &lt;em&gt;mininal&lt;/em&gt;) no tiene.&lt;/p&gt;
+&lt;p&gt;Para tener esta característica en la terminal instalemos el paquete &lt;strong&gt;&lt;em&gt;bash-completion&lt;/em&gt;&lt;/strong&gt; que viene en los repositorios base.&lt;/p&gt;
+&lt;pre class=&quot;prettyprint lang-bsh&quot;&gt;&lt;code&gt;$ yum install bash-completion -y
+&lt;/code&gt;&lt;/pre&gt;</content><author><name></name></author><category term="protips" /><category term="linux" /><category term="centos" /><category term="bash" /><summary type="html">Cuando usamos distribuciones Linux (Fedora, Debian, OpenSuse, etc) nos acostumbramos ha tener auto-completado en la terminal, ya que esta característica viene por defecto, pero en CentOS (al menos en la versión mininal) no tiene. Para tener esta característica en la terminal instalemos el paquete bash-completion que viene en los repositorios base. $ yum install bash-completion -y</summary></entry></feed>
