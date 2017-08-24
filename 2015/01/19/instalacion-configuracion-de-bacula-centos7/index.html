@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Instalación y configuración de Bacula en CentOS 7 &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Instalación y configuración de Bacula en CentOS 7</h1>
+  <span class="post-date">19 Jan 2015</span>
+  <p><strong>Bacula</strong> es un conjunto de programas* Open Source*, permite administrar los respaldos, restauración y verificación de datos en una red heterogénea. Bacula es relativamente fácil de usar y eficiente, a la vez que ofrece muchas funcionalidades avanzadas para la administración de los datos almacenados, lo cual facilita hallar y recuperar archivos perdidos o dañados.</p>
+
+<p>Se basa en una arquitectura Cliente-Servidor que resulta eficaz y fácil de manejar, dada la amplia gama de funciones y características que brinda; copiar y restaurar ficheros dañados o perdidos.</p>
+
+<blockquote>
+  <p>Considere los siguiente al leer este manual:</p>
+
+  <ul>
+    <li>La versión de bacula que se instala es la 5.2</li>
+    <li>Se usara la versión de postgresql 9.2</li>
+    <li>Algunos comandos que se muestran necesitaran de privilegios de superusuario, considere usar <code class="highlighter-rouge">sudo</code> o ejecutar el comando como superusuario</li>
+  </ul>
+</blockquote>
+
+<p>Instalaremos Bacula de acuerdo al siguiente esquema:</p>
+
+<p><img src="/public/images/bacula_arch.png" alt="BaculaARque" /></p>
+
+<ul>
+  <li><strong>Servidor 1</strong>. Tendra los servicios:
+    <ul>
+      <li>bacula-dir</li>
+      <li>bacula-sd</li>
+      <li>PostgreSQL</li>
+      <li>bconsole</li>
+    </ul>
+  </li>
+  <li><strong>Servidor 2</strong>.Nuestro cliente, tendra los servicios:
+    <ul>
+      <li>bacula-fd</li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p>En el diagrama tenemos un 3er servidor con el servicio NFS, considere esto un paso opcional.</p>
+</blockquote>
+
+<h2 id="componentes">Componentes</h2>
+
+<p>Los componentes de Bacula son:</p>
+
+<h3 id="bacula-director">Bacula-director</h3>
+
+<p>Es el servicio (<strong><em>bacula-dir</em></strong>) que gestiona la lógica de los procesos de respaldo y administra los demás servicios que componen <em>Bacula</em>. El servicio <em>bacula-dir</em> hace uso de un servicio de base de datos donde guarda información importante del servicio (Trabajos, Listas de archivos respaldados, etc. Conocido como catalogo) y esta debe estar accesible a <em>bacula-dir</em>.</p>
+
+<p>En el archivo de configuración de este servicio se especifica dónde y cómo acceder al resto de los servicios.</p>
+
+<h3 id="bacula-storage">Bacula-storage</h3>
+
+<p>Este servicio (<strong><em>bacula-sd</em></strong>) es el encargado de manejar los dispositivos de almacenamiento físicos que se usaran para resguardar los respaldos, tales como: discos locales, grabadoras de CD o DVD, unidades de cinta, volúmenes NAS o SAN, etc.</p>
+
+<p>Su fichero de configuración define los dispositivos de almacenamiento disponibles y los directores (<em>bacula-dir</em>) que pueden utilizarlo.</p>
+
+<h3 id="bacula-file">Bacula-file</h3>
+
+<p>Mediante este servicio (<strong><em>bacula-fd</em></strong>) <em>Bacula</em> obtiene los ficheros que necesita respaldar, éste es el componente que hay que instalar en las máquinas que necesiten respaldo. Realiza la función de <strong>agente cliente</strong>.</p>
+
+<h3 id="bacula-console">Bacula-console</h3>
+
+<p>Este es el cliente de administración que se conecta al bacula-dir. En el podemos realizar trabajos de restauración o ejecución de respaldos manuales, monitorear el estatus de los servicios que componen <em>Bacula</em>.</p>
+
+<h2 id="instalacin">Instalación</h2>
+
+<p>En esta ejemplo de instalación manejaremos la siguiente arquitectura.</p>
+
+<h3 id="base-de-datos">Base de datos</h3>
+
+<p>Todo el conjunto de elementos que forman Bacula trabaja en sincronía y es totalmente compatible con bases de datos como <strong>MySQL, SQLite y PostgreSQL</strong>.</p>
+
+<p>Usaremos el gestor de base de datos <strong>PostgreSQL 9.2</strong> en donde se guardara el <strong>catalogo de archivos</strong> que se respaldan y otras variables importantes para <em>Bacula</em>.</p>
+
+<p>Instalación del servicio</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ yum install postgresql-server
+</code></pre>
+</div>
+
+<p>Inicio automático del servicio</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ systemctl enable postgresql.service
+</code></pre>
+</div>
+
+<p>Iniciar las bases de datos y el servicio</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ postgresql-setup initdb
+$ systemctl start postgresql.service
+</code></pre>
+</div>
+
+<p>Configuración del servicio</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/data/postgresql.conf
+listen_addresses = 'localhost'
+port = 5432
+max_connections = 100
+client_min_messages = notice
+log_min_messages = notice
+log_min_error_statement = error
+log_connections = on
+log_line_prefix = '%t %u %d'
+</code></pre>
+</div>
+
+<p>Configuraciones de acceso</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/data/pg_hba.conf
+# TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
+# "local" is for Unix domain socket connections only
+local	all	all	peer
+# IPv4 local connections:
+host	all	all	127.0.0.1/32	md5
+# IPv6 local connections:
+host	all	all	::1/128	md5
+</code></pre>
+</div>
+
+<p>Aplicar los cambios</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ systemctl restart postgresql.service
+</code></pre>
+</div>
+
+<h3 id="instalacin-de-los-componentes">Instalación de los componentes</h3>
+
+<p>Instalamos los paquetes de bacula que necesitamos en el servidor</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ yum install bacula-console bacula-director bacula-storage
+</code></pre>
+</div>
+
+<h4 id="configuracin-de-la-base-de-datos-bacula">Configuración de la base de datos <strong>bacula</strong></h4>
+
+<p>Bacula nos ofrece <em>scripts</em> para configurar la base de datos para el catalogo. Estos comandos son para configurar la base de datos de bacula en <em>Postgresql</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su postgres -c "/usr/libexec/bacula/create_bacula_database postgresql"
+$ su postgres -c "/usr/libexec/bacula/make_bacula_tables postgresql"
+$ su postgres -c "/usr/libexec/bacula/grant_bacula_privileges postgresql"
+</code></pre>
+</div>
+
+<p>Asignamos una contraseña al usuario bacula de postgresql</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su postgres -c "psql"
+postgres=# ALTER USER bacula WITH LOGIN ENCRYPTED PASSWORD 'MiContraseña';
+</code></pre>
+</div>
+
+<p>Otras configuraciones</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ gpasswd -a bacula postgres
+</code></pre>
+</div>
+
+<h3 id="configuracin-de-los-componentes">Configuración de los componentes</h3>
+
+<p>Los archivos de configuración se encuentran en el directorio <em>/etc/bacula</em></p>
+
+<h4 id="bacula-sd">Bacula-sd</h4>
+
+<p>Primero empezamos con la configuración del servicio de almacenamiento, este servicio se encarga de administrar los medios de almacenamiento físicos, el archivo de configuración encuentra nombrado generalmente como <em>bacula-sd.conf</em>.</p>
+
+<p>En la sección <strong>Storage</strong> definimos opciones como el puerto del servicio, directorios donde se alojaran el PID de servicio, cola de tareas, etc. También definimos cuantos trabajos máximos ejecutara el Storage.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Storage {
+  Name = bacula-sd
+  SDPort = 9103
+  WorkingDirectory = "/var/spool/bacula"
+  Pid Directory = "/var/run"
+  Maximum Concurrent Jobs = 50 		     # Ajustar el máximo de trabajos
+}
+</code></pre>
+</div>
+
+<p>En esta parte definimos la contraseña con la cual <em>bacula-dir</em> se conectara con nuestro servicio <em>bacula-sd</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Director {
+  Name = bacula-dir
+  Password = "PasswordSuperSecretoSD"	 # Contraseña de bacula-sd
+}
+</code></pre>
+</div>
+
+<p>Comentamos la siguiente sección.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#Director {
+#  Name = bacula-mon
+#  Password = "dsd"
+#  Monitor = yes
+#}
+</code></pre>
+</div>
+
+<p>En esta sección definimos las características de nuestro <strong>medio de almacenamiento</strong>. Configuramos el <strong>Device</strong> con el nombre de <em>DiscoNFS</em>, sera un medio de almacenamiento de tipo <strong><em>File</em></strong> (este tipo pueden ser medios externos de almacenamiento montados en el sistema).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Device {
+  Name = DiscoNFS					# Nombre de nuestro dispositivo
+  Media Type = File					# Tipo de medio
+  Archive Device = /mnt/backups		# Punto de montaje
+  LabelMedia = yes;
+  Random Access = Yes;
+  AutomaticMount = no;
+  RemovableMedia = no;
+  AlwaysOpen = no;
+}
+</code></pre>
+</div>
+
+<h5 id="punto-de-montaje-nfs">Punto de montaje NFS</h5>
+
+<p>Como parte de la arquitectura de configuración de ejemplo montaremos un recurso compartido <strong>NFS</strong> (previamente configurado) en <em>/mnt/backups</em> que nos servirá para guardar los respaldos.</p>
+
+<blockquote>
+  <p>Considere esto un paso opcional, usted puede solo usar un directorio valido de su sistema para alojar los respaldos.
+<strong>Bacula recomienda</strong> instalar el servicio <em>bacula-sd</em> en un servidor standalone.</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ yum -y install nfs-utils
+</code></pre>
+</div>
+
+<p>Iniciamos los servicios</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>systemctl restart rpcbind
+systemctl start nfs-lock
+systemctl start nfs-idmap
+systemctl start nfs-mountd
+</code></pre>
+</div>
+
+<p>Habilitamos los servicios</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ systemctl enable rpcbind
+$ systemctl enable nfs-lock
+$ systemctl enable nfs-idmap
+$ systemctl enable nfs-mountd
+</code></pre>
+</div>
+
+<p>Montando la carpeta NFS</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo mount -v -t nfs -o sec=sys,proto=tcp 192.168.x.x:/volume/backups /mnt/backups
+</code></pre>
+</div>
+
+<p>Si no tenemos ningún problema procedemos a editar el archivo <strong>fstab</strong> para que el sistema monte la carpeta al iniciar.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/fstab
+192.168.x.x:/volume1/backups    /mnt/backups    nfs    timeo=14,intr,_netdev     0 0
+</code></pre>
+</div>
+
+<h4 id="bacula-dir">Bacula-dir</h4>
+
+<p>Ahora empezaremos la configuración del Bacula director, este se encuentra nombrado como <em>bacula-dir.conf</em>, en este archivo encontraremos las siguientes opciones para configurar.</p>
+
+<p>En la sección <strong>Director</strong> dentro del archivo de configuración, configuramos el máximo de trabajos concurrentes y la contraseña para <em>bacula-dir</em> (Esta contraseña se usa para conectarse desde la consola de administración, <strong>bconsole</strong>).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Director {
+  Name = bacula-dir
+  DIRport = 9101
+  QueryFile = "/etc/bacula/query.sql"
+  WorkingDirectory = "/var/spool/bacula"
+  PidDirectory = "/var/run"
+  Maximum Concurrent Jobs = 1		# Numero máximo de trabajos concurrentes
+  Password = "MiSuperPaswordBaculaDIR"		# Contraseña de bacula-dir
+  Messages = Daemon
+}
+</code></pre>
+</div>
+
+<p>La sección <strong>FileSet</strong> es donde se define los archivos y directorios que se respaldaran, así como los que serán excluidos, se puede declarar mas de un <em>FileSet</em>.</p>
+
+<blockquote>
+  <p><em>FileSet</em> es requerido en la definicion <strong>Job</strong>.</p>
+</blockquote>
+
+<p>Vamos a declarar un <em>FileSet</em> con el nombre <strong><em>Linux Set</em></strong>, este tendra un cifrado de tipo <em>SHA1</em> e ira comprimido con <em>GZIP</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>FileSet {
+  Name = "Linux Set"		# Nombre
+  Include {
+	Options {
+	  signature = SHA1		# Tipo de cifrado
+	  compression = GZIP	# Tipo de compresión
+	}
+	File = /				# Archivos que se respaldaran
+	File = /boot
+  }
+Exclude {					# Archivos que no se respaldaran
+	File = /tmp
+	File = /proc
+	File = /dev
+	File = /sys
+	File = /net
+	File = /misc
+	File = /lost+found
+  }
+}
+</code></pre>
+</div>
+
+<p>En la sección <strong>Schedule</strong>, se especifica el tipo, fecha y hora en que se realizara los trabajos de respaldo. En la variable <strong><em>Run</em></strong> definimos primero el tipo de respaldo (completo, diferencial o incremental) y después su ciclo de ejecución (definido tipo crontab).</p>
+
+<blockquote>
+  <p><em>Schedule</em> es requerido en la definición <strong>Job</strong>.</p>
+</blockquote>
+
+<p>Definamos un <em>schedule</em> con el nombre <strong><em>CicloServidores</em></strong> que ejecutara un tipo de respaldo completo (<em>Full</em>) todos los primer domingo de cada mes, ejecutara un respaldo diferencial (<em>Differential</em>) a partir del segundo al quinto domingo de cada mes y un respaldo incremental de lunes a sábado (<em>Incremental</em>); todos las tareas se ejecutan a las 23 horas.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Schedule {
+  Name = "CicloServidores"						# Nombre
+  Run = Full 1st sun at 23:00                   # Full – Mensual
+  Run = Differential 2nd-5th sun at 23:00		# Diferencial – Semanal
+  Run = Incremental mon-sat at 23:00			# Incremental – Diario
+}
+</code></pre>
+</div>
+
+<p>En la sección <strong>Storage</strong> se configura las credenciales del servicio de almacenamiento (<em>bacula-sd</em>). También se define el dispositivo (<em>device</em>) donde se realizará el respaldo.</p>
+
+<p>Configuramos el <em>Storage</em> con el nombre <strong><em>LocalStorage</em></strong>, configuramos las credenciales de acceso, dirección de red y el dispositivo que configuramos en <em>bacula-sd</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Storage {
+  Name = LocalStorage					# Nombre
+  Address = 192.168.x.x					# No usar localhost
+  SDPort = 9103
+  Password = "PasswordSuperSecretoSD"	# Contraseña de bacula-sd
+  Device = DiscoNFS						# Nombre del dispositivo
+  Media Type = File						# Tipo de medio
+}
+</code></pre>
+</div>
+
+<blockquote>
+  <p>En la directiva <strong>Address</strong> es importante no usar <strong>localhost</strong> o la ip <strong>127.0.0.1</strong>, si tienes corriendo el servicio bacula-sd en el mismo servidor del bacula-dir (como es nuestro caso) usa la IP LAN o nombre de dominio asignado al servidor.</p>
+</blockquote>
+
+<p>En la sección <strong>Catalog</strong> definimos la base de datos que previamente configuramos en <em>PostgreSQL</em>.</p>
+
+<p>Le asignamos el nombre <strong><em>MiCatalogo</em></strong> y configuramos los accesos.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Catalog {
+   Name = MiCatalogo		# Nombre del catalogo
+   dbname = "bacula"; dbuser = "bacula"; dbpassword = "PasswordSuperSecretoDB"
+}
+</code></pre>
+</div>
+
+<p>El recurso <strong>Pool</strong> define el conjunto de volúmenes asociados a un trabajo (<em>Job</em>), es decir es una agrupación de volúmenes de respaldo que se asocian a un trabajo.</p>
+
+<blockquote>
+  <p>Como buena practica podemos crear un <em>Pool</em> por cliente.</p>
+</blockquote>
+
+<p>Creamos un <em>Pool</em> con el nombre <strong><em>PoolCliente01</em></strong> y configuramos de la siguiente forma.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Pool {
+  Name = PoolCliente01			# Nombre
+  Pool Type = Backup			# Tipo backup
+  Recycle = yes					# Bacula reutilizara volumenes expirados.
+  AutoPrune = yes				# Borra los trabajos en volumenes expirados
+  Action On Purge = Truncate	# Trunca los datos cuando se ejecuta purge
+  Volume Retention = 2 months	# Expiracion de datos
+  Maximum Volume Bytes = 10G	# Maxima capacidad por volumen
+  Maximum Volumes = 5			# Numero de volumenes en el pool
+  Label Format = "VolCliente01-"	# Formato para autonombrar los volumenes
+}
+</code></pre>
+</div>
+
+<p>Ahora en la sección <strong>Client</strong> se define al cliente (<em>bacula-fd</em>), aquí se especifica las credenciales que se utilizara para conectarse, también se define la política de retención de datos y procesos/trabajos.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Client {
+  Name = cliente01						# Nombre
+  Address = cliente01.example.com		# IP ó dominio
+  FDPort = 9102
+  Catalog = MiCatalogo					# Catalogo definido
+  Password = "PasswordSuperSecretoFD"	# Contraseña de acceso del cliente
+  File Retention = 2 months				# Días de retención
+  Job Retention = 3 months				# Expira un trabajo
+}
+</code></pre>
+</div>
+
+<p>Y por ultimo (y no menos importante) el recurso <strong>Job</strong>, aquí se define un <strong><em>trabajo</em></strong> de respaldo ó restauración y se definen otros atributos como bajo que cliente se realizará el respaldo (<em>Client</em>), el conjunto de datos a respaldar (<em>FileSet</em>), el esquema de agrupación de los volúmenes (<em>Pool</em>), los horarios de ejecución (<em>Schedule</em>) y donde se almacenaran los datos físicamente (<em>Storage</em>).</p>
+
+<p>Para cada cliente debemos generar dos tipos de <em>Job</em>:</p>
+
+<ul>
+  <li><strong>Backup</strong>. Respaldo</li>
+  <li><strong>Restore</strong>. Restauración</li>
+</ul>
+
+<p>También existe el sección <strong>JobDefs</strong> que nos sirve como una <strong><em>plantilla</em></strong> para usar en los <em>Job</em>, esto es util porque aveces entre los <em>Job</em> pueden compartir ciertos parámetros y no seria necesario declararlos en todos.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># Plantillas para los Job
+JobDefs {
+   Name = "BackupServerLinux"				# Nombre
+   Type = Backup							# Tipo de trabajo
+   Level = Incremental						# Nivel
+   Schedule = "CicloServidores"				# Ciclo de ejecución
+   Storage = LocalStorage					# Donde se guarda el respaldo
+   Messages = Standard						# Tipo de notificación
+   FileSet = "Linux Set"					# Archivos que respaldara
+   Priority = 10							# Prioridad
+   Write Bootstrap = "/var/spool/bacula/%c_server.bsr"	# Log del trabajo
+}
+JobDefs {
+   Name = "RestoreServerLinux"		# Nombre
+   Type = Restore					# Tipo de trabajo
+   Storage = LocalStorage
+   FileSet = "Linux Set"
+   Messages = Standard
+   Where = /tmp/bacula-restores		# Directorio de restauración
+}
+#
+# Definicion de trabajos
+#
+Job {
+   Name = "BackupCliente01"			# Nombre
+   JobDefs = "BackupServerLinux"	# Plantilla de Job
+   Client = cliente01				# Cliente que lo usara
+   Pool = PoolCliente01				# Pool de volumenes que usara
+}
+Job {
+   Name = "RestoreCliente01"
+   JobDefs = "RestoreServerLinux"
+   Client = cliente01
+   Pool = PoolCliente01
+}
+</code></pre>
+</div>
+
+<p>En la variable <strong>Where</strong> del <em>JobDefs</em>“RestoreServerLinux” es donde señalamos en que directorio del cliente se va restaurar los archivos.</p>
+
+<h5 id="firewall">Firewall</h5>
+
+<p>Tenemos que abrir los puertos de los servicios bacula-dir (<strong>9101</strong>) y bacula-sd (<strong>9103</strong>) en protocolo <strong>TCP</strong>.</p>
+
+<p>Iptables:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 9101 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 9103 -j ACCEPT
+$ service iptables restart
+</code></pre>
+</div>
+
+<p>Firewalld:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ firewall-cmd --zone=public --add-service=bacula --permanent
+$ firewall-cmd --reload
+</code></pre>
+</div>
+
+<h4 id="bacula-fd-cliente">Bacula-fd (Cliente)</h4>
+
+<p>Una vez terminado con la configuración del director y haber declarado los clientes que se conectaran para ser respaldados procedemos a instalar en los clientes (bacula-fd).</p>
+
+<h4 id="instalacin-1">Instalación</h4>
+
+<p>La instalación de <strong>Bacula-fd</strong> es diferente entre el centos 6.x y 5.x, esta radica en que en CentOS 5.x no se encuentra en los repositorios conocidos y se tiene que instalar desde las fuentes.</p>
+
+<h5 id="en-centos-6x-7">En Centos 6.x, 7</h5>
+
+<p>En centos 6.x y 7 podemos encontrar bacula-fd desde los repositorios base, esto hace mas rapida la instalación y configuraciones del cliente.</p>
+
+<p>Instalación del servicio</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ yum -y install bacula-client
+</code></pre>
+</div>
+
+<h5 id="en-centos-5x">En Centos 5.x</h5>
+
+<p>Como se menciono anteriormente en CentOS 5.x realizaremos la instalación desde la fuente de binarios. Haremos los siguiente:</p>
+
+<p>Instalación de compiladores al sistema.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ yum install gcc gcc-c++ autoconf automake
+</code></pre>
+</div>
+
+<p>Descargamos las fuentes de Bacula y descomprimimos la fuente.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ wget http://sourceforge.net/projects/bacula/files/bacula/5.0.2/bacula-5.0.2.tar.gz/download
+$ tar -zxf bacula-5.0.2.tar.gz
+</code></pre>
+</div>
+
+<p>Nos cambiamos al directorio donde descomprimimos las fuentes, creamos una variable de sistema <strong>CFLAGS</strong> que nos servirá en la compilación y después procedemos a configurar la instalación y compilar.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cd bacula-5.0.2
+$ CFLAGS="-g -Wall"
+$ ./configure --sbindir=/usr/sbin --sysconfdir=/etc/bacula --with-pid-dir=/var/run --with-subsys-dir=/usr/libexec/bacula --with-working-dir=/var/spool/bacula --enable-client-only
+$ make
+$ make install
+</code></pre>
+</div>
+
+<p>Configuraciones de arranque del servicio bacula-fd.</p>
+
+<blockquote>
+  <p>Agregar la siguiente linea: <code class="highlighter-rouge"># chkconfig: - 87 26</code> en el archivo <em>/etc/init.d/bacula-fd</em></p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cp /usr/sbin/bacula-fd /etc/init.d/
+$ vim /etc/init.d/bacula-fd
+#! /bin/sh
+# chkconfig: - 87 26
+#
+# bacula This shell script takes care of starting and stopping
+# the bacula daemons.
+.......
+</code></pre>
+</div>
+
+<h4 id="configuracin">Configuración</h4>
+
+<p>La configuración están en  <em>bacula-fd.conf</em>. Aquí definimos una clave de acceso para el cliente. Agregamos la contraseña que definimos en la sección <em>Client</em> del <em>bacula-dir</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Director {
+  Name = bacula-dir
+  Password = "PasswordSuperSecretoFD" 		# Contraseña del cliente
+}
+</code></pre>
+</div>
+
+<p>Se comenta esta sección.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#Director {
+#  Name = bacula-mon
+#  Password = "vMN"
+#  Monitor = yes
+#}
+</code></pre>
+</div>
+
+<p>Activando el servicio.</p>
+
+<p>En CentOS 7</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ systemctl enable bacula-fd
+$ systemctl start bacula-fd
+</code></pre>
+</div>
+
+<p>En CentOS 6.x y 5.x</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ chkconfig bacula-fd on
+$ service bacula-fd start
+</code></pre>
+</div>
+
+<p>#####Firewall</p>
+
+<p>Configuraciones de firewall, abrimos el puerto 9102.</p>
+
+<p>Iptables</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 9102 -j ACCEPT
+$ service iptables restart
+</code></pre>
+</div>
+
+<p>Firewalld</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ firewall-cmd --permanent --zone=public --add-port=9102/tcp
+</code></pre>
+</div>
+
+<h4 id="bacula-console-consola">Bacula-console (Consola)</h4>
+
+<p>Existen varias opciones para administrar Bacula, una de ellas es por medio de <strong>bconsole</strong>, donde por medio de lineas de comando interactuamos con <em>bacula-dir</em>.</p>
+
+<p>Este programa la tenemos que instalar desde el equipo donde tengamos pensado realizar las tareas de administrador, no necesariamente se tiene que alojar en el servidor.</p>
+
+<p>Instalación desde repositorios. (RHEL, CentOS, Fedora)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ yum install bacula-console
+</code></pre>
+</div>
+
+<p>En su archivo de configuración agregamos la contraseña de acceso de <em>bacula-dir</em> que definimos anteriormente.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Director {
+  Name = bacula-dir
+  DIRport = 9101
+  address = 192.168.x.x						# IP ó dominio
+  Password = "MiSuperPaswordBaculaDIR"		# Contraseña de bacula-dir
+}
+</code></pre>
+</div>
+
+<h4 id="administracin-bsica">Administración básica</h4>
+
+<h5 id="generar-un-respaldo-manualmente">Generar un respaldo manualmente</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ bconsole
+* run 								# Ejecutamos un Job de respaldo (backup)
+Select Job resource (1-3): 1 		# Seleccionamos el Job de backup del cliente
+OK to run? (yes/mod/no): yes		# Ejecutamos la tarea
+Job queued. JobId=1
+* exit
+</code></pre>
+</div>
+
+<p>Las tareas de respaldo se irán generando automáticamente de acuerdo a las tareas que se definieron en la configuraciones del servicio bacula-dir.</p>
+
+<h5 id="generar-una-restauracin">Generar una restauración</h5>
+
+<p>Las restauraciones se pueden realizar desde varios puntos o imágenes de archivos que se hayan generado.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ bconsole
+* restore						# Ejecutamos una tarea de restauración
+To select the JobIds, you have the following choices:
+	1: List last 20 Jobs run
+	..
+	5: Select the most recent backup for a client
+	..
+	13: Cancel
+Select item: (1-13): 5 			# Seleccionamos el 5 para generar el mas reciente.
+Defined Clients:
+	 1: cliente01
+Select the Client (1-11): 1		# Seleccionamos al cliente
+$ ls 							# Listamos los archivos respaldados
+home/
+$ mark home						# Marcamos los que deseemos restaurar
+5 files marked.
+$ done							# Terminamos de seleccionar
+OK to run? (yes/mod/no): yes 	# Ejecutamos la tarea configurada
+Job queued. JobId=2
+* exit
+</code></pre>
+</div>
+
+<h2 id="fuentes">Fuentes</h2>
+
+<ul>
+  <li><a href="http://wiki.bacula.org/doku.php">bacula.org</a></li>
+  <li><a href="http://www.server-world.info/en/note?os=CentOS_6&amp;p=bacula">server-world.info</a></li>
+</ul>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x/">
+            Aplicación de parches en VMware ESXi 5.x
+            <small>20 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live/">
+            Clonación y migración en tiempo real de instancias virtuales Qemu/KVM
+            <small>09 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

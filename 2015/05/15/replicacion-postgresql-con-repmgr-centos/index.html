@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Administrando replicación en PostgreSQL con REPMGR &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Administrando replicación en PostgreSQL con REPMGR</h1>
+  <span class="post-date">15 May 2015</span>
+  <p>Como sabemos en PostgreSQL podemos tener una configuracion de replicación maestro-esclavo (<em>hot-standby</em>) de forma facil, pero esta configuración no nos provee un <strong>failover</strong> o recuperación del maestro. Tenemos varias <a href="https://wiki.postgresql.org/wiki/Clustering">alternativas</a> que junto con PostgreSQL nos pueden proveer estas características.</p>
+
+<p>Sin embargo aquí hablaremos de <a href="http://www.repmgr.org">REPMGR</a> que es una herramienta para poder administrar la replicación <em>hot-standby</em> de PostgreSQL, nos ofrece características como poder cambiar de modo esclavo a maestro de forma manual ó automática, capacidad de que los esclavos del cluster sigan al nuevo maestro y poder recuperar al maestro.</p>
+
+<p>En esta publicación realizaremos los siguientes ejercicios:</p>
+
+<ul>
+  <li>Configurar nodo maestro y dos esclavos</li>
+  <li>Realizar failover manual</li>
+  <li>Promover un nodo esclavo a maestro</li>
+  <li>Hacer que los nodos esclavo sigan al nuevo maestro</li>
+  <li>Recuperar el nodo maestro como esclavo</li>
+</ul>
+
+<h2 id="instalacin">Instalación</h2>
+
+<blockquote>
+  <p>En esta publicación manejaremos <strong>PostgreSQL 9.2</strong> y ** CentOS 6.x**</p>
+</blockquote>
+
+<p>En <strong>todos</strong> nuestros nodos debemos instalar los siguientes paquetes:</p>
+
+<ul>
+  <li>postgresql92-server</li>
+  <li>postgresql92-contrib</li>
+  <li>repmgr92</li>
+  <li>rsync</li>
+</ul>
+
+<p>Estos paquetes se encuentra dentro del <a href="http://yum.postgresql.org/repopackages.php">repositorio oficial de postgresql</a> (ha excepción de <em>rsync</em>) que debes instalar antes para poder encontrar los paquetes que se listan arriba.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># yum install postgresql92-server postgresql92-contrib repmgr92 rsync -y
+# chkconfig postgresql-9.2 on
+# service postgresql-9.2 initdb
+</code></pre>
+</div>
+
+<p>Antes de empezar, tenga encuentra la siguiente estructura de configuración de red de los nodos.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>IP</th>
+      <th>Hostname</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>nodo1</td>
+      <td>192.168.1.1</td>
+      <td>nodo1.example.com</td>
+    </tr>
+    <tr>
+      <td>nodo2</td>
+      <td>192.168.1.2</td>
+      <td>nodo2.example.com</td>
+    </tr>
+    <tr>
+      <td>nodo3</td>
+      <td>192.168.1.3</td>
+      <td>nodo3.example.com</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>El nodo <strong><em>maestro</em></strong> sera el <strong><em>nodo1</em></strong> y los demás los esclavos (standby).
+[[more]]</p>
+
+<h2 id="configuraciones">Configuraciones</h2>
+
+<h3 id="configuraciones-del-nodo-maestro">Configuraciones del nodo maestro</h3>
+
+<p>Iniciamos el servicio en el nodo1</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># service postgresql-9.2 start
+</code></pre>
+</div>
+
+<p>Creamos un usuario y la base de datos que usara <em>REPMGR</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>CREATE ROLE repmgr_usr LOGIN SUPERUSER;
+CREATE DATABASE repmgr_db OWNER repmgr_usr;
+</code></pre>
+</div>
+
+<p>Instalamos las funciones necesarias para la base de datos de <em>REPMGR</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+$ psql -f /usr/pgsql-9.2/share/contrib/repmgr_funcs.sql repmgr_db
+</code></pre>
+</div>
+
+<p>Configuración de accesos al servicio <em>postgresql</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+# Acceso nodo1
+host    repmgr_db       repmgr_usr  192.168.1.1/32         trust
+host    replication     repmgr_usr  192.168.1.1/32         trust
+# Acceso nodo2
+host    repmgr_db       repmgr_usr  192.168.1.2/32         trust
+host    replication     repmgr_usr  192.168.1.2/32         trust
+# Acceso nodo3
+host    repmgr_db       repmgr_usr  192.168.1.3/32         trust
+host    replication     repmgr_usr  192.168.1.3/32         trust
+</code></pre>
+</div>
+
+<blockquote>
+  <p>En la publicación estaremos usando <a href="http://www.vim.org/">VIM</a> para editar los archivos de configuración desde terminal. Siéntase en libertad de usar la que mas le acomode (gedit, emacs, nano, etc).</p>
+</blockquote>
+
+<p>Configuraciones generales del servicio.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/9.2/data/postgresql.conf
+listen_addresses='*'
+wal_level = 'hot_standby'
+archive_mode = on
+archive_command = 'cd .'
+max_wal_senders = 10
+wal_keep_segments = 5000
+hot_standby = on
+shared_preload_libraries = 'repmgr_funcs'
+</code></pre>
+</div>
+
+<p>Reiniciar el servicio para cargas las nuevas configuraciones</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># service postgresql-9.2 restart
+</code></pre>
+</div>
+
+<h3 id="configuraciones-adicionales">Configuraciones adicionales</h3>
+
+<p>Estas configuraciones nos aseguran la conectividad entre los nodos y es importante realizar para el correcto funcionamiento del cluster.</p>
+
+<h4 id="configuracin-de-hostnames-opcional">Configuración de hostnames (opcional)</h4>
+
+<p>Si no contamos con un servicio de dominio (DNS) para poder asignarle a los servidores un dominio valido podemos usar la resolución por medio del archivo <em>/etc/hosts</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># vim /etc/hosts
+192.168.1.1 nodo1.example.com
+192.168.1.2 nodo2.example.com
+192.168.1.3 nodo3.example.com
+</code></pre>
+</div>
+
+<blockquote>
+  <p>Asegure de hacer la misma configuración para todos los nodos del cluster.</p>
+</blockquote>
+
+<h4 id="inicio-de-sesin-ssh-private-key">Inicio de sesión SSH private-key</h4>
+
+<p>Esta configuración es indispensable, ya que los archivos base de <em>postgresql</em> se van ha sincronizar con la herramienta <em>rsync</em> y este utilizara este tipo de acceso con los nodos.</p>
+
+<p>Siguiendo en el <em>nodo1</em> configuramos de las siguiente forma, iniciamos una sesión del usuario <strong><em>postgres</em></strong> y generamos sus llaves de acceso y lo agregamos entre las llaves autorizadas.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+$ ssh-keygen
+$ cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+$ chmod 600 ~/.ssh/authorized_keys
+$ exit
+</code></pre>
+</div>
+
+<blockquote>
+  <p>Cuando genere la llave no le asigne frase de acceso (passphrase).</p>
+</blockquote>
+
+<p>Ahora vamos a enviarle las llaves (publica y privada) y la lista de llaves autorizadas a todos los nodos que estarán en el cluster.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># rsync -avz ~postgres/.ssh/authorized_keys nodo2.example.com:~postgres/.ssh/
+# rsync -avz ~postgres/.ssh/authorized_keys nodo3.example.com:~postgres/.ssh/
+
+# rsync -avz ~postgres/.ssh/id_rsa* nodo2.example.com:~postgres/.ssh/
+# rsync -avz ~postgres/.ssh/id_rsa* nodo3.example.com:~postgres/.ssh/
+</code></pre>
+</div>
+
+<blockquote>
+  <p>Note que las llaves enviadas son para el usuario <em>postgres</em>, este usuario es el que se va conectar a otros nodos usando ssh (rsync) sin requerir contraseña.</p>
+</blockquote>
+
+<h3 id="registrando-el-nodo-maestro">Registrando el nodo maestro</h3>
+
+<p>Antes de registrar al nodo maestro necesitamos configurar la herramienta <em>REPMGR</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># vi /etc/repmgr/9.2/repmgr.conf
+cluster=mi_cluster
+node=1
+node_name=nodo1
+conninfo='host=nodo1.example.com dbname=repmgr_db user=repmgr_usr'
+logfile='/tmp/repmgr-9.2.log'
+</code></pre>
+</div>
+
+<p>Ahora registramos el nodo maestro de la siguiente forma.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf master register --verbose
+</code></pre>
+</div>
+
+<h3 id="registrando-nodos-standby-esclavos">Registrando nodos standby (esclavos)</h3>
+
+<blockquote>
+  <p>Estas configuraciones se realizan en cada servidor esclavo del cluster.</p>
+</blockquote>
+
+<p>Estando conectado en el nodo esclavo (nodo2) lo primero es clonar al nodo maestro (nodo1) y luego <em>REPMGR</em> se encargara de configurarlo como esclavo (recovery.conf).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ /usr/pgsql-9.2/bin/repmgr -d repmgr_db -U repmgr_usr standby clone nodo1.example.com --verbose
+</code></pre>
+</div>
+
+<p>Iniciamos el servicio postgresql.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># service postgresql-9.2 start
+</code></pre>
+</div>
+
+<p>Editamos la configuración de <em>REPMGR</em> (configuración del <strong>nodo2</strong>).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># vim /etc/repmgr/9.2/repmgr.conf
+cluster=mi_cluster
+node=2
+node_name=nodo2
+conninfo='host=nodo2.example.com dbname=repmgr_db user=repmgr_usr'
+logfile='/tmp/repmgr-9.2.log'
+</code></pre>
+</div>
+
+<p>Ahora registramos nuestro esclavo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf standby register --verbose
+</code></pre>
+</div>
+
+<p>Podemos verificamos el registro del nodo de la siguiente manera.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf cluster show
+Role      | Connection String 
+* master  | host=nodo1.example.com user=repmgr_usr dbname=repmgr_db
+standby   | host=nodo2.example.com user=repmgr_usr dbname=repmgr_db
+</code></pre>
+</div>
+
+<h2 id="failover-manual">Failover manual</h2>
+
+<p>Ahora realizamos el siguiente ejercicio, haremos que el <em>nodo1</em> se detenga para promover al <em>nodo2</em> a maestro y después hacer que los demás nodos sigan al nuevo maestro (nodo 2).</p>
+
+<h3 id="promover-al-nodo2-a-maestro">Promover al nodo2 a maestro</h3>
+
+<p>Antes de promover este nodo detenemos el nodo maestro para simular la baja del servidor.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># poweroff
+</code></pre>
+</div>
+
+<p>Ahora nos conectamos al <em>nodo2</em> y vamos a promoverlo como nodo maestro.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf --verbose standby promote
+$ exit
+# service postgresql-9.2 restart
+</code></pre>
+</div>
+
+<h3 id="reconfigurar-los-nodos-para-seguir-al-nuevo-maestro">Reconfigurar los nodos para seguir al nuevo maestro</h3>
+
+<p>Realizamos lo siguiente en cada <strong><em>nodo esclavo</em></strong> para que puedan seguir al nuevo nodo maestro.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf standby follow 
+</code></pre>
+</div>
+
+<h3 id="volver-al-nodo1-a-esclavo">Volver al nodo1 a esclavo</h3>
+
+<p>Detener servicio postgresql, al iniciar el servidor maestro es posible que este inicie automáticamente.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># service postgresql-9.2 stop
+</code></pre>
+</div>
+
+<p>Clonar a partir del nuevo maestro.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -d repmgr_db -U repmgr_usr --verbose standby clone node2.example.com --ignore-rsync-warning --force
+$ exit
+</code></pre>
+</div>
+
+<p>Iniciamos el servicio</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># service postgresql-9.2 start
+</code></pre>
+</div>
+
+<h3 id="tips-extras">Tips extras</h3>
+
+<p>Revisar el estado de replicación en nuestro servidor maestro</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+$ psql -x -c "select * from pg_stat_replication;"
+</code></pre>
+</div>
+
+<h2 id="resolucin-de-problemas">Resolución de problemas</h2>
+
+<ul>
+  <li>Host key verification failed. Error al clonar con el nodo maestro</li>
+</ul>
+
+<p>Es posible que sea la primera ves que intentas una conexión <strong><em>ssh</em></strong> con el servidor maestro.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+$ ssh nodo1.example.com
+The authenticity of host 'nodo2.example.com (192.168.1.2)' can't be established.
+RSA key fingerprint is xx:8e:2e:e9:d0:xx:5d:7b:48:d3:25:xx:18:50:b7:xx.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'nodo1.example.com' (RSA) to the list of known hosts.
+Welcome to your server.
+</code></pre>
+</div>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x/">
+            Aplicación de parches en VMware ESXi 5.x
+            <small>20 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live/">
+            Clonación y migración en tiempo real de instancias virtuales Qemu/KVM
+            <small>09 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Mejorando el rendimiento de PostgreSQL (Linux) &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Mejorando el rendimiento de PostgreSQL (Linux)</h1>
+  <span class="post-date">15 Jul 2014</span>
+  <p>En estos dias me dado a la tarea de explorar las opciones de optimizacion que tiene PostgreSQL, ya se tenia hecho una optimizacion en la configuracion general de PostgreSQL (postgresql.conf) de acuerdo con el hardware que tiene el servidor, esto demostro una mejora en el arranque del servicio y en los tiempos de respuesta de las consultas sql. Siempre uso la herramienta <a href="https://github.com/gregs1104/pgtune">pgtune</a> para optimizar estos parametros importantes, como por ejemplo el <strong><em>shared_buffers</em></strong>, <strong><em>effective_cache_size</em></strong> y otros demas importantes.</p>
+
+<p>Existen dos vertientes por las cuales podemos explorar alguna optimizacion en nuestro sistema gestor de bases de datos (<strong>SGBD</strong>):</p>
+
+<ol>
+  <li><strong>A nivel de consulta</strong>. Que tiene mucho que ver en el empleo de tecnicas al realizar las consultas, como manejo de <em>indices</em>, correcto uso de <em>JOINs</em>, etc.</li>
+  <li>y <strong>a nivel de hardware o sistema operativo</strong>, que es en cuanto a proveer una optimizacion a nivel de hardware ó configuraciones en el sistema operativo que beneficien al SGBD.</li>
+</ol>
+
+<p>Actualmente estamos en una etapa de auge de las SGBD de tipo NoSQL, sumamente rapidos y eficaces, muchos de los cuales vemos que sus datos estan en tiempo de ejecucion en espacio de RAM en el sistema operativo (SO). Todo acceso de datos en RAM sabemos por demas que es sumamente rapida, pero tienen la gran desventaja de que es un espacio volatil y en un SGDB es muy importante que los datos se conserven y puedan recuperarse a eventos como apagados repentinos del SO.</p>
+
+<p>Partiendo de la idea de que en RAM los accesos a datos son sumamente rapidos, en la investigacion (o googleada) encontre un articulo interesante titulado <a href="http://www.appneta.com/blog/postgresql-ram-drive/">“Adventures with a PostGreSQL RAM Drive”</a>, que en conclusion el autor <strong>Alan Leung</strong> juega con el <strong>Write-Ahead Log</strong> ó <a href="http://en.wikipedia.org/wiki/Write-ahead_logging">WAL</a> sacandole ventaja poniendolo en RAM, ¿y esto porque?</p>
+
+<p><strong>WAL</strong> le permite a PostgreSQL mantener la atomicidad en los datos, este registra cada evento que es aplicado a los datos, esto permite recuperar datos en caso de un apagon de servidor. <strong>WAL</strong> viene activado por defecto y no es conveniente desactivarlo.</p>
+
+<p>Ya que cada transaccion es registrada en <strong>WAL</strong> esto genera un tiempo extra de espera en cada transaccion y tener un mejor tiempo de I/O depende mucho de la configuracion y tipo de disco duro donde este alojado <strong>WAL</strong> (el directorio es <strong><em>pg_xlog</em></strong>) y los archivos de las bases de datos (el directorio es <strong>pg_data</strong>)</p>
+
+<p>En el <a href="http://www.postgresql.org/docs/9.1/static/wal-internals.html">sitio oficial</a> de postgresql en el segmento de <strong>WAL</strong> nos comenta:</p>
+
+<blockquote>
+  <p>It is advantageous if the log is located on a different disk from the main database files.</p>
+</blockquote>
+
+<p>Esto suena logico, si mantenemos por separado la carga de I/O del <strong>WAL</strong> y de los datos debemos tener un mejor tiempo en cada transaccion. Esto lo prueba <strong>Alan Leung</strong> y nos muestra una mejora del 5% de TPS (<a href="http://en.wikipedia.org/wiki/Transactions_per_second">Transactions per second</a>).</p>
+
+<p>Ahora realizamos la misma accion y pero en este caso movemos los registros WAL a espacio de RAM en teoria deberia de mejorar resultados en TPS, y esto igual lo prueba Alan Leung, teniendo un incremento del 70% del rendimiento en TPS como resultado. Increiblemente ahora tenemos un mejor y destacable incremento de performance.</p>
+
+<h2 id="probando-la-teoria">Probando la teoria</h2>
+
+<p>Yo he realizado igual las mismas pruebas que Alan Leung, he montado CentOS virtualizado con lo siguiente:</p>
+
+<ul>
+  <li>CentOS 6.5 x86_64</li>
+  <li>1GB de RAM</li>
+  <li>8G de Disco virtual</li>
+  <li>PostgreSQL 9.2</li>
+</ul>
+
+<p>Usare <code class="highlighter-rouge">pgbench</code> para realizar pruebas de rendimiento a PostgreSQL, he realizado la primera prueba manteniendo WAL en disco duro obteniendo el siguiente resultado:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ pgbench -h localhost -p 5432 -U dbadmin -c 10 -t 10000 testdb
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+tps = 590.213182 (including connections establishing)
+tps = 590.281717 (excluding connections establishing)
+</code></pre>
+</div>
+
+<p>Vemos que tenemos aprox unos 590tps. Ahora ejecutare la misma prueba pero ahora con WAL en espacio de RAM:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ pgbench -h localhost -p 5432 -U dbadmin -c 10 -t 10000 testdb
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+tps = 1982.478380 (including connections establishing)
+tps = 1983.162671 (excluding connections establishing)
+</code></pre>
+</div>
+
+<p>Nos da como resultado unos 1983tps, vaya que el performance a incrementado 3 veces, sumamente valioso.</p>
+
+<p>Obviamente queda demostrado que mover a espacio de <em>RAM</em> a WAL nos incrementa el performance, hasta este punto no estamos moviendo nuestros datos a <em>RAM</em>, lo cual queda en espacio de disco y esta a salvo, pero tener a WAL en <em>RAM</em> arriesgamos mucho nuestro proceso de atomicidad y es muy importante tenerlo integro en caso de desastres.</p>
+
+<p>Esto me deja pensando, ¿es realmente factible tener nuestro WAL en <em>RAM</em>? hablando en disponibilidad de recursos, WAL pesa entre unos 16MB minimo a 1G aproximadamente y esto depende mucho de las bases de datos alojados en el servicio PostgreSQL, tambien sabemos que si tenemos contratado algun servicio <strong>VPS</strong> el costo mas alto siempre es el de <em>RAM</em>. Asi bien implementar este performance queda a decision de <strong><em>la disponibilidad de los recursos de RAM y hasta de tipo monetarios</em></strong>.</p>
+
+<p>Supongamos que tenemos “toda” la RAM y que eso no es problema, continuemos con las pruebas.</p>
+
+<p>Ahora necesitamos un proceso FAILOVER (tolerancia a fallos), que nos permita recuperar y resguardar nuestro WAL a un disco duro en caso de algun apagon y este nos haga perder los datos que estan en RAM.</p>
+
+<p>La propuesta es:</p>
+
+<ul>
+  <li>Configurar dos servicios PostgreSQL y replicar en modo maestro-esclavo.</li>
+  <li>Usando los script de inicio de PostgreSQL montaremos la particion en espacio de RAM para alojar a WAL.</li>
+</ul>
+
+<h2 id="replicacion-de-postgresql">Replicacion de PostgreSQL</h2>
+
+<p>Tener una instancia esclava del servidor maestro nos permite tener una copia de WAL en otra instancia que este en un espacio de disco duro para poder conservarlo en caso de un apagado repentino del servidor.</p>
+
+<p>Vamos a configurar una replicacion de tipo <a href="http://www.postgresql.org/docs/9.2/static/warm-standby.html">“Log-Shipping Standby Servers”</a>.</p>
+
+<blockquote>
+  <p>En este caso lo haremos las pruebas en el mismo servidor y en el mismo disco duro. Podemos tener el esclavo en otra instancia de servidor o tenerlo en otro disco en el mismo servidor.</p>
+</blockquote>
+
+<h3 id="configuracion-del-servicio-maestro">Configuracion del servicio maestro.</h3>
+
+<p>Editamos el archivo principal de configuracion los paremetros para <em>WAL</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/9.2/data/postgresql.conf
+wal_level = hot_standby
+max_wal_senders = 1
+wal_keep_segments = 50
+archive_command = 'cp %p /tmp/backup/db001/%f'
+archive_mode = on
+</code></pre>
+</div>
+
+<p>Editamos el archivo de configuracion de accesos.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+host    replication     postgres        127.0.0.1/32            trust
+host    replication     postgres        ::1/128                 trust
+</code></pre>
+</div>
+
+<p>Reiniciamos el servidor maestro.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>service postgresql-9.2 restart
+</code></pre>
+</div>
+
+<p>Ahora crearemos un <strong>snapshot</strong> de nuestro servidor maestro para el servidor esclavo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+-bash-4.1$ psql -c "SELECT pg_start_backup('mi_backup');"
+-bash-4.1$ cp -rvf /var/lib/pgsql/9.2/data /tmp/
+-bash-4.1$ psql -c "SELECT pg_stop_backup();"
+-bash-4.1$ exit
+</code></pre>
+</div>
+
+<h3 id="configuraciones-del-servicio-esclavo">Configuraciones del servicio esclavo</h3>
+
+<p>Hacemos una copia del script de inicio del servicio PostgreSQL del sistema y los llamaremos <strong><em>postgresql-slave9.2</em></strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cp /etc/init.d/postgresql-9.2 /etc/init.d/postgresql-slave9.2
+</code></pre>
+</div>
+
+<p>Modificamos los siguientes parametros en el script. Usaremos el puerto 5433 y el directorio <strong><em>/var/lib/pgsql/9.2/data_slave</em></strong> para el servicio esclavo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/init.d/postgresql-slave9.2
+PGPORT=5433
+PGDATA=/var/lib/pgsql/9.2/data_slave
+PGLOG=/var/lib/pgsql/9.2/pgstartup_slave.log
+</code></pre>
+</div>
+
+<p>Agregamos el script al sistema de inicio y lo activamos.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ chkconfig --add postgresql-slave9.2
+$ chkconfig postgresql-slave9.2 on
+</code></pre>
+</div>
+
+<p>Copiamos el <strong><em>snapshot</em></strong> maestro al que sera el directorio del servicio esclavo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres
+-bash-4.1$ mv /tmp/data /tmp/data_slave
+-bash-4.1$ cp -rvf /tmp/data_slave /var/lib/pgsql/9.2/
+</code></pre>
+</div>
+
+<p>Editamos estos parametros minimos para nuestra nueva instancia.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/9.2/data_slave/postgresql.conf
+listen_addresses = '*'
+port = 5433
+wal_level = hot_standby
+archive_mode = on
+archive_command = '/bin/true'
+hot_standby = on
+</code></pre>
+</div>
+
+<p>Podemos usar nuestra politica de acceso que tenemos en nuestra instancia maestra a la nueva instancia esclava si asi lo consideramos optimo, solo que tendremos que comentar las lineas de <strong>replication</strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+#host    replication     postgres        127.0.0.1/32            trust
+#host    replication     postgres        ::1/128                 trust
+</code></pre>
+</div>
+
+<p>Eliminar el <em>postmaster.pid</em> y los archivos xlog</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ rm -f /var/lib/pgsql/9.2/data_slave/postmaster.pid
+$ rm -r /var/lib/pgsql/9.2/data_slave/pg_xlog/*
+</code></pre>
+</div>
+
+<p>Creamos el archivo <em>recovery.conf</em> que es indispensable para que nuestro servicio esclavo
+empieze a recibir la replicacion.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cp /usr/pgsql-9.2/share/recovery.conf.sample /var/lib/pgsql/9.2/data_slave/recovery.conf
+$ chown postgres.postgres /var/lib/pgsql/9.2/data_slave/recovery.conf
+</code></pre>
+</div>
+
+<p>Agregamos las siguiente configuracion a <em>recovery.conf</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /var/lib/pgsql/9.2/data_slave/recovery.conf
+standby_mode = 'on'
+primary_conninfo = 'host=127.0.0.1 port=5432 user=postgres'
+trigger_file = '/tmp/postgresql.slave.trigger'
+restore_command = 'cp /tmp/backup/db001/%f \"%p\"'
+</code></pre>
+</div>
+
+<p>Iniciamos el servicio esclavo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ service postgresql-slave9.2 start
+</code></pre>
+</div>
+
+<p>Hasta este punto debemos tener dos servicios completamente replicados, probemos creando una tabla en el maestro y revisemos si en nuestro esclavo esta replicado (recordemos que el esclavo esta en modo <strong><em>read-only</em></strong>).</p>
+
+<p>Importante revisar en los registros(<strong><em>/var/lib/pgsql/9.2/data_slave/pg_log/</em></strong>) de inicio del esclavo el siguiente mensaje:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>2014-07-00 00:00:00.177 UTC [-1993-] LOG:  streaming replication successfully connected to primary
+</code></pre>
+</div>
+
+<h3 id="configuracion-de-wal-en-ram">Configuracion de WAL en RAM.</h3>
+
+<p>Esta idea es de contener en RAM los archivos WAL (<strong>pg_xlog</strong>) y haremos lo siguiente:</p>
+
+<ul>
+  <li>El servidor maestro tendra el directorio <strong>pg_xlog</strong> en RAM, lo cual crearemos un enlace simbolico del directorio <strong>pg_xlog</strong> que apunte a RAM.</li>
+  <li>El servidor esclavo tendra el directorio <strong>pg_xlog</strong> en Disco duro.</li>
+</ul>
+
+<p>Si tenemos un servicio de replicacion en buen estado apagando el servidor debemos tener una copia exacta de lo que contenemos en RAM en el disco duro. En consecuencia debemos:</p>
+
+<ul>
+  <li>Adecuar el arranque del maestro para que este recupere su WAL apartir del esclavo antes de iniciar copiandolo en la particion que esta en RAM.</li>
+  <li>El esclavo al iniciar realiza una comprobacion para saber si contienen el mismo WAL para poder arrancar, lo cual es el mismo ya que es una copia del mismo.</li>
+</ul>
+
+<p>Creamos el directorio donde alojaremos la particion RAM.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ mkdir /mnt/ramdisk
+$ chown postgres.postgres /mnt/ramdisk
+</code></pre>
+</div>
+
+<p>Configuramos el <strong>fstab</strong> para montar la particion al inicio del sistema.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/fstab
+tmpfs   /mnt/ramdisk    tmpfs   size=1024M  0 0
+</code></pre>
+</div>
+
+<p>Probemos la configuracion fstab montando todas las particiones declaradas en la configuracion con <code class="highlighter-rouge">mount</code> y verificamos con <code class="highlighter-rouge">df</code>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ mount -a
+$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.9G  4.8G  2.7G  64% /
+tmpfs           939M     0  939M   0% /dev/shm
+tmpfs             1G    4M  1020M   1% /mnt/ramdisk
+</code></pre>
+</div>
+
+<p>Detenemos los servicios PostgreSQL.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ service postgresql-9.2 stop &amp;&amp; service postgresql-slave9.2 stop
+</code></pre>
+</div>
+
+<p>Ahora vamos a mover el directorio <strong><em>pg_xlog</em></strong> del servicio maestro a la particion RAM.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cd /var/lib/pgsql/9.2/data/
+data$ mv pg_xlog /mnt/ramdisk/
+data$ chown postgres.postgres -R /mnt/ramdisk/pg_xlog
+</code></pre>
+</div>
+
+<p>Creamos un enlace directo llamado <strong><em>pg_xlog</em></strong> que apunte a nuestra particion RAM y verificamos los directorios.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>data$ ln -s /mnt/ramdisk/pg_xlog
+data$ ls -l
+total 136
+drwx------ 10 postgres postgres  4096 Jun 25 19:34 base
+drwx------  2 postgres postgres  4096 Jul  9 17:39 global
+drwx------  2 postgres postgres  4096 May 30 20:36 pg_clog
+-rw-------  1 postgres postgres  4349 Jun 24 16:51 pg_hba.conf
+-rw-------  1 postgres postgres  1636 May 30 20:36 pg_ident.conf
+drwx------  2 postgres postgres  4096 Jun 23 16:40 pg_log
+drwx------  4 postgres postgres  4096 May 30 20:36 pg_multixact
+drwx------  2 postgres postgres  4096 Jul 14 22:43 pg_notify
+drwx------  2 postgres postgres  4096 May 30 20:36 pg_serial
+drwx------  2 postgres postgres  4096 May 30 20:36 pg_snapshots
+drwx------  2 postgres postgres  4096 Jul 14 23:21 pg_stat_tmp
+drwx------  2 postgres postgres  4096 Jun 25 19:08 pg_subtrans
+drwx------  2 postgres postgres  4096 Jun 27 23:06 pg_tblspc
+drwx------  2 postgres postgres  4096 May 30 20:36 pg_twophase
+-rw-------  1 postgres postgres     4 May 30 20:36 PG_VERSION
+lrwxrwxrwx  1 root     root        21 Jun 24 19:50 pg_xlog -&gt; /mnt/ramdisk/pg_xlog
+-rw-------  1 postgres postgres 20332 Jun 24 19:04 postgresql.conf
+-rw-------  1 postgres postgres    71 Jul 14 22:43 postmaster.opts
+-rw-------  1 postgres postgres    72 Jul 14 22:43 postmaster.pid
+</code></pre>
+</div>
+
+<p>Hasta este punto podemos iniciar los servicios PostgreSQL y verificar la replicacion ingresando datos a una tabla de prueba.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ service postgresql-9.2 start &amp;&amp; service postgresql-slave9.2 start
+</code></pre>
+</div>
+
+<p>Todo debe funcionar correctamente y tener una replicacion exitosa.</p>
+
+<p>Ahora debemos modificar el script <em>bash</em> de inicio del servicio maestro para que antes de iniciar verifique si existe el directorio <em>/mnt/ramdisk/pg_xlog</em> y si no existe obtener la copia del servidor esclavo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/init.d/postgresql-9.2
+# Replication configs. Lo agregamos aproximadamente en la linea 88.
+PG_XLOG_MASTER=/mnt/ramdisk/pg_xlog
+PG_XLOG_SLAVE=/var/lib/pgsql/9.2/data_slave/pg_xlog
+#
+# Esta condicion la colocamos dentro de la funcion START. Aproximadamente en la linea 118.
+if [ ! -d "$PG_XLOG_MASTER" ]; then
+        cp -r "$PG_XLOG_SLAVE" "/mnt/ramdisk/"
+        chown postgres:postgres -R "$PG_XLOG_MASTER"
+fi
+</code></pre>
+</div>
+
+<p>Con esta modificacion podemos garantizar de que nuestro pg_xlog este en RAM para que pueda iniciar el servicio maestro.</p>
+
+<p>Hagamos una prueba, detengamos los servicios PostgreSQL, borremos el directorio <strong><em>/mnt/ramdisk/pg_xlog</em></strong> e iniciemos los servicios PostgreSQL nuevamente.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ service postgresql-9.2 stop &amp;&amp; service postgresql-slave9.2 stop
+$ rm -rf /mnt/ramdisk/pg_xlog
+$ service postgresql-9.2 start &amp;&amp; service postgresql-slave9.2 start
+</code></pre>
+</div>
+
+<p>Hasta este punto debe estar todo funcionando y si no es asi verifique sus configuraciones.</p>
+
+<p>Lo que sigue es comprobar que el sistema operativo pueda apagarse e iniciarse con los servicios postgresql, si no tuvimos problemas con ejecutar los comandos anteriores el reiniciar el sistema no debe causarnos problema.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ reboot
+</code></pre>
+</div>
+
+<p>He realizado las siguientes pruebas:</p>
+
+<ul>
+  <li>Reinicio normal del sistema.</li>
+  <li>Apagado directo del sistema.</li>
+  <li>Matando el proceso maestro.</li>
+  <li>Matando el proceso esclavo.</li>
+</ul>
+
+<p>En todas no he tenido problemas con la integridad de los datos y del registro WAL.</p>
+
+<p>Consideraciones:</p>
+
+<ul>
+  <li>Siempre estar pendiente que nuestros servicios esten replicando correctamente. Un servicio como <strong><em>Nagios</em></strong> nos puede servir para esto.</li>
+  <li>Tener un servicio replicado con lleva a tener en cuenta los <strong><em>troubleshootings</em></strong> de este tipo de configuracion.</li>
+  <li>Si el directorio WAL esta creciendo demaciado podemos “purgar” el directorio. Este <a href="http://ag-up.com/?p=840">articulo</a> nos muestra como.</li>
+</ul>
+
+<p>Ahora bien ejecutemos el <code class="highlighter-rouge">pgbench</code> de nueva cuenta con nuestra actual configuracion.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ pgbench -h localhost -p 5432 -U dbadmin -c 10 -t 10000 testdb
+Password: 
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+tps = 1479.385379 (including connections establishing)
+tps = 1480.620177 (excluding connections establishing)
+</code></pre>
+</div>
+
+<p>Nos arroja un 1480tps, es un son como 500tps menos en comparacion cuando teniamos el servidor en standalone con WAL en RAM, aunque practicamente alto, esto lo atribuyo a que ahora en el sistema tiene mas carga de procesos, ya que son dos servicios PostgreSQL y tambien porque hemos dublicado las peticiones I/O del disco y el performance en el disco duro puede castigarse, pero es aceptable el performance de TPS que se obtiene.</p>
+
+<h3 id="tablespace-en-ram">TABLESPACE en RAM</h3>
+
+<p>En PostgreSQL tenemos algo llamado <a href="http://www.postgresql.org/docs/9.2/static/sql-createtablespace.html"><strong><em>tablespace</em></strong></a>, que es practicamente tener la posibilidad de configurar el directorio donde quiero que se guarde una tabla o base de datos completa.</p>
+
+<blockquote>
+  <p>Por defecto tenemos una <strong><em>tablespace</em></strong> llamada pg_default a que punta al directorio pg_data</p>
+</blockquote>
+
+<p>PostgreSQL realiza esto de la siguiente forma:</p>
+
+<ul>
+  <li>Genera un enlace simbolico nombrado con un ID numerico y este apunta al directorio que has configurado.</li>
+</ul>
+
+<p>Estos enlaces directos son guardados en el directorio <strong>pg_tblspc</strong>.</p>
+
+<p>Partiendo de la idea de que podemos manipular la ruta donde podemos mover nuestras tablas en la base de datos es posible aplicar la misma tecnica usada en WAL y poder tener ciertas tablas en <em>RAM</em>.</p>
+
+<p>Tener tablas en <em>RAM</em> nos puede proporcionar un alto performance en TPS.</p>
+
+<blockquote>
+  <p>En existen tablas de tipo <a href="http://www.postgresql.org/docs/9.2/interactive/sql-createtable.html">TEMPORARY</a> en PostgreSQL que son ejecutadas en espacio de <em>RAM</em>. Estas son eliminadas al final de la sesion o transaccion.</p>
+</blockquote>
+
+<p>Pero debemos considerar algunas recomendaciones, como:</p>
+
+<ul>
+  <li>Solo contener tablas que sean de alta lectura y poca escritura.</li>
+  <li>Monitorear el crecimiento de la(s) tabla(s).</li>
+</ul>
+
+<p>Teniendo esto encuenta pasemos a la configuraciones de nuestro <strong><em>tablespace</em></strong> en <em>RAM</em>.</p>
+
+<p>Nos conectamos al servidor maestro.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ su - postgres -c 'psql -p5432'
+</code></pre>
+</div>
+
+<p>Estando ya en la sesion del usuario <em>postgres</em> ejecutamos la sentencia para crear el <strong><em>tablespace</em></strong>, este lo apuntaremos hacia nuestra particion <em>RAM</em> ya configurada <em>/mnt/ramdisk</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>postgres=# CREATE TABLESPACE ramspace OWNER dbadmin LOCATION '/mnt/ramdisk/ramspace';
+</code></pre>
+</div>
+
+<p>Con la sentencia <code class="highlighter-rouge">SELECT * FROM pg_tablespace</code> listamos nuestros <strong><em>tablespace</em></strong> disponibles y vemos que tenemos a <strong>rampspace</strong> ya creado.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>postgres=# SELECT * FROM pg_tablespace;
+  spcname   | spcowner | spcacl | spcoptions 
+------------+----------+--------+------------
+ pg_default |       10 |        | 
+ pg_global  |       10 |        | 
+ ramspace   |    16384 |        |
+</code></pre>
+</div>
+
+<p>Previamente he creado una base de datos llamada <strong>db_test</strong> y dentro de ella vamos a crear una tabla llamada <strong>prueba_ram2</strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>postgres=# \connect db_test
+db_test=# CREATE TABLE prueba_ram2(valor char(100)) TABLESPACE ramspace;
+db_test=# ALTER TABLE prueba_ram2 OWNER TO dbadmin;
+</code></pre>
+</div>
+
+<p>Ahora bien vamos a verificar que nuestro tablespace que esta en el directoio <strong>pg_tblspc</strong> este apuntando al directorio de la particion RAM. Podemos observar que le asigno la ID <strong>55061</strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ ls -l /var/lib/pgsql/9.2/data/pg_tblspc
+total 0
+lrwxrwxrwx 1 postgres postgres 14 2014-06-27 23:06 55061 -&gt; /mnt/ramdisk/ramspace
+</code></pre>
+</div>
+
+<p>Y podemos observar tambien que tenemos <strong><em>el mismo enlace directo</em></strong> generado en el servidor <strong>esclavo</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ ls -l /var/lib/pgsql/9.2/data_slave/pg_tblspc
+total 0
+lrwxrwxrwx 1 postgres postgres 14 2014-06-27 23:06 55061 -&gt; /mnt/ramdisk/ramspace
+</code></pre>
+</div>
+
+<p>Lo siguiente es manipular el enlace directo del <strong><em>servidor esclavo</em></strong> y redireccionarlo a un directorio que este en el disco duro. Pero antes de esto tenemos que tener nuestros servicios PostgreSQL.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ service postgresql-9.2 stop &amp;&amp; service postgresql-slave9.2 stop
+</code></pre>
+</div>
+
+<p>Creamos una copia de <em>ramspace</em> al directorio <em>/opt/</em> y le asignamos el propieratio <em>postgres</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cp -rvf /mnt/ramdisk/ramspace /opt/ramspace
+$ chown postgres.postgres /mnt/ramdisk/ram_space
+</code></pre>
+</div>
+
+<p>Ahora vamos a redireccionar el enlace del <strong><em>servicio esclavo</em></strong> a la copia generada anteriormente.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cd /var/lib/pgsql/9.2/data_slave/pg_tblspc/
+$ rm 55061
+$ ln -s /opt/ramspace 55061
+</code></pre>
+</div>
+
+<p>Verificamos que el enlace este creado y apuntando a <em>/opt/ramspace</em>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ ls -l /var/lib/pgsql/9.2/data_slave/pg_tblspc
+total 0
+lrwxrwxrwx 1 postgres postgres 22 2014-06-27 23:27 55061 -&gt; /opt/ramspace
+</code></pre>
+</div>
+
+<p>Y por ultimo iniciamos nuestros servicios PostgreSQL.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ service postgresql-9.2 start &amp;&amp; service postgresql-slave9.2 start
+</code></pre>
+</div>
+
+<blockquote>
+  <p>Verifiquemos que nuestra replicacion siga funcionando, podemos insertar datos en la tabla que tenemos en <em>RAM</em> y verificar en el esclavo la replicacion.</p>
+</blockquote>
+
+<p>Lo siguiente ahora es agregar una verificacion en el <strong><em>script</em></strong> de inicio del servicio maestro como lo hicimos anteriormente, para garantizar que inicie con el <strong><em>tablespace</em></strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/init.d/postgresql-9.2
+# Replication configs. Agregar aprox linea 90
+PG_BASE=/mnt/ramdisk/ramspace
+PG_BASE_SLAVE=/opt/ramspace
+#
+# Agregar en aprox. linea 120
+if [ ! -d "$PG_BASE" ]; then
+        cp -r "$PG_BASE_SLAVE" "/mnt/ramdisk/"
+        chown postgres:postgres -R "$PG_BASE"
+fi
+</code></pre>
+</div>
+
+<h3 id="conclusiones">Conclusiones</h3>
+
+<p>Podemos usar esta configuracion en produccion siempre y cuando verificando el uso de espacio de <em>RAM</em>, como dije anteriormente, la <em>RAM</em> es un recurso muchas veces muy limitado y debemos tener en cuenta eso, el uso de espacio que pueda usar WAL depende mucho de la cantidad de datos y el nivel de transacciones que se registren en la base de datos que hacen crecer a WAL, sin embargo si nuestra base este de altas transacciones por dia convendria solo usar el hack del tablespace en tablas donde se presente mucho consulta de lectura y obtendriamos una mejor en perfomance en <em>TPS</em> sobre esa(s) tabla(s).</p>
+
+<p>Como siempre conviene hacer un analis a largo plazo del crecimiento de la base de datos y corroborar que nuestro hardware en <em>RAM</em> pueda soportarlo. El beneficio es bastante bueno en <em>TPS</em>.</p>
+
+<p>Espero este articulo les haya servido, si tienen ideas que puedan mejorar la configuracion me encantaria poder saberlo y actualizar el articulo con sus hacks.</p>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x/">
+            Aplicación de parches en VMware ESXi 5.x
+            <small>20 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live/">
+            Clonación y migración en tiempo real de instancias virtuales Qemu/KVM
+            <small>09 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

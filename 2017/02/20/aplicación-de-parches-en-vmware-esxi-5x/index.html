@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Aplicación de parches en VMware ESXi 5.x &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Aplicación de parches en VMware ESXi 5.x</h1>
+  <span class="post-date">20 Feb 2017</span>
+  <p>Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.</p>
+
+<p>Este proceso se hace por medio de <strong>SSH</strong>. Se tiene que activar desde el <strong>VMware vShepere Client</strong>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Server&gt;Configuration&gt;SecurityProfiles&gt;Services&gt;Properties
+</code></pre>
+</div>
+
+<p>Apagar todas las maquinas virtuales</p>
+
+<p>Antes de entrar a modo de mantenimiento es necesario apagar todas las maquinas virtuales o migrarlos si es posible.</p>
+
+<p>Descargar el parche y subirlo a un storage del servidor</p>
+
+<p>Antes ya debemos haber descargado el parche (archivo .zip) en el sitio web de VMWare. <a href="https://my.vmware.com/group/vmware/patch#search">Descarga</a></p>
+
+<p>Entramos por SSH al servidor y nos vamos al diretorio <code class="highlighter-rouge">/vmfs/volumes</code> donde se encuentran los DATASTOREs, en ese directorio subiremos el parche.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cd /vmfs/volumes
+/vmfs/volumes $ ls -l
+lrwxr-xr-x    1 root     root            35 Dec 12 16:44 datastore2 -&gt; 56d31905-1dc9ed10-1632-549f35076b4a
+lrwxr-xr-x    1 root     root            35 Dec 12 16:44 datastore1 -&gt; 56d196bb-3ae3f27e-44c3-549f35076b4a
+/vmfs/volumes $ cd datastore1/
+/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a $ 
+</code></pre>
+</div>
+
+<p>Creamos un directorio llamado UPDATE para subir el patch en ese directorio</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a # mkdir UPDATE
+</code></pre>
+</div>
+
+<p>Ahora desde nuestro equipo subimos el patch por medio de SCP:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ scp update-patch.zip root@10.0.0.X:/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a/UPDATE/
+</code></pre>
+</div>
+
+<p>Entrar en modo de mantenimiento</p>
+
+<p>Entramos por SSH a nuestro VMware y lo ponemos en modo de mantenimiento</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>~ $ vim-cmd hostsvc/maintenance_mode_enter 
+'vim.Task:haTask-ha-host-vim.HostSystem.enterMaintenanceMode-306994658'
+</code></pre>
+</div>
+
+<p>Actualizar el servidor</p>
+
+<p>Procedemos a instalar el parche anteriormente subido al VMware</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>~ # esxcli software vib install -d /vmfs/volumes/datastore1/UPDATE/update-patch.zip 
+</code></pre>
+</div>
+
+<p>Importante revisar que nuestro resultado de la ejecucion haya sido <strong>The update completed successfully</strong> como se muestra en la salida siguiente:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Installation Result
+   Message: The update completed successfully, but the system needs to be rebooted for the changes to be effective.
+   Reboot Required: true
+   VIBs Installed: VMware_bootbank_esx-base...
+</code></pre>
+</div>
+
+<p>Es necesario reiniciar el servidor correr los cambios aplicados.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>~ # reboot
+</code></pre>
+</div>
+
+<p>Esto nos sacara de nuestra sesion SSH y tendremos que volver a iniciar una sesion cuando el servidor termine de reiniciar para continuar.</p>
+
+<p>Estando por SSH salimos del modo de mantenimiento</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>~ # vim-cmd hostsvc/maintenance_mode_exit
+'vim.Task:haTask-ha-host-vim.HostSystem.exitMaintenanceMode-499940104'
+</code></pre>
+</div>
+
+<p>Y ahora nos toca iniciar las maquinas virtuales o volverlas a migrar.</p>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live/">
+            Clonación y migración en tiempo real de instancias virtuales Qemu/KVM
+            <small>09 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/05/15/replicacion-postgresql-con-repmgr-centos/">
+            Administrando replicación en PostgreSQL con REPMGR
+            <small>15 May 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

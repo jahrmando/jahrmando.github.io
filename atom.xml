@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Tech Monkey</title>
- <link href="jahrmando.github.com/atom.xml" rel="self"/>
- <link href="jahrmando.github.com/"/>
- <updated>2017-08-24T10:36:55-05:00</updated>
- <id>jahrmando.github.com</id>
+ <link href="jahrmando.com/atom.xml" rel="self"/>
+ <link href="jahrmando.com/"/>
+ <updated>2017-08-24T18:07:36-05:00</updated>
+ <id>jahrmando.com</id>
  <author>
    <name></name>
    <email></email>
@@ -13,10 +13,227 @@
 
  
  <entry>
+   <title>Aplicación de parches en VMware ESXi 5.x</title>
+   <link href="jahrmando.com/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x/"/>
+   <updated>2017-02-20T12:00:12-06:00</updated>
+   <id>jahrmando.com/2017/02/20/aplicación-de-parches-en-vmware-esxi-5x</id>
+   <content type="html">&lt;p&gt;Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.&lt;/p&gt;
+
+&lt;p&gt;Este proceso se hace por medio de &lt;strong&gt;SSH&lt;/strong&gt;. Se tiene que activar desde el &lt;strong&gt;VMware vShepere Client&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Server&amp;gt;Configuration&amp;gt;SecurityProfiles&amp;gt;Services&amp;gt;Properties
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Apagar todas las maquinas virtuales&lt;/p&gt;
+
+&lt;p&gt;Antes de entrar a modo de mantenimiento es necesario apagar todas las maquinas virtuales o migrarlos si es posible.&lt;/p&gt;
+
+&lt;p&gt;Descargar el parche y subirlo a un storage del servidor&lt;/p&gt;
+
+&lt;p&gt;Antes ya debemos haber descargado el parche (archivo .zip) en el sitio web de VMWare. &lt;a href=&quot;https://my.vmware.com/group/vmware/patch#search&quot;&gt;Descarga&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Entramos por SSH al servidor y nos vamos al diretorio &lt;code class=&quot;highlighter-rouge&quot;&gt;/vmfs/volumes&lt;/code&gt; donde se encuentran los DATASTOREs, en ese directorio subiremos el parche.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /vmfs/volumes
+/vmfs/volumes $ ls -l
+lrwxr-xr-x    1 root     root            35 Dec 12 16:44 datastore2 -&amp;gt; 56d31905-1dc9ed10-1632-549f35076b4a
+lrwxr-xr-x    1 root     root            35 Dec 12 16:44 datastore1 -&amp;gt; 56d196bb-3ae3f27e-44c3-549f35076b4a
+/vmfs/volumes $ cd datastore1/
+/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a $ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un directorio llamado UPDATE para subir el patch en ese directorio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a # mkdir UPDATE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora desde nuestro equipo subimos el patch por medio de SCP:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ scp update-patch.zip root@10.0.0.X:/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a/UPDATE/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Entrar en modo de mantenimiento&lt;/p&gt;
+
+&lt;p&gt;Entramos por SSH a nuestro VMware y lo ponemos en modo de mantenimiento&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ $ vim-cmd hostsvc/maintenance_mode_enter 
+&#39;vim.Task:haTask-ha-host-vim.HostSystem.enterMaintenanceMode-306994658&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Actualizar el servidor&lt;/p&gt;
+
+&lt;p&gt;Procedemos a instalar el parche anteriormente subido al VMware&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ # esxcli software vib install -d /vmfs/volumes/datastore1/UPDATE/update-patch.zip 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Importante revisar que nuestro resultado de la ejecucion haya sido &lt;strong&gt;The update completed successfully&lt;/strong&gt; como se muestra en la salida siguiente:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Installation Result
+   Message: The update completed successfully, but the system needs to be rebooted for the changes to be effective.
+   Reboot Required: true
+   VIBs Installed: VMware_bootbank_esx-base...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Es necesario reiniciar el servidor correr los cambios aplicados.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ # reboot
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Esto nos sacara de nuestra sesion SSH y tendremos que volver a iniciar una sesion cuando el servidor termine de reiniciar para continuar.&lt;/p&gt;
+
+&lt;p&gt;Estando por SSH salimos del modo de mantenimiento&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ # vim-cmd hostsvc/maintenance_mode_exit
+&#39;vim.Task:haTask-ha-host-vim.HostSystem.exitMaintenanceMode-499940104&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Y ahora nos toca iniciar las maquinas virtuales o volverlas a migrar.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Clonación y migración en tiempo real de instancias virtuales Qemu/KVM</title>
+   <link href="jahrmando.com/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live/"/>
+   <updated>2015-12-09T11:33:06-06:00</updated>
+   <id>jahrmando.com/2015/12/09/clonación-y-migración-en-tiempo-real-live</id>
+   <content type="html">&lt;p&gt;Hacer una copia del cliente &lt;strong&gt;VM1&lt;/strong&gt; teniendo como resultado un cliente con el nombre de &lt;strong&gt;VM1_clone&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Es necesario suspender ó apagar al cliente para poder clonarlo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ virsh suspend VM1
+Dominio VM1 suspendido
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para clonar una instancia virtual lo hacemos con el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;virt-clone&lt;/code&gt;. Explicando un poco las opciones básicas seleccionadas acontinuación:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-o&lt;/code&gt;, nombramos el cliente que vamos a clonar&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-n&lt;/code&gt;, es el nombre del nuevo cliente clonado&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-f&lt;/code&gt;, es la dirección absoluta de la nueva imagen de almacenamiento&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.img
+Asignando &#39;VM1_clone.img&#39; | 40 GB 04:52
+Clone &#39;VM1_clone&#39; created successfully.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Al terminar la ejecucion del comando anterior con &lt;code class=&quot;highlighter-rouge&quot;&gt;virsh resume&lt;/code&gt; reanudamos nuestro cliente que esta pausado.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ virsh resume VM1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Migración de cliente en vivo (Live)&lt;/p&gt;
+
+&lt;p&gt;La migración en vivo nos es de utilidad cuando requerimos mover el cliente de su “servidor virtual” hacia otro sin necesidad de apagar el cliente, esto es completamente transparente y es casi nulo que se note la migración.&lt;/p&gt;
+
+&lt;p&gt;Requisitos previos:&lt;/p&gt;
+
+&lt;p&gt;El medio de almacenamiento del cliente debe estar corriendo sobre un sistema de almacenamiento en red como:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;iSCSI&lt;/li&gt;
+  &lt;li&gt;NFS&lt;/li&gt;
+  &lt;li&gt;GFS2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ambos servicios Qemu/KVM deben ser tener la misma versión y las mismas actualizaciones.&lt;/p&gt;
+
+&lt;p&gt;Primero debemos tener una configuración para la resolución de host. En este ejemplo nuestros servidores &lt;strong&gt;Qemu/KVM&lt;/strong&gt; tienen la siguiente información asignada:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;virt1 tiene asignado la IP 10.0.0.1&lt;/li&gt;
+  &lt;li&gt;virt2 tiene asignado la IP 10.0.0.2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En &lt;strong&gt;ambos servidores&lt;/strong&gt; tendremos configurado el archivo &lt;strong&gt;host&lt;/strong&gt; para que resuelva sus nombres de dominio locales asignados.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/hosts
+127.0.0.1   localhost localhost.localdomain
+::1         localhost localhost.localdomain
+10.0.0.1   virt1
+10.0.0.2   virt2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En este ejemplo usaremos un servicio &lt;strong&gt;NFS&lt;/strong&gt; como &lt;strong&gt;storage pool&lt;/strong&gt;, este contiene nuestras imagenes de discos de nuestras instancias virtuales.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Ambos servidores Qemu/KVM deben tener montado en el mismo directorio el recurso NFS.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;La sintaxis del comando de migración (&lt;code class=&quot;highlighter-rouge&quot;&gt;virsh migrate&lt;/code&gt;) es la siguiente:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ virsh migrate --live --persistent Guest URLConnection
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Donde &lt;strong&gt;Guest&lt;/strong&gt;, es el nombre del cliente a migrar.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;URLConnection&lt;/strong&gt; es la URL de conexión hacia el servidor destino, ejemplo: &lt;strong&gt;qemu+ssh://hostname/system&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;La opcion &lt;code class=&quot;highlighter-rouge&quot;&gt;--persistent&lt;/code&gt; nos hara el movimiento permanente. De lo contrario si esta opcion no es puesta al apagar el cliente en el servidor destino se eliminara las configuraciones.&lt;/p&gt;
+
+&lt;p&gt;Listamos las instancias virtuales que se esta ejecutando en &lt;strong&gt;virt1&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(virt1)$ virsh list
+ Id    Nombre                         Estado
+----------------------------------------------------
+ 1     VM1                            ejecutando
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora migramos &lt;strong&gt;VM1&lt;/strong&gt; del servidor &lt;strong&gt;virt1&lt;/strong&gt; al servidor &lt;strong&gt;virt2&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(virt1)$ virsh migrate --live --persistent VM1 qemu+ssh://virt2/system
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Notese que el comando anterior usa el servicio SSH y de manera implicita conecta usando el usuario root. Si quisieramos &lt;strong&gt;usar otro usuario&lt;/strong&gt; ante ponemos al nombre del hostname el usuario. Por ejemplo: &lt;strong&gt;qemu+ssh://admin@virt2/system&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Listamos las instancias virtuales y observamos que &lt;strong&gt;VM1&lt;/strong&gt; esta apagado en &lt;strong&gt;virt1&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(virt1)$ virsh list --all
+ Id    Nombre                         Estado
+----------------------------------------------------
+ -     VM1                            apagado
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Y ahora listamos las instancias virtuales y vemos a &lt;strong&gt;VM1&lt;/strong&gt; que ya se encuentra &lt;strong&gt;ejecutandose&lt;/strong&gt; en &lt;strong&gt;virt2&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(virt2)$ virsh list --all
+ Id    Nombre                         Estado
+----------------------------------------------------
+ 1     VM1                            ejecutando
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Ahora nos queda una instancia de &lt;strong&gt;VM1&lt;/strong&gt; en &lt;strong&gt;virt1&lt;/strong&gt; que podemos eliminar si deseamos, siempre y cuando &lt;strong&gt;NO borremos la imagen&lt;/strong&gt; del medio de almacenamiento ya que se tiene asociado en la instancia alojada en &lt;strong&gt;virt2&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Análisis del rendimiento de Linux en 60 Segundos</title>
-   <link href="jahrmando.github.com/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/"/>
+   <link href="jahrmando.com/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/"/>
    <updated>2015-12-04T11:30:32-06:00</updated>
-   <id>jahrmando.github.com/2015/12/04/the-netflix-tech-blog-análisis-del-rendimiento</id>
+   <id>jahrmando.com/2015/12/04/the-netflix-tech-blog-análisis-del-rendimiento</id>
    <content type="html">&lt;p&gt;Les dejo un excelente articulo sobre como poder detectar rapidamente anomalias en el rendimiento de nuestro servidor &lt;strong&gt;Linux&lt;/strong&gt;, 60 Segundos pueden ser significativos para resolver incidentes en ambientes productivos y que estos no escalen a problemas mucho mayores.&lt;/p&gt;
 
 &lt;ul&gt;
@@ -41,10 +258,342 @@ $ top
  </entry>
  
  <entry>
+   <title>Administrando replicación en PostgreSQL con REPMGR</title>
+   <link href="jahrmando.com/2015/05/15/replicacion-postgresql-con-repmgr-centos/"/>
+   <updated>2015-05-15T18:48:11-05:00</updated>
+   <id>jahrmando.com/2015/05/15/replicacion-postgresql-con-repmgr-centos</id>
+   <content type="html">&lt;p&gt;Como sabemos en PostgreSQL podemos tener una configuracion de replicación maestro-esclavo (&lt;em&gt;hot-standby&lt;/em&gt;) de forma facil, pero esta configuración no nos provee un &lt;strong&gt;failover&lt;/strong&gt; o recuperación del maestro. Tenemos varias &lt;a href=&quot;https://wiki.postgresql.org/wiki/Clustering&quot;&gt;alternativas&lt;/a&gt; que junto con PostgreSQL nos pueden proveer estas características.&lt;/p&gt;
+
+&lt;p&gt;Sin embargo aquí hablaremos de &lt;a href=&quot;http://www.repmgr.org&quot;&gt;REPMGR&lt;/a&gt; que es una herramienta para poder administrar la replicación &lt;em&gt;hot-standby&lt;/em&gt; de PostgreSQL, nos ofrece características como poder cambiar de modo esclavo a maestro de forma manual ó automática, capacidad de que los esclavos del cluster sigan al nuevo maestro y poder recuperar al maestro.&lt;/p&gt;
+
+&lt;p&gt;En esta publicación realizaremos los siguientes ejercicios:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Configurar nodo maestro y dos esclavos&lt;/li&gt;
+  &lt;li&gt;Realizar failover manual&lt;/li&gt;
+  &lt;li&gt;Promover un nodo esclavo a maestro&lt;/li&gt;
+  &lt;li&gt;Hacer que los nodos esclavo sigan al nuevo maestro&lt;/li&gt;
+  &lt;li&gt;Recuperar el nodo maestro como esclavo&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;instalacin&quot;&gt;Instalación&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En esta publicación manejaremos &lt;strong&gt;PostgreSQL 9.2&lt;/strong&gt; y ** CentOS 6.x**&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;En &lt;strong&gt;todos&lt;/strong&gt; nuestros nodos debemos instalar los siguientes paquetes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;postgresql92-server&lt;/li&gt;
+  &lt;li&gt;postgresql92-contrib&lt;/li&gt;
+  &lt;li&gt;repmgr92&lt;/li&gt;
+  &lt;li&gt;rsync&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Estos paquetes se encuentra dentro del &lt;a href=&quot;http://yum.postgresql.org/repopackages.php&quot;&gt;repositorio oficial de postgresql&lt;/a&gt; (ha excepción de &lt;em&gt;rsync&lt;/em&gt;) que debes instalar antes para poder encontrar los paquetes que se listan arriba.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# yum install postgresql92-server postgresql92-contrib repmgr92 rsync -y
+# chkconfig postgresql-9.2 on
+# service postgresql-9.2 initdb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Antes de empezar, tenga encuentra la siguiente estructura de configuración de red de los nodos.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Nombre&lt;/th&gt;
+      &lt;th&gt;IP&lt;/th&gt;
+      &lt;th&gt;Hostname&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;nodo1&lt;/td&gt;
+      &lt;td&gt;192.168.1.1&lt;/td&gt;
+      &lt;td&gt;nodo1.example.com&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;nodo2&lt;/td&gt;
+      &lt;td&gt;192.168.1.2&lt;/td&gt;
+      &lt;td&gt;nodo2.example.com&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;nodo3&lt;/td&gt;
+      &lt;td&gt;192.168.1.3&lt;/td&gt;
+      &lt;td&gt;nodo3.example.com&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;El nodo &lt;strong&gt;&lt;em&gt;maestro&lt;/em&gt;&lt;/strong&gt; sera el &lt;strong&gt;&lt;em&gt;nodo1&lt;/em&gt;&lt;/strong&gt; y los demás los esclavos (standby).
+[[more]]&lt;/p&gt;
+
+&lt;h2 id=&quot;configuraciones&quot;&gt;Configuraciones&lt;/h2&gt;
+
+&lt;h3 id=&quot;configuraciones-del-nodo-maestro&quot;&gt;Configuraciones del nodo maestro&lt;/h3&gt;
+
+&lt;p&gt;Iniciamos el servicio en el nodo1&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# service postgresql-9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un usuario y la base de datos que usara &lt;em&gt;REPMGR&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CREATE ROLE repmgr_usr LOGIN SUPERUSER;
+CREATE DATABASE repmgr_db OWNER repmgr_usr;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalamos las funciones necesarias para la base de datos de &lt;em&gt;REPMGR&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+$ psql -f /usr/pgsql-9.2/share/contrib/repmgr_funcs.sql repmgr_db
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuración de accesos al servicio &lt;em&gt;postgresql&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+# Acceso nodo1
+host    repmgr_db       repmgr_usr  192.168.1.1/32         trust
+host    replication     repmgr_usr  192.168.1.1/32         trust
+# Acceso nodo2
+host    repmgr_db       repmgr_usr  192.168.1.2/32         trust
+host    replication     repmgr_usr  192.168.1.2/32         trust
+# Acceso nodo3
+host    repmgr_db       repmgr_usr  192.168.1.3/32         trust
+host    replication     repmgr_usr  192.168.1.3/32         trust
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En la publicación estaremos usando &lt;a href=&quot;http://www.vim.org/&quot;&gt;VIM&lt;/a&gt; para editar los archivos de configuración desde terminal. Siéntase en libertad de usar la que mas le acomode (gedit, emacs, nano, etc).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Configuraciones generales del servicio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data/postgresql.conf
+listen_addresses=&#39;*&#39;
+wal_level = &#39;hot_standby&#39;
+archive_mode = on
+archive_command = &#39;cd .&#39;
+max_wal_senders = 10
+wal_keep_segments = 5000
+hot_standby = on
+shared_preload_libraries = &#39;repmgr_funcs&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciar el servicio para cargas las nuevas configuraciones&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# service postgresql-9.2 restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;configuraciones-adicionales&quot;&gt;Configuraciones adicionales&lt;/h3&gt;
+
+&lt;p&gt;Estas configuraciones nos aseguran la conectividad entre los nodos y es importante realizar para el correcto funcionamiento del cluster.&lt;/p&gt;
+
+&lt;h4 id=&quot;configuracin-de-hostnames-opcional&quot;&gt;Configuración de hostnames (opcional)&lt;/h4&gt;
+
+&lt;p&gt;Si no contamos con un servicio de dominio (DNS) para poder asignarle a los servidores un dominio valido podemos usar la resolución por medio del archivo &lt;em&gt;/etc/hosts&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# vim /etc/hosts
+192.168.1.1 nodo1.example.com
+192.168.1.2 nodo2.example.com
+192.168.1.3 nodo3.example.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Asegure de hacer la misma configuración para todos los nodos del cluster.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;inicio-de-sesin-ssh-private-key&quot;&gt;Inicio de sesión SSH private-key&lt;/h4&gt;
+
+&lt;p&gt;Esta configuración es indispensable, ya que los archivos base de &lt;em&gt;postgresql&lt;/em&gt; se van ha sincronizar con la herramienta &lt;em&gt;rsync&lt;/em&gt; y este utilizara este tipo de acceso con los nodos.&lt;/p&gt;
+
+&lt;p&gt;Siguiendo en el &lt;em&gt;nodo1&lt;/em&gt; configuramos de las siguiente forma, iniciamos una sesión del usuario &lt;strong&gt;&lt;em&gt;postgres&lt;/em&gt;&lt;/strong&gt; y generamos sus llaves de acceso y lo agregamos entre las llaves autorizadas.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+$ ssh-keygen
+$ cat ~/.ssh/id_rsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys
+$ chmod 600 ~/.ssh/authorized_keys
+$ exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Cuando genere la llave no le asigne frase de acceso (passphrase).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Ahora vamos a enviarle las llaves (publica y privada) y la lista de llaves autorizadas a todos los nodos que estarán en el cluster.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# rsync -avz ~postgres/.ssh/authorized_keys nodo2.example.com:~postgres/.ssh/
+# rsync -avz ~postgres/.ssh/authorized_keys nodo3.example.com:~postgres/.ssh/
+
+# rsync -avz ~postgres/.ssh/id_rsa* nodo2.example.com:~postgres/.ssh/
+# rsync -avz ~postgres/.ssh/id_rsa* nodo3.example.com:~postgres/.ssh/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note que las llaves enviadas son para el usuario &lt;em&gt;postgres&lt;/em&gt;, este usuario es el que se va conectar a otros nodos usando ssh (rsync) sin requerir contraseña.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;registrando-el-nodo-maestro&quot;&gt;Registrando el nodo maestro&lt;/h3&gt;
+
+&lt;p&gt;Antes de registrar al nodo maestro necesitamos configurar la herramienta &lt;em&gt;REPMGR&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# vi /etc/repmgr/9.2/repmgr.conf
+cluster=mi_cluster
+node=1
+node_name=nodo1
+conninfo=&#39;host=nodo1.example.com dbname=repmgr_db user=repmgr_usr&#39;
+logfile=&#39;/tmp/repmgr-9.2.log&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora registramos el nodo maestro de la siguiente forma.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf master register --verbose
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;registrando-nodos-standby-esclavos&quot;&gt;Registrando nodos standby (esclavos)&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Estas configuraciones se realizan en cada servidor esclavo del cluster.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Estando conectado en el nodo esclavo (nodo2) lo primero es clonar al nodo maestro (nodo1) y luego &lt;em&gt;REPMGR&lt;/em&gt; se encargara de configurarlo como esclavo (recovery.conf).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ /usr/pgsql-9.2/bin/repmgr -d repmgr_db -U repmgr_usr standby clone nodo1.example.com --verbose
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos el servicio postgresql.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# service postgresql-9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Editamos la configuración de &lt;em&gt;REPMGR&lt;/em&gt; (configuración del &lt;strong&gt;nodo2&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# vim /etc/repmgr/9.2/repmgr.conf
+cluster=mi_cluster
+node=2
+node_name=nodo2
+conninfo=&#39;host=nodo2.example.com dbname=repmgr_db user=repmgr_usr&#39;
+logfile=&#39;/tmp/repmgr-9.2.log&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora registramos nuestro esclavo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf standby register --verbose
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Podemos verificamos el registro del nodo de la siguiente manera.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf cluster show
+Role      | Connection String 
+* master  | host=nodo1.example.com user=repmgr_usr dbname=repmgr_db
+standby   | host=nodo2.example.com user=repmgr_usr dbname=repmgr_db
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;failover-manual&quot;&gt;Failover manual&lt;/h2&gt;
+
+&lt;p&gt;Ahora realizamos el siguiente ejercicio, haremos que el &lt;em&gt;nodo1&lt;/em&gt; se detenga para promover al &lt;em&gt;nodo2&lt;/em&gt; a maestro y después hacer que los demás nodos sigan al nuevo maestro (nodo 2).&lt;/p&gt;
+
+&lt;h3 id=&quot;promover-al-nodo2-a-maestro&quot;&gt;Promover al nodo2 a maestro&lt;/h3&gt;
+
+&lt;p&gt;Antes de promover este nodo detenemos el nodo maestro para simular la baja del servidor.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# poweroff
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora nos conectamos al &lt;em&gt;nodo2&lt;/em&gt; y vamos a promoverlo como nodo maestro.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf --verbose standby promote
+$ exit
+# service postgresql-9.2 restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;reconfigurar-los-nodos-para-seguir-al-nuevo-maestro&quot;&gt;Reconfigurar los nodos para seguir al nuevo maestro&lt;/h3&gt;
+
+&lt;p&gt;Realizamos lo siguiente en cada &lt;strong&gt;&lt;em&gt;nodo esclavo&lt;/em&gt;&lt;/strong&gt; para que puedan seguir al nuevo nodo maestro.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -f /etc/repmgr/9.2/repmgr.conf standby follow 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;volver-al-nodo1-a-esclavo&quot;&gt;Volver al nodo1 a esclavo&lt;/h3&gt;
+
+&lt;p&gt;Detener servicio postgresql, al iniciar el servidor maestro es posible que este inicie automáticamente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# service postgresql-9.2 stop
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Clonar a partir del nuevo maestro.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+$ /usr/pgsql-9.2/bin/repmgr -d repmgr_db -U repmgr_usr --verbose standby clone node2.example.com --ignore-rsync-warning --force
+$ exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos el servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# service postgresql-9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;tips-extras&quot;&gt;Tips extras&lt;/h3&gt;
+
+&lt;p&gt;Revisar el estado de replicación en nuestro servidor maestro&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+$ psql -x -c &quot;select * from pg_stat_replication;&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;resolucin-de-problemas&quot;&gt;Resolución de problemas&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Host key verification failed. Error al clonar con el nodo maestro&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Es posible que sea la primera ves que intentas una conexión &lt;strong&gt;&lt;em&gt;ssh&lt;/em&gt;&lt;/strong&gt; con el servidor maestro.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+$ ssh nodo1.example.com
+The authenticity of host &#39;nodo2.example.com (192.168.1.2)&#39; can&#39;t be established.
+RSA key fingerprint is xx:8e:2e:e9:d0:xx:5d:7b:48:d3:25:xx:18:50:b7:xx.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added &#39;nodo1.example.com&#39; (RSA) to the list of known hosts.
+Welcome to your server.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Manejar un estado de Mantemiento WebSite con NGINX</title>
-   <link href="jahrmando.github.com/2015/03/27/sitio-en-mantenimiento-con-nginx/"/>
+   <link href="jahrmando.com/2015/03/27/sitio-en-mantenimiento-con-nginx/"/>
    <updated>2015-03-27T11:03:19-06:00</updated>
-   <id>jahrmando.github.com/2015/03/27/sitio-en-mantenimiento-con-nginx</id>
+   <id>jahrmando.com/2015/03/27/sitio-en-mantenimiento-con-nginx</id>
    <content type="html">&lt;p&gt;Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline.&lt;/p&gt;
 
 &lt;p&gt;La idea es poder intercambiar rápidamente a un “estado de mantenimiento” de sitio controlado por una sentencia &lt;strong&gt;IF&lt;/strong&gt;.&lt;/p&gt;
@@ -86,10 +635,149 @@ location = /503.html {
  </entry>
  
  <entry>
+   <title>Como conectarse a Hipchat desde IRSSI</title>
+   <link href="jahrmando.com/2015/03/21/como-conectarse-hipchat-desde-irssi/"/>
+   <updated>2015-03-21T13:27:13-06:00</updated>
+   <id>jahrmando.com/2015/03/21/como-conectarse-hipchat-desde-irssi</id>
+   <content type="html">&lt;p&gt;Para aquellos que quieran integrar su servicio &lt;a href=&quot;https://www.hipchat.com&quot;&gt;HipChat&lt;/a&gt; al programa &lt;a href=&quot;http://www.irssi.org/&quot;&gt;irssi&lt;/a&gt;, espero les sea de utilidad.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Esta configuración la probé en un Fedora 21 de 64Bits.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Instalamos algunas dependencias necesarias para compilar el modulo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo yum install loudmouth-devel irssi-devel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;modulo-irssi-xmpp&quot;&gt;Modulo irssi-xmpp&lt;/h2&gt;
+
+&lt;p&gt;Nos descargamos la ultima versión de &lt;a href=&quot;http://cybione.org/~irssi-xmpp/&quot;&gt;irssi-xmpp&lt;/a&gt;, ya que esa contiene un &lt;em&gt;bugfix&lt;/em&gt; que nos permitirá conectarnos exitosamente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ wget http://cybione.org/~irssi-xmpp/files/irssi-xmpp-0.52.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Extraemos los archivos del archivo y desde una terminal nos cambiamos al directorio.&lt;/p&gt;
+
+&lt;p&gt;Compilamos el modulo &lt;strong&gt;irssi-xmpp&lt;/strong&gt; de la siguiente forma:&lt;/p&gt;
+
+&lt;p&gt;Necesitamos saber en que directorio esta &lt;strong&gt;&lt;em&gt;irssi-config.h&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo find / -name irssi-config.h
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Yo lo encontre en &lt;strong&gt;/usr/include/irssi/irssi-config.h&lt;/strong&gt;, ahora edito el archivo &lt;em&gt;config.mk&lt;/em&gt; y agrego el directorio que esta antes de &lt;strong&gt;include&lt;/strong&gt; y lo agrego a la variable &lt;strong&gt;&lt;em&gt;PREFIX&lt;/em&gt;&lt;/strong&gt; del archivo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim config.mk
+# paths
+PREFIX ?= /usr
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;si nuestro sistema es de &lt;em&gt;64bits&lt;/em&gt; edite en el archivo anterior en la variable &lt;strong&gt;&lt;em&gt;IRSSI_LIB&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IRSSI_LIB ?= ${PREFIX}/lib64/irssi
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora compilamos e instalamos con los siguientes comandos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ make
+$ sudo make install1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Desde terminal muévase hasta la carpeta donde se instalo los módulos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /usr/lib/irssi/modules
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;ó para los de 64bits.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /usr/lib64/irssi/modules
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el siguiente link.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ln -s libxmpp_core.so libXMPP_core.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;configuracin-irssi&quot;&gt;Configuración IRSSI&lt;/h2&gt;
+
+&lt;p&gt;Ahora toca el turno de configurar &lt;strong&gt;IRSSI&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;El siguiente comando hará que se cargue el modulo &lt;strong&gt;&lt;em&gt;irssi-xmpp&lt;/em&gt;&lt;/strong&gt; al inicio de * irssi*&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ echo &quot;load xmpp&quot; &amp;gt;&amp;gt; ~/.irssi/startup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Abrimos el archivo de configuración de irssi, usando &lt;code class=&quot;highlighter-rouge&quot;&gt;vim&lt;/code&gt; o cualquier editor abrimos el archivo &lt;strong&gt;&lt;em&gt;~/.irssi/config&lt;/em&gt;&lt;/strong&gt; que esta en tu carpeta de usuario. Los datos lo tomamos de configuracion de HipChat los tomamos del &lt;a href=&quot;https://hipchat.com/account/xmpp&quot;&gt;panel de usuario&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Configuramos una instancia &lt;em&gt;servers&lt;/em&gt; para el servicio hipchat:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;servers = (
+  {
+    address = &quot;chat.hipchat.com&quot;;
+    chatnet = &quot;hipchat&quot;;
+    port = &quot;5223&quot;;
+    password = &quot;mipasswordhipchat&quot;;
+    use_ssl = &quot;yes&quot;;
+    ssl_verify = &quot;no&quot;;
+    autoconnect = &quot;yes&quot;;
+  }
+);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos una instancia &lt;em&gt;network&lt;/em&gt; para el servidor:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chatnets = {
+  hipchat = { 
+        type = &quot;XMPP&quot;; 
+        nick = &quot;Username@chat.hipchat.com&quot;; 
+    };
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Damos de alta a los canales en los que estemos agregados, estos los consultamos desde el &lt;a href=&quot;https://hipchat.com/rooms&quot;&gt;panel de rooms&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;channels = (
+  {
+    name = &quot;XMPP_JID@conf.hipchat.com&quot;;
+    chatnet = &quot;hipchat&quot;;
+    autojoin = &quot;yes&quot;;
+  }
+);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora necesitamos poner nuestro &lt;strong&gt;&lt;em&gt;nickname&lt;/em&gt;&lt;/strong&gt; del canal, para esto tiene que ser nuestro nombre completo registrado en &lt;strong&gt;HipChat&lt;/strong&gt;, en mi caso &lt;strong&gt;&lt;em&gt;Armando Uch&lt;/em&gt;&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;settings = {
+  &quot;irc/core&quot; = { 
+    alternate_nick = &quot;Armando Uch&quot;;
+    };
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora solo queda iniciar el programa &lt;strong&gt;irssi&lt;/strong&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Excelente cheat sheet de VIM</title>
-   <link href="jahrmando.github.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/"/>
+   <link href="jahrmando.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/"/>
    <updated>2015-03-13T20:34:09-06:00</updated>
-   <id>jahrmando.github.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim</id>
+   <id>jahrmando.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim</id>
    <content type="html">&lt;p&gt;Excelente cheat sheet para principiantes de #VIM (y no generen cadenas aleatorias para poder salir del editor 😁)&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/tumblr_files/tumblr_nl6kgxBjbX1qcyjxwo1_1280.png&quot; alt=&quot;VIM Cheet&quot; /&gt;&lt;/p&gt;
@@ -97,10 +785,289 @@ location = /503.html {
  </entry>
  
  <entry>
+   <title>Instalación y configuración del servicio NGINX y PHP-FPM en CentOS 7</title>
+   <link href="jahrmando.com/2015/02/11/instalacion-nginx-php-en-centos/"/>
+   <updated>2015-02-11T11:02:00-06:00</updated>
+   <id>jahrmando.com/2015/02/11/instalacion-nginx-php-en-centos</id>
+   <content type="html">&lt;p&gt;Este manual nos permitira configurar un servicio &lt;strong&gt;HTTP&lt;/strong&gt; usando &lt;em&gt;NGINX&lt;/em&gt; y con soporte &lt;strong&gt;PHP&lt;/strong&gt; usando &lt;em&gt;PHP-FPM&lt;/em&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Las configuraciones presentadas funcionan bajo el esquema de seguridad &lt;strong&gt;SELINUX&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Instalemos el servicio &lt;em&gt;NGINX&lt;/em&gt; desde los reposotorios &lt;em&gt;EPEL&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo yum install nginx --enablerepo epel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Si no tiene el repositorio &lt;em&gt;EPEL&lt;/em&gt; configurado hagalo desde &lt;a href=&quot;http://www.cyberciti.biz/faq/installing-rhel-epel-repo-on-centos-redhat-7-x/&quot;&gt;aquí&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Ahora vamos a habilitar el servicio en el inicio de sistema con el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;enable&lt;/code&gt; y despues iniciamos el servicio (&lt;code class=&quot;highlighter-rouge&quot;&gt;start&lt;/code&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo systemctl enable nginx.service
+$ sudo systemctl start nginx.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Por defecto &lt;em&gt;CentOS 7&lt;/em&gt; trae el servicio &lt;em&gt;firewalld&lt;/em&gt; como servicio de muro de fuego, &lt;em&gt;firewalld&lt;/em&gt; maneja perfiles de servicio para habilitar puertos por lo cual vamos ha habilitar el perfil &lt;strong&gt;&lt;em&gt;http&lt;/em&gt;&lt;/strong&gt; que nos abre el puerto &lt;em&gt;80/TCP&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo firewall-cmd --zone=public --add-service=http --permanent
+$ sudo firewall-cmd --reload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Podemos ver el estatus del firewall usando el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;firewall-cmd --list-all&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;configuracin-de-nginx&quot;&gt;Configuración de NGINX&lt;/h3&gt;
+
+&lt;p&gt;Ahora vamos a configurar el &lt;em&gt;NGINX&lt;/em&gt;, primero creamos una carpeta llamada &lt;em&gt;sites-enabled&lt;/em&gt; que sera el directorio donde &lt;em&gt;NGINX&lt;/em&gt; cargará configuraciones.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir /etc/nginx/sites-enabled
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El esquema como buena practica, es que nosotros crearemos los archivos desde el directorio &lt;strong&gt;&lt;em&gt;/etc/nginx/conf.d&lt;/em&gt;&lt;/strong&gt; y “&lt;em&gt;activaremos&lt;/em&gt;” la configuracion creando un acceso directo de la configuracion apuntando a &lt;strong&gt;&lt;em&gt;/etc/nginx/sites-enabled&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Ejemplo&lt;/em&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ln -s /etc/nginx/conf.d/misitio.conf /etc/nginx/sites-enabled/misitio.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;De esta manera nos es mas facil desactivar sitios sin borrar sus archivos de configuracion.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Antes de iniciar la edicion del archivo principal de configuracion de &lt;em&gt;NGINX&lt;/em&gt; respaldamos la configuracion inicial.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuramos de la siguiente manera, siga las instruccion de los comentarios del archivo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo vim /etc/nginx/nginx.conf
+user  nginx;
+worker_processes  4;                        # Ajuste de acuerdo al numero de CPUs
+
+#error_log  /var/log/nginx/error.log;
+#error_log  /var/log/nginx/error.log  notice;
+#error_log  /var/log/nginx/error.log  info;
+error_log  /var/log/nginx/error.log  warn;  # Logs a nivel de advertencia
+
+pid        /run/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;
+                      &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;
+                      &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile    on;
+    tcp_nopush  on;                         # Optimiza el rendimiento de sendfile
+    keepalive_timeout  65;                      # Ajuste de tiempo de espera
+    gzip  on;                                   # Reduce la cantidad de datos a transferir
+
+    include /etc/nginx/sites-enabled/*.conf;    # Directorio de configuraciones
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;configuracion-de-php-fpm-soporte-fastcgi-para-php&quot;&gt;Configuracion de php-fpm (Soporte FastCGI para PHP)&lt;/h3&gt;
+
+&lt;p&gt;El servicio &lt;a href=&quot;http://php-fpm.org&quot;&gt;php-fpm&lt;/a&gt; nos da el sorporte para sitios web hechos en &lt;em&gt;PHP&lt;/em&gt;. Procedamos a instalar php-fpm y los modulos PHP necesarios para su funcion.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo yum install php-fpm php-common php-cli php-pear php-pdo php-gd php-mbstring php-xml php-pecl-apc --enablerepo epel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora editamos el archivo de configuracion de &lt;em&gt;php-fpm&lt;/em&gt;. Configuraciones importantes en la variable &lt;code class=&quot;highlighter-rouge&quot;&gt;listen&lt;/code&gt; donde declaramos el socket del servicio y las variables &lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt; y &lt;code class=&quot;highlighter-rouge&quot;&gt;group&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/php-fpm.d/www.conf
+;listen = 127.0.0.1:9000
+listen = /var/run/php5-fpm.sock
+
+;user = apache
+;group = apache
+user = nginx
+group = nginx
+
+request_terminate_timeout = 65
+
+security.limit_extensions = .php .php3 .php4 .php5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos directorios indispensables para el servicio y le asignamos los permisos correspondientes.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir -p /var/lib/php/{session,tmp}
+$ chmod 750 -R /var/lib/php/
+$ chown nginx:nginx -R /var/lib/php/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora agregamos el siguiente archivo, este contiene configuraciones de seguridad que he recopilado y que nos permite agregarle un extra de seguridad.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/php.d/security.ini
+; Ocultar version de PHP
+expose_php=Off
+; Ocultar errores
+display_errors=Off
+; Bloquear subidas de archivos
+;file_uploads=Off
+; ó limitar los archivos a subir
+file_uploads=On
+upload_max_filesize=1M
+; Bloquear ejecucion remota via ftp,http
+allow_url_fopen=Off
+allow_url_include=Off
+; Desactivar (Obsoleto a partir de PHP 5.4.0)
+magic_quotes_gpc=Off
+; Limita los paquetes POST, (Default 8M)
+post_max_size=1M
+; Control de recursos
+max_execution_time =  30
+max_input_time = 30
+memory_limit = 8M
+; Desactivar funciones que podrían ser explotadas
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen,curl_multi_exec,parse_ini_file,show_source
+; Directorio temporal
+upload_tmp_dir = /var/lib/php/tmp/
+; Limitar la ejecución a php en directorio
+open_basedir = /home/www/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Para esta prueba no desabilitamos &lt;strong&gt;phpinfo&lt;/strong&gt; en la variable &lt;strong&gt;disable_functions&lt;/strong&gt; para poder realizar la prueba, recomiendo agregarlo una vez terminada las pruebas.
+Estas opciones las puede ajustar a su criterio.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Habilitamos el servicio en el inicio de sistema e iniciamos el servicio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ systemctl enable php-fpm.service
+$ systemctl start php-fpm.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;configuracion-de-un-sitio-de-prueba&quot;&gt;Configuracion de un sitio de prueba&lt;/h3&gt;
+
+&lt;p&gt;Lo primero que haremos es crear el archivo de configuracion de nuestro sitio en &lt;em&gt;NGINX&lt;/em&gt; (recuerde que estas van en el directorio &lt;em&gt;/etc/nginx/conf.d&lt;/em&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/nginx/conf.d/test.conf
+server {
+    listen       80 default;
+    server_name  localhost;
+
+    ## Deshabilitamos que imprima la version de NGINX ##
+    server_tokens off;
+
+    ## Registros del virtualhost ##
+    access_log  /var/log/nginx/test.access.log;
+    error_log  /var/log/nginx/test.error.log;
+
+    ## Metodos validos ##
+    if ($request_method !~ ^(GET|HEAD|POST)$ ) {
+         return 444;
+    }
+
+    location / {
+        ## Los index validos, entre ellos el .php
+        index  index.html index.htm index.php;
+
+        ## Directorio del sitio
+        root  /home/www/test/public_html;
+
+        ## Soporte PHP ##
+        location ~ \.php$ {
+                root            public_html;
+                fastcgi_pass    unix:/var/run/php5-fpm.sock;    #Socket de php-fpm
+                fastcgi_index   index.php;
+                fastcgi_param   SCRIPT_FILENAME  /home/www/test/public_html$fastcgi_script_name;
+                include         /etc/nginx/fastcgi_params;
+        }
+
+        ## Denegar accesos a archivos ocultos ##
+        location ~ /\. { deny  all; }
+
+        ## Bloquear logs de archivos estaticos ###
+        location ~* \.(jpg|jpeg|gif|png|css|js|ico|xml)$ {
+                access_log        off;
+                log_not_found     off;
+                expires           360d;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Usted puede ver que estamos declarando que los archivos de nuestro sitio estaran alojados en &lt;strong&gt;&lt;em&gt;/home/www&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Ahora lo que haremos es activar nuestra configuracion nginx de prueba, para esto creamos un enlace directo hacia &lt;em&gt;/etc/nginx/sites-enabled&lt;/em&gt; que es donde se &lt;em&gt;NGINX&lt;/em&gt; carga los archivos de configuracion (como lo declaramos anteriormente).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ln -s /etc/nginx/conf.d/test.conf /etc/nginx/sites-enabled/test.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el directorio donde alojaremos nuestros sitio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir -p /home/www/test/public_html
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un archivo &lt;em&gt;php&lt;/em&gt; donde ejecutaremos la funcion &lt;code class=&quot;highlighter-rouge&quot;&gt;phpinfo()&lt;/code&gt; para compobrar que este funcionando correctamente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /home/www/test/public_html/index.php
+&amp;lt;?php
+        phpinfo();
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asignamos permisos adecuados.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chmod 750 -R /home/www
+$ chown nginx:nginx -R /home/www
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Permisos necesarios para &lt;strong&gt;SELinux&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ semanage fcontext -a -t httpd_sys_content_t &quot;/home/www(.*)&quot;
+$ restorecon -R -v /home/www/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;No olvide asignar los permisos que se mencionan anteriormente para cada proyecto &lt;em&gt;PHP&lt;/em&gt; que configure.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Reiniciamos el servicio para cargar todo&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ systemctl restart nginx.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Limpiar las particiones de intercambio SWAP</title>
-   <link href="jahrmando.github.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap/"/>
+   <link href="jahrmando.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap/"/>
    <updated>2015-01-27T14:51:39-06:00</updated>
-   <id>jahrmando.github.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap</id>
+   <id>jahrmando.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap</id>
    <content type="html">&lt;p&gt;Suele suceder que un proceso finalizado nos deje ocupado parte o casi toda la partición swap. Si requiere depurar ese espacio para eso utilizamos el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;swapoff&lt;/code&gt;, este desactiva una partición swap y volcara todo archivo que se este usando a espacio de ram.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ swapoff -a
@@ -124,9 +1091,9 @@ location = /503.html {
  
  <entry>
    <title>Autocompletado de comandos con bash en CentOS</title>
-   <link href="jahrmando.github.com/2015/01/20/autocompletado-bash-en-centos/"/>
+   <link href="jahrmando.com/2015/01/20/autocompletado-bash-en-centos/"/>
    <updated>2015-01-20T13:47:00-06:00</updated>
-   <id>jahrmando.github.com/2015/01/20/autocompletado-bash-en-centos</id>
+   <id>jahrmando.com/2015/01/20/autocompletado-bash-en-centos</id>
    <content type="html">&lt;p&gt;Cuando usamos distribuciones &lt;strong&gt;Linux&lt;/strong&gt; (Fedora, Debian, OpenSuse, etc) nos acostumbramos ha tener auto-completado en la terminal, ya que esta característica viene por defecto, pero en &lt;strong&gt;CentOS&lt;/strong&gt; (al menos en la versión mininal) no tiene.&lt;/p&gt;
 
 &lt;p&gt;Para tener esta característica en la terminal instalemos el paquete &lt;strong&gt;bash-completion&lt;/strong&gt; que viene en los repositorios base.&lt;/p&gt;
@@ -138,10 +1105,663 @@ location = /503.html {
  </entry>
  
  <entry>
+   <title>Instalación y configuración de Bacula en CentOS 7</title>
+   <link href="jahrmando.com/2015/01/19/instalacion-configuracion-de-bacula-centos7/"/>
+   <updated>2015-01-19T10:49:43-06:00</updated>
+   <id>jahrmando.com/2015/01/19/instalacion-configuracion-de-bacula-centos7</id>
+   <content type="html">&lt;p&gt;&lt;strong&gt;Bacula&lt;/strong&gt; es un conjunto de programas* Open Source*, permite administrar los respaldos, restauración y verificación de datos en una red heterogénea. Bacula es relativamente fácil de usar y eficiente, a la vez que ofrece muchas funcionalidades avanzadas para la administración de los datos almacenados, lo cual facilita hallar y recuperar archivos perdidos o dañados.&lt;/p&gt;
+
+&lt;p&gt;Se basa en una arquitectura Cliente-Servidor que resulta eficaz y fácil de manejar, dada la amplia gama de funciones y características que brinda; copiar y restaurar ficheros dañados o perdidos.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Considere los siguiente al leer este manual:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;La versión de bacula que se instala es la 5.2&lt;/li&gt;
+    &lt;li&gt;Se usara la versión de postgresql 9.2&lt;/li&gt;
+    &lt;li&gt;Algunos comandos que se muestran necesitaran de privilegios de superusuario, considere usar &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo&lt;/code&gt; o ejecutar el comando como superusuario&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Instalaremos Bacula de acuerdo al siguiente esquema:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/bacula_arch.png&quot; alt=&quot;BaculaARque&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Servidor 1&lt;/strong&gt;. Tendra los servicios:
+    &lt;ul&gt;
+      &lt;li&gt;bacula-dir&lt;/li&gt;
+      &lt;li&gt;bacula-sd&lt;/li&gt;
+      &lt;li&gt;PostgreSQL&lt;/li&gt;
+      &lt;li&gt;bconsole&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Servidor 2&lt;/strong&gt;.Nuestro cliente, tendra los servicios:
+    &lt;ul&gt;
+      &lt;li&gt;bacula-fd&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En el diagrama tenemos un 3er servidor con el servicio NFS, considere esto un paso opcional.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;componentes&quot;&gt;Componentes&lt;/h2&gt;
+
+&lt;p&gt;Los componentes de Bacula son:&lt;/p&gt;
+
+&lt;h3 id=&quot;bacula-director&quot;&gt;Bacula-director&lt;/h3&gt;
+
+&lt;p&gt;Es el servicio (&lt;strong&gt;&lt;em&gt;bacula-dir&lt;/em&gt;&lt;/strong&gt;) que gestiona la lógica de los procesos de respaldo y administra los demás servicios que componen &lt;em&gt;Bacula&lt;/em&gt;. El servicio &lt;em&gt;bacula-dir&lt;/em&gt; hace uso de un servicio de base de datos donde guarda información importante del servicio (Trabajos, Listas de archivos respaldados, etc. Conocido como catalogo) y esta debe estar accesible a &lt;em&gt;bacula-dir&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;En el archivo de configuración de este servicio se especifica dónde y cómo acceder al resto de los servicios.&lt;/p&gt;
+
+&lt;h3 id=&quot;bacula-storage&quot;&gt;Bacula-storage&lt;/h3&gt;
+
+&lt;p&gt;Este servicio (&lt;strong&gt;&lt;em&gt;bacula-sd&lt;/em&gt;&lt;/strong&gt;) es el encargado de manejar los dispositivos de almacenamiento físicos que se usaran para resguardar los respaldos, tales como: discos locales, grabadoras de CD o DVD, unidades de cinta, volúmenes NAS o SAN, etc.&lt;/p&gt;
+
+&lt;p&gt;Su fichero de configuración define los dispositivos de almacenamiento disponibles y los directores (&lt;em&gt;bacula-dir&lt;/em&gt;) que pueden utilizarlo.&lt;/p&gt;
+
+&lt;h3 id=&quot;bacula-file&quot;&gt;Bacula-file&lt;/h3&gt;
+
+&lt;p&gt;Mediante este servicio (&lt;strong&gt;&lt;em&gt;bacula-fd&lt;/em&gt;&lt;/strong&gt;) &lt;em&gt;Bacula&lt;/em&gt; obtiene los ficheros que necesita respaldar, éste es el componente que hay que instalar en las máquinas que necesiten respaldo. Realiza la función de &lt;strong&gt;agente cliente&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;bacula-console&quot;&gt;Bacula-console&lt;/h3&gt;
+
+&lt;p&gt;Este es el cliente de administración que se conecta al bacula-dir. En el podemos realizar trabajos de restauración o ejecución de respaldos manuales, monitorear el estatus de los servicios que componen &lt;em&gt;Bacula&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;instalacin&quot;&gt;Instalación&lt;/h2&gt;
+
+&lt;p&gt;En esta ejemplo de instalación manejaremos la siguiente arquitectura.&lt;/p&gt;
+
+&lt;h3 id=&quot;base-de-datos&quot;&gt;Base de datos&lt;/h3&gt;
+
+&lt;p&gt;Todo el conjunto de elementos que forman Bacula trabaja en sincronía y es totalmente compatible con bases de datos como &lt;strong&gt;MySQL, SQLite y PostgreSQL&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Usaremos el gestor de base de datos &lt;strong&gt;PostgreSQL 9.2&lt;/strong&gt; en donde se guardara el &lt;strong&gt;catalogo de archivos&lt;/strong&gt; que se respaldan y otras variables importantes para &lt;em&gt;Bacula&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Instalación del servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install postgresql-server
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Inicio automático del servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ systemctl enable postgresql.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciar las bases de datos y el servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ postgresql-setup initdb
+$ systemctl start postgresql.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuración del servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/data/postgresql.conf
+listen_addresses = &#39;localhost&#39;
+port = 5432
+max_connections = 100
+client_min_messages = notice
+log_min_messages = notice
+log_min_error_statement = error
+log_connections = on
+log_line_prefix = &#39;%t %u %d&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuraciones de acceso&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/data/pg_hba.conf
+# TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
+# &quot;local&quot; is for Unix domain socket connections only
+local	all	all	peer
+# IPv4 local connections:
+host	all	all	127.0.0.1/32	md5
+# IPv6 local connections:
+host	all	all	::1/128	md5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Aplicar los cambios&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ systemctl restart postgresql.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;instalacin-de-los-componentes&quot;&gt;Instalación de los componentes&lt;/h3&gt;
+
+&lt;p&gt;Instalamos los paquetes de bacula que necesitamos en el servidor&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install bacula-console bacula-director bacula-storage
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;configuracin-de-la-base-de-datos-bacula&quot;&gt;Configuración de la base de datos &lt;strong&gt;bacula&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;Bacula nos ofrece &lt;em&gt;scripts&lt;/em&gt; para configurar la base de datos para el catalogo. Estos comandos son para configurar la base de datos de bacula en &lt;em&gt;Postgresql&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su postgres -c &quot;/usr/libexec/bacula/create_bacula_database postgresql&quot;
+$ su postgres -c &quot;/usr/libexec/bacula/make_bacula_tables postgresql&quot;
+$ su postgres -c &quot;/usr/libexec/bacula/grant_bacula_privileges postgresql&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asignamos una contraseña al usuario bacula de postgresql&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su postgres -c &quot;psql&quot;
+postgres=# ALTER USER bacula WITH LOGIN ENCRYPTED PASSWORD &#39;MiContraseña&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Otras configuraciones&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ gpasswd -a bacula postgres
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;configuracin-de-los-componentes&quot;&gt;Configuración de los componentes&lt;/h3&gt;
+
+&lt;p&gt;Los archivos de configuración se encuentran en el directorio &lt;em&gt;/etc/bacula&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;bacula-sd&quot;&gt;Bacula-sd&lt;/h4&gt;
+
+&lt;p&gt;Primero empezamos con la configuración del servicio de almacenamiento, este servicio se encarga de administrar los medios de almacenamiento físicos, el archivo de configuración encuentra nombrado generalmente como &lt;em&gt;bacula-sd.conf&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;En la sección &lt;strong&gt;Storage&lt;/strong&gt; definimos opciones como el puerto del servicio, directorios donde se alojaran el PID de servicio, cola de tareas, etc. También definimos cuantos trabajos máximos ejecutara el Storage.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Storage {
+  Name = bacula-sd
+  SDPort = 9103
+  WorkingDirectory = &quot;/var/spool/bacula&quot;
+  Pid Directory = &quot;/var/run&quot;
+  Maximum Concurrent Jobs = 50 		     # Ajustar el máximo de trabajos
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En esta parte definimos la contraseña con la cual &lt;em&gt;bacula-dir&lt;/em&gt; se conectara con nuestro servicio &lt;em&gt;bacula-sd&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Director {
+  Name = bacula-dir
+  Password = &quot;PasswordSuperSecretoSD&quot;	 # Contraseña de bacula-sd
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Comentamos la siguiente sección.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#Director {
+#  Name = bacula-mon
+#  Password = &quot;dsd&quot;
+#  Monitor = yes
+#}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En esta sección definimos las características de nuestro &lt;strong&gt;medio de almacenamiento&lt;/strong&gt;. Configuramos el &lt;strong&gt;Device&lt;/strong&gt; con el nombre de &lt;em&gt;DiscoNFS&lt;/em&gt;, sera un medio de almacenamiento de tipo &lt;strong&gt;&lt;em&gt;File&lt;/em&gt;&lt;/strong&gt; (este tipo pueden ser medios externos de almacenamiento montados en el sistema).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Device {
+  Name = DiscoNFS					# Nombre de nuestro dispositivo
+  Media Type = File					# Tipo de medio
+  Archive Device = /mnt/backups		# Punto de montaje
+  LabelMedia = yes;
+  Random Access = Yes;
+  AutomaticMount = no;
+  RemovableMedia = no;
+  AlwaysOpen = no;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;punto-de-montaje-nfs&quot;&gt;Punto de montaje NFS&lt;/h5&gt;
+
+&lt;p&gt;Como parte de la arquitectura de configuración de ejemplo montaremos un recurso compartido &lt;strong&gt;NFS&lt;/strong&gt; (previamente configurado) en &lt;em&gt;/mnt/backups&lt;/em&gt; que nos servirá para guardar los respaldos.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Considere esto un paso opcional, usted puede solo usar un directorio valido de su sistema para alojar los respaldos.
+&lt;strong&gt;Bacula recomienda&lt;/strong&gt; instalar el servicio &lt;em&gt;bacula-sd&lt;/em&gt; en un servidor standalone.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum -y install nfs-utils
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos los servicios&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;systemctl restart rpcbind
+systemctl start nfs-lock
+systemctl start nfs-idmap
+systemctl start nfs-mountd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Habilitamos los servicios&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ systemctl enable rpcbind
+$ systemctl enable nfs-lock
+$ systemctl enable nfs-idmap
+$ systemctl enable nfs-mountd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Montando la carpeta NFS&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo mount -v -t nfs -o sec=sys,proto=tcp 192.168.x.x:/volume/backups /mnt/backups
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Si no tenemos ningún problema procedemos a editar el archivo &lt;strong&gt;fstab&lt;/strong&gt; para que el sistema monte la carpeta al iniciar.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/fstab
+192.168.x.x:/volume1/backups    /mnt/backups    nfs    timeo=14,intr,_netdev     0 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;bacula-dir&quot;&gt;Bacula-dir&lt;/h4&gt;
+
+&lt;p&gt;Ahora empezaremos la configuración del Bacula director, este se encuentra nombrado como &lt;em&gt;bacula-dir.conf&lt;/em&gt;, en este archivo encontraremos las siguientes opciones para configurar.&lt;/p&gt;
+
+&lt;p&gt;En la sección &lt;strong&gt;Director&lt;/strong&gt; dentro del archivo de configuración, configuramos el máximo de trabajos concurrentes y la contraseña para &lt;em&gt;bacula-dir&lt;/em&gt; (Esta contraseña se usa para conectarse desde la consola de administración, &lt;strong&gt;bconsole&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Director {
+  Name = bacula-dir
+  DIRport = 9101
+  QueryFile = &quot;/etc/bacula/query.sql&quot;
+  WorkingDirectory = &quot;/var/spool/bacula&quot;
+  PidDirectory = &quot;/var/run&quot;
+  Maximum Concurrent Jobs = 1		# Numero máximo de trabajos concurrentes
+  Password = &quot;MiSuperPaswordBaculaDIR&quot;		# Contraseña de bacula-dir
+  Messages = Daemon
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La sección &lt;strong&gt;FileSet&lt;/strong&gt; es donde se define los archivos y directorios que se respaldaran, así como los que serán excluidos, se puede declarar mas de un &lt;em&gt;FileSet&lt;/em&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;em&gt;FileSet&lt;/em&gt; es requerido en la definicion &lt;strong&gt;Job&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Vamos a declarar un &lt;em&gt;FileSet&lt;/em&gt; con el nombre &lt;strong&gt;&lt;em&gt;Linux Set&lt;/em&gt;&lt;/strong&gt;, este tendra un cifrado de tipo &lt;em&gt;SHA1&lt;/em&gt; e ira comprimido con &lt;em&gt;GZIP&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FileSet {
+  Name = &quot;Linux Set&quot;		# Nombre
+  Include {
+	Options {
+	  signature = SHA1		# Tipo de cifrado
+	  compression = GZIP	# Tipo de compresión
+	}
+	File = /				# Archivos que se respaldaran
+	File = /boot
+  }
+Exclude {					# Archivos que no se respaldaran
+	File = /tmp
+	File = /proc
+	File = /dev
+	File = /sys
+	File = /net
+	File = /misc
+	File = /lost+found
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la sección &lt;strong&gt;Schedule&lt;/strong&gt;, se especifica el tipo, fecha y hora en que se realizara los trabajos de respaldo. En la variable &lt;strong&gt;&lt;em&gt;Run&lt;/em&gt;&lt;/strong&gt; definimos primero el tipo de respaldo (completo, diferencial o incremental) y después su ciclo de ejecución (definido tipo crontab).&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;em&gt;Schedule&lt;/em&gt; es requerido en la definición &lt;strong&gt;Job&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Definamos un &lt;em&gt;schedule&lt;/em&gt; con el nombre &lt;strong&gt;&lt;em&gt;CicloServidores&lt;/em&gt;&lt;/strong&gt; que ejecutara un tipo de respaldo completo (&lt;em&gt;Full&lt;/em&gt;) todos los primer domingo de cada mes, ejecutara un respaldo diferencial (&lt;em&gt;Differential&lt;/em&gt;) a partir del segundo al quinto domingo de cada mes y un respaldo incremental de lunes a sábado (&lt;em&gt;Incremental&lt;/em&gt;); todos las tareas se ejecutan a las 23 horas.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Schedule {
+  Name = &quot;CicloServidores&quot;						# Nombre
+  Run = Full 1st sun at 23:00                   # Full – Mensual
+  Run = Differential 2nd-5th sun at 23:00		# Diferencial – Semanal
+  Run = Incremental mon-sat at 23:00			# Incremental – Diario
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la sección &lt;strong&gt;Storage&lt;/strong&gt; se configura las credenciales del servicio de almacenamiento (&lt;em&gt;bacula-sd&lt;/em&gt;). También se define el dispositivo (&lt;em&gt;device&lt;/em&gt;) donde se realizará el respaldo.&lt;/p&gt;
+
+&lt;p&gt;Configuramos el &lt;em&gt;Storage&lt;/em&gt; con el nombre &lt;strong&gt;&lt;em&gt;LocalStorage&lt;/em&gt;&lt;/strong&gt;, configuramos las credenciales de acceso, dirección de red y el dispositivo que configuramos en &lt;em&gt;bacula-sd&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Storage {
+  Name = LocalStorage					# Nombre
+  Address = 192.168.x.x					# No usar localhost
+  SDPort = 9103
+  Password = &quot;PasswordSuperSecretoSD&quot;	# Contraseña de bacula-sd
+  Device = DiscoNFS						# Nombre del dispositivo
+  Media Type = File						# Tipo de medio
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En la directiva &lt;strong&gt;Address&lt;/strong&gt; es importante no usar &lt;strong&gt;localhost&lt;/strong&gt; o la ip &lt;strong&gt;127.0.0.1&lt;/strong&gt;, si tienes corriendo el servicio bacula-sd en el mismo servidor del bacula-dir (como es nuestro caso) usa la IP LAN o nombre de dominio asignado al servidor.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;En la sección &lt;strong&gt;Catalog&lt;/strong&gt; definimos la base de datos que previamente configuramos en &lt;em&gt;PostgreSQL&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Le asignamos el nombre &lt;strong&gt;&lt;em&gt;MiCatalogo&lt;/em&gt;&lt;/strong&gt; y configuramos los accesos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Catalog {
+   Name = MiCatalogo		# Nombre del catalogo
+   dbname = &quot;bacula&quot;; dbuser = &quot;bacula&quot;; dbpassword = &quot;PasswordSuperSecretoDB&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El recurso &lt;strong&gt;Pool&lt;/strong&gt; define el conjunto de volúmenes asociados a un trabajo (&lt;em&gt;Job&lt;/em&gt;), es decir es una agrupación de volúmenes de respaldo que se asocian a un trabajo.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Como buena practica podemos crear un &lt;em&gt;Pool&lt;/em&gt; por cliente.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Creamos un &lt;em&gt;Pool&lt;/em&gt; con el nombre &lt;strong&gt;&lt;em&gt;PoolCliente01&lt;/em&gt;&lt;/strong&gt; y configuramos de la siguiente forma.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Pool {
+  Name = PoolCliente01			# Nombre
+  Pool Type = Backup			# Tipo backup
+  Recycle = yes					# Bacula reutilizara volumenes expirados.
+  AutoPrune = yes				# Borra los trabajos en volumenes expirados
+  Action On Purge = Truncate	# Trunca los datos cuando se ejecuta purge
+  Volume Retention = 2 months	# Expiracion de datos
+  Maximum Volume Bytes = 10G	# Maxima capacidad por volumen
+  Maximum Volumes = 5			# Numero de volumenes en el pool
+  Label Format = &quot;VolCliente01-&quot;	# Formato para autonombrar los volumenes
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora en la sección &lt;strong&gt;Client&lt;/strong&gt; se define al cliente (&lt;em&gt;bacula-fd&lt;/em&gt;), aquí se especifica las credenciales que se utilizara para conectarse, también se define la política de retención de datos y procesos/trabajos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Client {
+  Name = cliente01						# Nombre
+  Address = cliente01.example.com		# IP ó dominio
+  FDPort = 9102
+  Catalog = MiCatalogo					# Catalogo definido
+  Password = &quot;PasswordSuperSecretoFD&quot;	# Contraseña de acceso del cliente
+  File Retention = 2 months				# Días de retención
+  Job Retention = 3 months				# Expira un trabajo
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Y por ultimo (y no menos importante) el recurso &lt;strong&gt;Job&lt;/strong&gt;, aquí se define un &lt;strong&gt;&lt;em&gt;trabajo&lt;/em&gt;&lt;/strong&gt; de respaldo ó restauración y se definen otros atributos como bajo que cliente se realizará el respaldo (&lt;em&gt;Client&lt;/em&gt;), el conjunto de datos a respaldar (&lt;em&gt;FileSet&lt;/em&gt;), el esquema de agrupación de los volúmenes (&lt;em&gt;Pool&lt;/em&gt;), los horarios de ejecución (&lt;em&gt;Schedule&lt;/em&gt;) y donde se almacenaran los datos físicamente (&lt;em&gt;Storage&lt;/em&gt;).&lt;/p&gt;
+
+&lt;p&gt;Para cada cliente debemos generar dos tipos de &lt;em&gt;Job&lt;/em&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Backup&lt;/strong&gt;. Respaldo&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Restore&lt;/strong&gt;. Restauración&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;También existe el sección &lt;strong&gt;JobDefs&lt;/strong&gt; que nos sirve como una &lt;strong&gt;&lt;em&gt;plantilla&lt;/em&gt;&lt;/strong&gt; para usar en los &lt;em&gt;Job&lt;/em&gt;, esto es util porque aveces entre los &lt;em&gt;Job&lt;/em&gt; pueden compartir ciertos parámetros y no seria necesario declararlos en todos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Plantillas para los Job
+JobDefs {
+   Name = &quot;BackupServerLinux&quot;				# Nombre
+   Type = Backup							# Tipo de trabajo
+   Level = Incremental						# Nivel
+   Schedule = &quot;CicloServidores&quot;				# Ciclo de ejecución
+   Storage = LocalStorage					# Donde se guarda el respaldo
+   Messages = Standard						# Tipo de notificación
+   FileSet = &quot;Linux Set&quot;					# Archivos que respaldara
+   Priority = 10							# Prioridad
+   Write Bootstrap = &quot;/var/spool/bacula/%c_server.bsr&quot;	# Log del trabajo
+}
+JobDefs {
+   Name = &quot;RestoreServerLinux&quot;		# Nombre
+   Type = Restore					# Tipo de trabajo
+   Storage = LocalStorage
+   FileSet = &quot;Linux Set&quot;
+   Messages = Standard
+   Where = /tmp/bacula-restores		# Directorio de restauración
+}
+#
+# Definicion de trabajos
+#
+Job {
+   Name = &quot;BackupCliente01&quot;			# Nombre
+   JobDefs = &quot;BackupServerLinux&quot;	# Plantilla de Job
+   Client = cliente01				# Cliente que lo usara
+   Pool = PoolCliente01				# Pool de volumenes que usara
+}
+Job {
+   Name = &quot;RestoreCliente01&quot;
+   JobDefs = &quot;RestoreServerLinux&quot;
+   Client = cliente01
+   Pool = PoolCliente01
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la variable &lt;strong&gt;Where&lt;/strong&gt; del &lt;em&gt;JobDefs&lt;/em&gt;“RestoreServerLinux” es donde señalamos en que directorio del cliente se va restaurar los archivos.&lt;/p&gt;
+
+&lt;h5 id=&quot;firewall&quot;&gt;Firewall&lt;/h5&gt;
+
+&lt;p&gt;Tenemos que abrir los puertos de los servicios bacula-dir (&lt;strong&gt;9101&lt;/strong&gt;) y bacula-sd (&lt;strong&gt;9103&lt;/strong&gt;) en protocolo &lt;strong&gt;TCP&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Iptables:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 9101 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 9103 -j ACCEPT
+$ service iptables restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Firewalld:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ firewall-cmd --zone=public --add-service=bacula --permanent
+$ firewall-cmd --reload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;bacula-fd-cliente&quot;&gt;Bacula-fd (Cliente)&lt;/h4&gt;
+
+&lt;p&gt;Una vez terminado con la configuración del director y haber declarado los clientes que se conectaran para ser respaldados procedemos a instalar en los clientes (bacula-fd).&lt;/p&gt;
+
+&lt;h4 id=&quot;instalacin-1&quot;&gt;Instalación&lt;/h4&gt;
+
+&lt;p&gt;La instalación de &lt;strong&gt;Bacula-fd&lt;/strong&gt; es diferente entre el centos 6.x y 5.x, esta radica en que en CentOS 5.x no se encuentra en los repositorios conocidos y se tiene que instalar desde las fuentes.&lt;/p&gt;
+
+&lt;h5 id=&quot;en-centos-6x-7&quot;&gt;En Centos 6.x, 7&lt;/h5&gt;
+
+&lt;p&gt;En centos 6.x y 7 podemos encontrar bacula-fd desde los repositorios base, esto hace mas rapida la instalación y configuraciones del cliente.&lt;/p&gt;
+
+&lt;p&gt;Instalación del servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum -y install bacula-client
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;en-centos-5x&quot;&gt;En Centos 5.x&lt;/h5&gt;
+
+&lt;p&gt;Como se menciono anteriormente en CentOS 5.x realizaremos la instalación desde la fuente de binarios. Haremos los siguiente:&lt;/p&gt;
+
+&lt;p&gt;Instalación de compiladores al sistema.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install gcc gcc-c++ autoconf automake
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Descargamos las fuentes de Bacula y descomprimimos la fuente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ wget http://sourceforge.net/projects/bacula/files/bacula/5.0.2/bacula-5.0.2.tar.gz/download
+$ tar -zxf bacula-5.0.2.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Nos cambiamos al directorio donde descomprimimos las fuentes, creamos una variable de sistema &lt;strong&gt;CFLAGS&lt;/strong&gt; que nos servirá en la compilación y después procedemos a configurar la instalación y compilar.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd bacula-5.0.2
+$ CFLAGS=&quot;-g -Wall&quot;
+$ ./configure --sbindir=/usr/sbin --sysconfdir=/etc/bacula --with-pid-dir=/var/run --with-subsys-dir=/usr/libexec/bacula --with-working-dir=/var/spool/bacula --enable-client-only
+$ make
+$ make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuraciones de arranque del servicio bacula-fd.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Agregar la siguiente linea: &lt;code class=&quot;highlighter-rouge&quot;&gt;# chkconfig: - 87 26&lt;/code&gt; en el archivo &lt;em&gt;/etc/init.d/bacula-fd&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp /usr/sbin/bacula-fd /etc/init.d/
+$ vim /etc/init.d/bacula-fd
+#! /bin/sh
+# chkconfig: - 87 26
+#
+# bacula This shell script takes care of starting and stopping
+# the bacula daemons.
+.......
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;configuracin&quot;&gt;Configuración&lt;/h4&gt;
+
+&lt;p&gt;La configuración están en  &lt;em&gt;bacula-fd.conf&lt;/em&gt;. Aquí definimos una clave de acceso para el cliente. Agregamos la contraseña que definimos en la sección &lt;em&gt;Client&lt;/em&gt; del &lt;em&gt;bacula-dir&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Director {
+  Name = bacula-dir
+  Password = &quot;PasswordSuperSecretoFD&quot; 		# Contraseña del cliente
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Se comenta esta sección.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#Director {
+#  Name = bacula-mon
+#  Password = &quot;vMN&quot;
+#  Monitor = yes
+#}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Activando el servicio.&lt;/p&gt;
+
+&lt;p&gt;En CentOS 7&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ systemctl enable bacula-fd
+$ systemctl start bacula-fd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En CentOS 6.x y 5.x&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chkconfig bacula-fd on
+$ service bacula-fd start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;#####Firewall&lt;/p&gt;
+
+&lt;p&gt;Configuraciones de firewall, abrimos el puerto 9102.&lt;/p&gt;
+
+&lt;p&gt;Iptables&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 9102 -j ACCEPT
+$ service iptables restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Firewalld&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ firewall-cmd --permanent --zone=public --add-port=9102/tcp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;bacula-console-consola&quot;&gt;Bacula-console (Consola)&lt;/h4&gt;
+
+&lt;p&gt;Existen varias opciones para administrar Bacula, una de ellas es por medio de &lt;strong&gt;bconsole&lt;/strong&gt;, donde por medio de lineas de comando interactuamos con &lt;em&gt;bacula-dir&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Este programa la tenemos que instalar desde el equipo donde tengamos pensado realizar las tareas de administrador, no necesariamente se tiene que alojar en el servidor.&lt;/p&gt;
+
+&lt;p&gt;Instalación desde repositorios. (RHEL, CentOS, Fedora)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install bacula-console
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En su archivo de configuración agregamos la contraseña de acceso de &lt;em&gt;bacula-dir&lt;/em&gt; que definimos anteriormente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Director {
+  Name = bacula-dir
+  DIRport = 9101
+  address = 192.168.x.x						# IP ó dominio
+  Password = &quot;MiSuperPaswordBaculaDIR&quot;		# Contraseña de bacula-dir
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;administracin-bsica&quot;&gt;Administración básica&lt;/h4&gt;
+
+&lt;h5 id=&quot;generar-un-respaldo-manualmente&quot;&gt;Generar un respaldo manualmente&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ bconsole
+* run 								# Ejecutamos un Job de respaldo (backup)
+Select Job resource (1-3): 1 		# Seleccionamos el Job de backup del cliente
+OK to run? (yes/mod/no): yes		# Ejecutamos la tarea
+Job queued. JobId=1
+* exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Las tareas de respaldo se irán generando automáticamente de acuerdo a las tareas que se definieron en la configuraciones del servicio bacula-dir.&lt;/p&gt;
+
+&lt;h5 id=&quot;generar-una-restauracin&quot;&gt;Generar una restauración&lt;/h5&gt;
+
+&lt;p&gt;Las restauraciones se pueden realizar desde varios puntos o imágenes de archivos que se hayan generado.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ bconsole
+* restore						# Ejecutamos una tarea de restauración
+To select the JobIds, you have the following choices:
+	1: List last 20 Jobs run
+	..
+	5: Select the most recent backup for a client
+	..
+	13: Cancel
+Select item: (1-13): 5 			# Seleccionamos el 5 para generar el mas reciente.
+Defined Clients:
+	 1: cliente01
+Select the Client (1-11): 1		# Seleccionamos al cliente
+$ ls 							# Listamos los archivos respaldados
+home/
+$ mark home						# Marcamos los que deseemos restaurar
+5 files marked.
+$ done							# Terminamos de seleccionar
+OK to run? (yes/mod/no): yes 	# Ejecutamos la tarea configurada
+Job queued. JobId=2
+* exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;fuentes&quot;&gt;Fuentes&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://wiki.bacula.org/doku.php&quot;&gt;bacula.org&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.server-world.info/en/note?os=CentOS_6&amp;amp;p=bacula&quot;&gt;server-world.info&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Configuración de NGINX con autenticación HTTP en CentOS</title>
-   <link href="jahrmando.github.com/2015/01/08/nginx-autenticacion-http-centos/"/>
+   <link href="jahrmando.com/2015/01/08/nginx-autenticacion-http-centos/"/>
    <updated>2015-01-08T12:00:28-06:00</updated>
-   <id>jahrmando.github.com/2015/01/08/nginx-autenticacion-http-centos</id>
+   <id>jahrmando.com/2015/01/08/nginx-autenticacion-http-centos</id>
    <content type="html">&lt;p&gt;Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.&lt;/p&gt;
 
 &lt;p&gt;La utilidad &lt;code class=&quot;highlighter-rouge&quot;&gt;htpasswd&lt;/code&gt; nos permite manejar los accesos de usuario para la autenticación básica por HTTP, esto en CentOS se encuentra en el paquete &lt;strong&gt;httpd-tools&lt;/strong&gt;.&lt;/p&gt;
@@ -198,9 +1818,9 @@ server {
  
  <entry>
    <title>Guardar un archivo sin permisos de escritura en VIM</title>
-   <link href="jahrmando.github.com/2014/09/29/como-forzar-vim-para-guardar-un-archivo-sin/"/>
+   <link href="jahrmando.com/2014/09/29/como-forzar-vim-para-guardar-un-archivo-sin/"/>
    <updated>2014-09-29T10:01:00-05:00</updated>
-   <id>jahrmando.github.com/2014/09/29/como-forzar-vim-para-guardar-un-archivo-sin</id>
+   <id>jahrmando.com/2014/09/29/como-forzar-vim-para-guardar-un-archivo-sin</id>
    <content type="html">&lt;p&gt;Se que no somos perfectos y yo en lo particular cometo el error de abrir un archivo para editarlo a la cual no tengo permisos de escritura, y claro! me doy cuenta cuando ya llevo varios minutos trabajando sobre ese archivo, siempre sucede y es inevitable.&lt;/p&gt;
 
 &lt;p&gt;Con el fin de que no suceda de nuevo he encontrado este pequeño VIM hack. Creamos un command-line (cmap) VIM de la siguiente forma en el archivo de configuracion local de VIM &lt;code class=&quot;highlighter-rouge&quot;&gt;.vimrc&lt;/code&gt;, esta se encuentra en el HOME del usuario.&lt;/p&gt;
@@ -223,9 +1843,9 @@ cmap w!! w !sudo tee &amp;gt; /dev/null %
  
  <entry>
    <title>Como redireccionar el trafico HTTP hacia HTTPS con NGINX</title>
-   <link href="jahrmando.github.com/2014/09/24/como-redireccionar-el-trafico-http-hacia-https-con/"/>
+   <link href="jahrmando.com/2014/09/24/como-redireccionar-el-trafico-http-hacia-https-con/"/>
    <updated>2014-09-24T11:02:11-05:00</updated>
-   <id>jahrmando.github.com/2014/09/24/como-redireccionar-el-trafico-http-hacia-https-con</id>
+   <id>jahrmando.com/2014/09/24/como-redireccionar-el-trafico-http-hacia-https-con</id>
    <content type="html">&lt;p&gt;Cuando tengamos que mudar un sitio web completamente a protocolo seguro &lt;strong&gt;HTTPS&lt;/strong&gt; necesitamos que toda petición que venga como &lt;strong&gt;HTTP&lt;/strong&gt; sea redirigido hacia el protocolo seguro.&lt;/p&gt;
 
 &lt;p&gt;Creamos dos instancias &lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt;, una para el puerto 80 (http) y otra para el puerto 443 (https).&lt;/p&gt;
@@ -260,9 +1880,9 @@ cmap w!! w !sudo tee &amp;gt; /dev/null %
  
  <entry>
    <title>Herramientas para monitoreo linux</title>
-   <link href="jahrmando.github.com/2014/08/20/herramientas-monitoreo-linux/"/>
+   <link href="jahrmando.com/2014/08/20/herramientas-monitoreo-linux/"/>
    <updated>2014-08-20T20:44:15-05:00</updated>
-   <id>jahrmando.github.com/2014/08/20/herramientas-monitoreo-linux</id>
+   <id>jahrmando.com/2014/08/20/herramientas-monitoreo-linux</id>
    <content type="html">&lt;p&gt;Una descripción gráfica de herramientas que podemos usar para monitorear diversas partes en las que se conforma un S.O Linux/Unix&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/tumblr_files/tumblr_namvhrFdOi1qcyjxwo1_1280.png&quot; alt=&quot;herramientas&quot; /&gt;&lt;/p&gt;
@@ -271,9 +1891,9 @@ cmap w!! w !sudo tee &amp;gt; /dev/null %
  
  <entry>
    <title>Top 10 IPs mas visitados en Apache / Nginx</title>
-   <link href="jahrmando.github.com/2014/08/16/obtener-las-10-ips-que-mas-visitan-un-sitio-en/"/>
+   <link href="jahrmando.com/2014/08/16/obtener-las-10-ips-que-mas-visitan-un-sitio-en/"/>
    <updated>2014-08-16T13:39:00-05:00</updated>
-   <id>jahrmando.github.com/2014/08/16/obtener-las-10-ips-que-mas-visitan-un-sitio-en</id>
+   <id>jahrmando.com/2014/08/16/obtener-las-10-ips-que-mas-visitan-un-sitio-en</id>
    <content type="html">&lt;p&gt;Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de &lt;strong&gt;Apache&lt;/strong&gt; ó &lt;strong&gt;NGINX&lt;/strong&gt;, ademas de listar el numero de accesos encontrados para cada IP.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat site.access.log | awk &#39;{print $1}&#39; | sort | uniq -c | sort -nr | head -n 10
@@ -294,9 +1914,9 @@ cmap w!! w !sudo tee &amp;gt; /dev/null %
  
  <entry>
    <title>Lista de comandos muy útil para auditar</title>
-   <link href="jahrmando.github.com/2014/08/07/una-lista-de-comandos-muy-%C3%BAtil-para-auditar/"/>
+   <link href="jahrmando.com/2014/08/07/una-lista-de-comandos-muy-%C3%BAtil-para-auditar/"/>
    <updated>2014-08-07T11:17:56-05:00</updated>
-   <id>jahrmando.github.com/2014/08/07/una-lista-de-comandos-muy-útil-para-auditar</id>
+   <id>jahrmando.com/2014/08/07/una-lista-de-comandos-muy-útil-para-auditar</id>
    <content type="html">&lt;p&gt;Una lista de comandos muy útil para auditar sesiones en Linux/Unix&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/tumblr_files/tumblr_n9y2lwdzkv1qcyjxwo1_1280.jpg&quot; alt=&quot;comandos&quot; /&gt;&lt;/p&gt;
@@ -305,9 +1925,9 @@ cmap w!! w !sudo tee &amp;gt; /dev/null %
  
  <entry>
    <title>Generar listado de contribuidores en un repositorio GIT</title>
-   <link href="jahrmando.github.com/2014/07/29/listado-contribuidores-repositorio-git/"/>
+   <link href="jahrmando.com/2014/07/29/listado-contribuidores-repositorio-git/"/>
    <updated>2014-07-29T12:19:00-05:00</updated>
-   <id>jahrmando.github.com/2014/07/29/listado-contribuidores-repositorio-git</id>
+   <id>jahrmando.com/2014/07/29/listado-contribuidores-repositorio-git</id>
    <content type="html">&lt;p&gt;Una forma sencilla de generar una lista completa de correos electronicos de los que han contribuido en un proyecto &lt;strong&gt;GIT&lt;/strong&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ git log --pretty=format:&quot;%aE&quot; | sort -u    
@@ -321,10 +1941,545 @@ userD@gmail.com
  </entry>
  
  <entry>
+   <title>Mejorando el rendimiento de PostgreSQL (Linux)</title>
+   <link href="jahrmando.com/2014/07/15/mejorar-rendimiento-postgresql/"/>
+   <updated>2014-07-15T17:36:34-05:00</updated>
+   <id>jahrmando.com/2014/07/15/mejorar-rendimiento-postgresql</id>
+   <content type="html">&lt;p&gt;En estos dias me dado a la tarea de explorar las opciones de optimizacion que tiene PostgreSQL, ya se tenia hecho una optimizacion en la configuracion general de PostgreSQL (postgresql.conf) de acuerdo con el hardware que tiene el servidor, esto demostro una mejora en el arranque del servicio y en los tiempos de respuesta de las consultas sql. Siempre uso la herramienta &lt;a href=&quot;https://github.com/gregs1104/pgtune&quot;&gt;pgtune&lt;/a&gt; para optimizar estos parametros importantes, como por ejemplo el &lt;strong&gt;&lt;em&gt;shared_buffers&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;effective_cache_size&lt;/em&gt;&lt;/strong&gt; y otros demas importantes.&lt;/p&gt;
+
+&lt;p&gt;Existen dos vertientes por las cuales podemos explorar alguna optimizacion en nuestro sistema gestor de bases de datos (&lt;strong&gt;SGBD&lt;/strong&gt;):&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;A nivel de consulta&lt;/strong&gt;. Que tiene mucho que ver en el empleo de tecnicas al realizar las consultas, como manejo de &lt;em&gt;indices&lt;/em&gt;, correcto uso de &lt;em&gt;JOINs&lt;/em&gt;, etc.&lt;/li&gt;
+  &lt;li&gt;y &lt;strong&gt;a nivel de hardware o sistema operativo&lt;/strong&gt;, que es en cuanto a proveer una optimizacion a nivel de hardware ó configuraciones en el sistema operativo que beneficien al SGBD.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Actualmente estamos en una etapa de auge de las SGBD de tipo NoSQL, sumamente rapidos y eficaces, muchos de los cuales vemos que sus datos estan en tiempo de ejecucion en espacio de RAM en el sistema operativo (SO). Todo acceso de datos en RAM sabemos por demas que es sumamente rapida, pero tienen la gran desventaja de que es un espacio volatil y en un SGDB es muy importante que los datos se conserven y puedan recuperarse a eventos como apagados repentinos del SO.&lt;/p&gt;
+
+&lt;p&gt;Partiendo de la idea de que en RAM los accesos a datos son sumamente rapidos, en la investigacion (o googleada) encontre un articulo interesante titulado &lt;a href=&quot;http://www.appneta.com/blog/postgresql-ram-drive/&quot;&gt;“Adventures with a PostGreSQL RAM Drive”&lt;/a&gt;, que en conclusion el autor &lt;strong&gt;Alan Leung&lt;/strong&gt; juega con el &lt;strong&gt;Write-Ahead Log&lt;/strong&gt; ó &lt;a href=&quot;http://en.wikipedia.org/wiki/Write-ahead_logging&quot;&gt;WAL&lt;/a&gt; sacandole ventaja poniendolo en RAM, ¿y esto porque?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;WAL&lt;/strong&gt; le permite a PostgreSQL mantener la atomicidad en los datos, este registra cada evento que es aplicado a los datos, esto permite recuperar datos en caso de un apagon de servidor. &lt;strong&gt;WAL&lt;/strong&gt; viene activado por defecto y no es conveniente desactivarlo.&lt;/p&gt;
+
+&lt;p&gt;Ya que cada transaccion es registrada en &lt;strong&gt;WAL&lt;/strong&gt; esto genera un tiempo extra de espera en cada transaccion y tener un mejor tiempo de I/O depende mucho de la configuracion y tipo de disco duro donde este alojado &lt;strong&gt;WAL&lt;/strong&gt; (el directorio es &lt;strong&gt;&lt;em&gt;pg_xlog&lt;/em&gt;&lt;/strong&gt;) y los archivos de las bases de datos (el directorio es &lt;strong&gt;pg_data&lt;/strong&gt;)&lt;/p&gt;
+
+&lt;p&gt;En el &lt;a href=&quot;http://www.postgresql.org/docs/9.1/static/wal-internals.html&quot;&gt;sitio oficial&lt;/a&gt; de postgresql en el segmento de &lt;strong&gt;WAL&lt;/strong&gt; nos comenta:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;It is advantageous if the log is located on a different disk from the main database files.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Esto suena logico, si mantenemos por separado la carga de I/O del &lt;strong&gt;WAL&lt;/strong&gt; y de los datos debemos tener un mejor tiempo en cada transaccion. Esto lo prueba &lt;strong&gt;Alan Leung&lt;/strong&gt; y nos muestra una mejora del 5% de TPS (&lt;a href=&quot;http://en.wikipedia.org/wiki/Transactions_per_second&quot;&gt;Transactions per second&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Ahora realizamos la misma accion y pero en este caso movemos los registros WAL a espacio de RAM en teoria deberia de mejorar resultados en TPS, y esto igual lo prueba Alan Leung, teniendo un incremento del 70% del rendimiento en TPS como resultado. Increiblemente ahora tenemos un mejor y destacable incremento de performance.&lt;/p&gt;
+
+&lt;h2 id=&quot;probando-la-teoria&quot;&gt;Probando la teoria&lt;/h2&gt;
+
+&lt;p&gt;Yo he realizado igual las mismas pruebas que Alan Leung, he montado CentOS virtualizado con lo siguiente:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CentOS 6.5 x86_64&lt;/li&gt;
+  &lt;li&gt;1GB de RAM&lt;/li&gt;
+  &lt;li&gt;8G de Disco virtual&lt;/li&gt;
+  &lt;li&gt;PostgreSQL 9.2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Usare &lt;code class=&quot;highlighter-rouge&quot;&gt;pgbench&lt;/code&gt; para realizar pruebas de rendimiento a PostgreSQL, he realizado la primera prueba manteniendo WAL en disco duro obteniendo el siguiente resultado:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pgbench -h localhost -p 5432 -U dbadmin -c 10 -t 10000 testdb
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+tps = 590.213182 (including connections establishing)
+tps = 590.281717 (excluding connections establishing)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Vemos que tenemos aprox unos 590tps. Ahora ejecutare la misma prueba pero ahora con WAL en espacio de RAM:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pgbench -h localhost -p 5432 -U dbadmin -c 10 -t 10000 testdb
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+tps = 1982.478380 (including connections establishing)
+tps = 1983.162671 (excluding connections establishing)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Nos da como resultado unos 1983tps, vaya que el performance a incrementado 3 veces, sumamente valioso.&lt;/p&gt;
+
+&lt;p&gt;Obviamente queda demostrado que mover a espacio de &lt;em&gt;RAM&lt;/em&gt; a WAL nos incrementa el performance, hasta este punto no estamos moviendo nuestros datos a &lt;em&gt;RAM&lt;/em&gt;, lo cual queda en espacio de disco y esta a salvo, pero tener a WAL en &lt;em&gt;RAM&lt;/em&gt; arriesgamos mucho nuestro proceso de atomicidad y es muy importante tenerlo integro en caso de desastres.&lt;/p&gt;
+
+&lt;p&gt;Esto me deja pensando, ¿es realmente factible tener nuestro WAL en &lt;em&gt;RAM&lt;/em&gt;? hablando en disponibilidad de recursos, WAL pesa entre unos 16MB minimo a 1G aproximadamente y esto depende mucho de las bases de datos alojados en el servicio PostgreSQL, tambien sabemos que si tenemos contratado algun servicio &lt;strong&gt;VPS&lt;/strong&gt; el costo mas alto siempre es el de &lt;em&gt;RAM&lt;/em&gt;. Asi bien implementar este performance queda a decision de &lt;strong&gt;&lt;em&gt;la disponibilidad de los recursos de RAM y hasta de tipo monetarios&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Supongamos que tenemos “toda” la RAM y que eso no es problema, continuemos con las pruebas.&lt;/p&gt;
+
+&lt;p&gt;Ahora necesitamos un proceso FAILOVER (tolerancia a fallos), que nos permita recuperar y resguardar nuestro WAL a un disco duro en caso de algun apagon y este nos haga perder los datos que estan en RAM.&lt;/p&gt;
+
+&lt;p&gt;La propuesta es:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Configurar dos servicios PostgreSQL y replicar en modo maestro-esclavo.&lt;/li&gt;
+  &lt;li&gt;Usando los script de inicio de PostgreSQL montaremos la particion en espacio de RAM para alojar a WAL.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;replicacion-de-postgresql&quot;&gt;Replicacion de PostgreSQL&lt;/h2&gt;
+
+&lt;p&gt;Tener una instancia esclava del servidor maestro nos permite tener una copia de WAL en otra instancia que este en un espacio de disco duro para poder conservarlo en caso de un apagado repentino del servidor.&lt;/p&gt;
+
+&lt;p&gt;Vamos a configurar una replicacion de tipo &lt;a href=&quot;http://www.postgresql.org/docs/9.2/static/warm-standby.html&quot;&gt;“Log-Shipping Standby Servers”&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En este caso lo haremos las pruebas en el mismo servidor y en el mismo disco duro. Podemos tener el esclavo en otra instancia de servidor o tenerlo en otro disco en el mismo servidor.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;configuracion-del-servicio-maestro&quot;&gt;Configuracion del servicio maestro.&lt;/h3&gt;
+
+&lt;p&gt;Editamos el archivo principal de configuracion los paremetros para &lt;em&gt;WAL&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data/postgresql.conf
+wal_level = hot_standby
+max_wal_senders = 1
+wal_keep_segments = 50
+archive_command = &#39;cp %p /tmp/backup/db001/%f&#39;
+archive_mode = on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Editamos el archivo de configuracion de accesos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+host    replication     postgres        127.0.0.1/32            trust
+host    replication     postgres        ::1/128                 trust
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el servidor maestro.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;service postgresql-9.2 restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora crearemos un &lt;strong&gt;snapshot&lt;/strong&gt; de nuestro servidor maestro para el servidor esclavo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+-bash-4.1$ psql -c &quot;SELECT pg_start_backup(&#39;mi_backup&#39;);&quot;
+-bash-4.1$ cp -rvf /var/lib/pgsql/9.2/data /tmp/
+-bash-4.1$ psql -c &quot;SELECT pg_stop_backup();&quot;
+-bash-4.1$ exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;configuraciones-del-servicio-esclavo&quot;&gt;Configuraciones del servicio esclavo&lt;/h3&gt;
+
+&lt;p&gt;Hacemos una copia del script de inicio del servicio PostgreSQL del sistema y los llamaremos &lt;strong&gt;&lt;em&gt;postgresql-slave9.2&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp /etc/init.d/postgresql-9.2 /etc/init.d/postgresql-slave9.2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Modificamos los siguientes parametros en el script. Usaremos el puerto 5433 y el directorio &lt;strong&gt;&lt;em&gt;/var/lib/pgsql/9.2/data_slave&lt;/em&gt;&lt;/strong&gt; para el servicio esclavo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/init.d/postgresql-slave9.2
+PGPORT=5433
+PGDATA=/var/lib/pgsql/9.2/data_slave
+PGLOG=/var/lib/pgsql/9.2/pgstartup_slave.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Agregamos el script al sistema de inicio y lo activamos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chkconfig --add postgresql-slave9.2
+$ chkconfig postgresql-slave9.2 on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Copiamos el &lt;strong&gt;&lt;em&gt;snapshot&lt;/em&gt;&lt;/strong&gt; maestro al que sera el directorio del servicio esclavo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres
+-bash-4.1$ mv /tmp/data /tmp/data_slave
+-bash-4.1$ cp -rvf /tmp/data_slave /var/lib/pgsql/9.2/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Editamos estos parametros minimos para nuestra nueva instancia.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data_slave/postgresql.conf
+listen_addresses = &#39;*&#39;
+port = 5433
+wal_level = hot_standby
+archive_mode = on
+archive_command = &#39;/bin/true&#39;
+hot_standby = on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Podemos usar nuestra politica de acceso que tenemos en nuestra instancia maestra a la nueva instancia esclava si asi lo consideramos optimo, solo que tendremos que comentar las lineas de &lt;strong&gt;replication&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+#host    replication     postgres        127.0.0.1/32            trust
+#host    replication     postgres        ::1/128                 trust
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Eliminar el &lt;em&gt;postmaster.pid&lt;/em&gt; y los archivos xlog&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ rm -f /var/lib/pgsql/9.2/data_slave/postmaster.pid
+$ rm -r /var/lib/pgsql/9.2/data_slave/pg_xlog/*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el archivo &lt;em&gt;recovery.conf&lt;/em&gt; que es indispensable para que nuestro servicio esclavo
+empieze a recibir la replicacion.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp /usr/pgsql-9.2/share/recovery.conf.sample /var/lib/pgsql/9.2/data_slave/recovery.conf
+$ chown postgres.postgres /var/lib/pgsql/9.2/data_slave/recovery.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Agregamos las siguiente configuracion a &lt;em&gt;recovery.conf&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.2/data_slave/recovery.conf
+standby_mode = &#39;on&#39;
+primary_conninfo = &#39;host=127.0.0.1 port=5432 user=postgres&#39;
+trigger_file = &#39;/tmp/postgresql.slave.trigger&#39;
+restore_command = &#39;cp /tmp/backup/db001/%f \&quot;%p\&quot;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos el servicio esclavo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service postgresql-slave9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hasta este punto debemos tener dos servicios completamente replicados, probemos creando una tabla en el maestro y revisemos si en nuestro esclavo esta replicado (recordemos que el esclavo esta en modo &lt;strong&gt;&lt;em&gt;read-only&lt;/em&gt;&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;p&gt;Importante revisar en los registros(&lt;strong&gt;&lt;em&gt;/var/lib/pgsql/9.2/data_slave/pg_log/&lt;/em&gt;&lt;/strong&gt;) de inicio del esclavo el siguiente mensaje:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2014-07-00 00:00:00.177 UTC [-1993-] LOG:  streaming replication successfully connected to primary
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;configuracion-de-wal-en-ram&quot;&gt;Configuracion de WAL en RAM.&lt;/h3&gt;
+
+&lt;p&gt;Esta idea es de contener en RAM los archivos WAL (&lt;strong&gt;pg_xlog&lt;/strong&gt;) y haremos lo siguiente:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;El servidor maestro tendra el directorio &lt;strong&gt;pg_xlog&lt;/strong&gt; en RAM, lo cual crearemos un enlace simbolico del directorio &lt;strong&gt;pg_xlog&lt;/strong&gt; que apunte a RAM.&lt;/li&gt;
+  &lt;li&gt;El servidor esclavo tendra el directorio &lt;strong&gt;pg_xlog&lt;/strong&gt; en Disco duro.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Si tenemos un servicio de replicacion en buen estado apagando el servidor debemos tener una copia exacta de lo que contenemos en RAM en el disco duro. En consecuencia debemos:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Adecuar el arranque del maestro para que este recupere su WAL apartir del esclavo antes de iniciar copiandolo en la particion que esta en RAM.&lt;/li&gt;
+  &lt;li&gt;El esclavo al iniciar realiza una comprobacion para saber si contienen el mismo WAL para poder arrancar, lo cual es el mismo ya que es una copia del mismo.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Creamos el directorio donde alojaremos la particion RAM.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /mnt/ramdisk
+$ chown postgres.postgres /mnt/ramdisk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuramos el &lt;strong&gt;fstab&lt;/strong&gt; para montar la particion al inicio del sistema.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/fstab
+tmpfs   /mnt/ramdisk    tmpfs   size=1024M  0 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Probemos la configuracion fstab montando todas las particiones declaradas en la configuracion con &lt;code class=&quot;highlighter-rouge&quot;&gt;mount&lt;/code&gt; y verificamos con &lt;code class=&quot;highlighter-rouge&quot;&gt;df&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mount -a
+$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.9G  4.8G  2.7G  64% /
+tmpfs           939M     0  939M   0% /dev/shm
+tmpfs             1G    4M  1020M   1% /mnt/ramdisk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Detenemos los servicios PostgreSQL.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service postgresql-9.2 stop &amp;amp;&amp;amp; service postgresql-slave9.2 stop
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora vamos a mover el directorio &lt;strong&gt;&lt;em&gt;pg_xlog&lt;/em&gt;&lt;/strong&gt; del servicio maestro a la particion RAM.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /var/lib/pgsql/9.2/data/
+data$ mv pg_xlog /mnt/ramdisk/
+data$ chown postgres.postgres -R /mnt/ramdisk/pg_xlog
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un enlace directo llamado &lt;strong&gt;&lt;em&gt;pg_xlog&lt;/em&gt;&lt;/strong&gt; que apunte a nuestra particion RAM y verificamos los directorios.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;data$ ln -s /mnt/ramdisk/pg_xlog
+data$ ls -l
+total 136
+drwx------ 10 postgres postgres  4096 Jun 25 19:34 base
+drwx------  2 postgres postgres  4096 Jul  9 17:39 global
+drwx------  2 postgres postgres  4096 May 30 20:36 pg_clog
+-rw-------  1 postgres postgres  4349 Jun 24 16:51 pg_hba.conf
+-rw-------  1 postgres postgres  1636 May 30 20:36 pg_ident.conf
+drwx------  2 postgres postgres  4096 Jun 23 16:40 pg_log
+drwx------  4 postgres postgres  4096 May 30 20:36 pg_multixact
+drwx------  2 postgres postgres  4096 Jul 14 22:43 pg_notify
+drwx------  2 postgres postgres  4096 May 30 20:36 pg_serial
+drwx------  2 postgres postgres  4096 May 30 20:36 pg_snapshots
+drwx------  2 postgres postgres  4096 Jul 14 23:21 pg_stat_tmp
+drwx------  2 postgres postgres  4096 Jun 25 19:08 pg_subtrans
+drwx------  2 postgres postgres  4096 Jun 27 23:06 pg_tblspc
+drwx------  2 postgres postgres  4096 May 30 20:36 pg_twophase
+-rw-------  1 postgres postgres     4 May 30 20:36 PG_VERSION
+lrwxrwxrwx  1 root     root        21 Jun 24 19:50 pg_xlog -&amp;gt; /mnt/ramdisk/pg_xlog
+-rw-------  1 postgres postgres 20332 Jun 24 19:04 postgresql.conf
+-rw-------  1 postgres postgres    71 Jul 14 22:43 postmaster.opts
+-rw-------  1 postgres postgres    72 Jul 14 22:43 postmaster.pid
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hasta este punto podemos iniciar los servicios PostgreSQL y verificar la replicacion ingresando datos a una tabla de prueba.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service postgresql-9.2 start &amp;amp;&amp;amp; service postgresql-slave9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Todo debe funcionar correctamente y tener una replicacion exitosa.&lt;/p&gt;
+
+&lt;p&gt;Ahora debemos modificar el script &lt;em&gt;bash&lt;/em&gt; de inicio del servicio maestro para que antes de iniciar verifique si existe el directorio &lt;em&gt;/mnt/ramdisk/pg_xlog&lt;/em&gt; y si no existe obtener la copia del servidor esclavo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/init.d/postgresql-9.2
+# Replication configs. Lo agregamos aproximadamente en la linea 88.
+PG_XLOG_MASTER=/mnt/ramdisk/pg_xlog
+PG_XLOG_SLAVE=/var/lib/pgsql/9.2/data_slave/pg_xlog
+#
+# Esta condicion la colocamos dentro de la funcion START. Aproximadamente en la linea 118.
+if [ ! -d &quot;$PG_XLOG_MASTER&quot; ]; then
+        cp -r &quot;$PG_XLOG_SLAVE&quot; &quot;/mnt/ramdisk/&quot;
+        chown postgres:postgres -R &quot;$PG_XLOG_MASTER&quot;
+fi
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Con esta modificacion podemos garantizar de que nuestro pg_xlog este en RAM para que pueda iniciar el servicio maestro.&lt;/p&gt;
+
+&lt;p&gt;Hagamos una prueba, detengamos los servicios PostgreSQL, borremos el directorio &lt;strong&gt;&lt;em&gt;/mnt/ramdisk/pg_xlog&lt;/em&gt;&lt;/strong&gt; e iniciemos los servicios PostgreSQL nuevamente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service postgresql-9.2 stop &amp;amp;&amp;amp; service postgresql-slave9.2 stop
+$ rm -rf /mnt/ramdisk/pg_xlog
+$ service postgresql-9.2 start &amp;amp;&amp;amp; service postgresql-slave9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hasta este punto debe estar todo funcionando y si no es asi verifique sus configuraciones.&lt;/p&gt;
+
+&lt;p&gt;Lo que sigue es comprobar que el sistema operativo pueda apagarse e iniciarse con los servicios postgresql, si no tuvimos problemas con ejecutar los comandos anteriores el reiniciar el sistema no debe causarnos problema.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ reboot
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;He realizado las siguientes pruebas:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Reinicio normal del sistema.&lt;/li&gt;
+  &lt;li&gt;Apagado directo del sistema.&lt;/li&gt;
+  &lt;li&gt;Matando el proceso maestro.&lt;/li&gt;
+  &lt;li&gt;Matando el proceso esclavo.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En todas no he tenido problemas con la integridad de los datos y del registro WAL.&lt;/p&gt;
+
+&lt;p&gt;Consideraciones:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Siempre estar pendiente que nuestros servicios esten replicando correctamente. Un servicio como &lt;strong&gt;&lt;em&gt;Nagios&lt;/em&gt;&lt;/strong&gt; nos puede servir para esto.&lt;/li&gt;
+  &lt;li&gt;Tener un servicio replicado con lleva a tener en cuenta los &lt;strong&gt;&lt;em&gt;troubleshootings&lt;/em&gt;&lt;/strong&gt; de este tipo de configuracion.&lt;/li&gt;
+  &lt;li&gt;Si el directorio WAL esta creciendo demaciado podemos “purgar” el directorio. Este &lt;a href=&quot;http://ag-up.com/?p=840&quot;&gt;articulo&lt;/a&gt; nos muestra como.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ahora bien ejecutemos el &lt;code class=&quot;highlighter-rouge&quot;&gt;pgbench&lt;/code&gt; de nueva cuenta con nuestra actual configuracion.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pgbench -h localhost -p 5432 -U dbadmin -c 10 -t 10000 testdb
+Password: 
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+tps = 1479.385379 (including connections establishing)
+tps = 1480.620177 (excluding connections establishing)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Nos arroja un 1480tps, es un son como 500tps menos en comparacion cuando teniamos el servidor en standalone con WAL en RAM, aunque practicamente alto, esto lo atribuyo a que ahora en el sistema tiene mas carga de procesos, ya que son dos servicios PostgreSQL y tambien porque hemos dublicado las peticiones I/O del disco y el performance en el disco duro puede castigarse, pero es aceptable el performance de TPS que se obtiene.&lt;/p&gt;
+
+&lt;h3 id=&quot;tablespace-en-ram&quot;&gt;TABLESPACE en RAM&lt;/h3&gt;
+
+&lt;p&gt;En PostgreSQL tenemos algo llamado &lt;a href=&quot;http://www.postgresql.org/docs/9.2/static/sql-createtablespace.html&quot;&gt;&lt;strong&gt;&lt;em&gt;tablespace&lt;/em&gt;&lt;/strong&gt;&lt;/a&gt;, que es practicamente tener la posibilidad de configurar el directorio donde quiero que se guarde una tabla o base de datos completa.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Por defecto tenemos una &lt;strong&gt;&lt;em&gt;tablespace&lt;/em&gt;&lt;/strong&gt; llamada pg_default a que punta al directorio pg_data&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;PostgreSQL realiza esto de la siguiente forma:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Genera un enlace simbolico nombrado con un ID numerico y este apunta al directorio que has configurado.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Estos enlaces directos son guardados en el directorio &lt;strong&gt;pg_tblspc&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Partiendo de la idea de que podemos manipular la ruta donde podemos mover nuestras tablas en la base de datos es posible aplicar la misma tecnica usada en WAL y poder tener ciertas tablas en &lt;em&gt;RAM&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tener tablas en &lt;em&gt;RAM&lt;/em&gt; nos puede proporcionar un alto performance en TPS.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En existen tablas de tipo &lt;a href=&quot;http://www.postgresql.org/docs/9.2/interactive/sql-createtable.html&quot;&gt;TEMPORARY&lt;/a&gt; en PostgreSQL que son ejecutadas en espacio de &lt;em&gt;RAM&lt;/em&gt;. Estas son eliminadas al final de la sesion o transaccion.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Pero debemos considerar algunas recomendaciones, como:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Solo contener tablas que sean de alta lectura y poca escritura.&lt;/li&gt;
+  &lt;li&gt;Monitorear el crecimiento de la(s) tabla(s).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Teniendo esto encuenta pasemos a la configuraciones de nuestro &lt;strong&gt;&lt;em&gt;tablespace&lt;/em&gt;&lt;/strong&gt; en &lt;em&gt;RAM&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Nos conectamos al servidor maestro.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres -c &#39;psql -p5432&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Estando ya en la sesion del usuario &lt;em&gt;postgres&lt;/em&gt; ejecutamos la sentencia para crear el &lt;strong&gt;&lt;em&gt;tablespace&lt;/em&gt;&lt;/strong&gt;, este lo apuntaremos hacia nuestra particion &lt;em&gt;RAM&lt;/em&gt; ya configurada &lt;em&gt;/mnt/ramdisk&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# CREATE TABLESPACE ramspace OWNER dbadmin LOCATION &#39;/mnt/ramdisk/ramspace&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Con la sentencia &lt;code class=&quot;highlighter-rouge&quot;&gt;SELECT * FROM pg_tablespace&lt;/code&gt; listamos nuestros &lt;strong&gt;&lt;em&gt;tablespace&lt;/em&gt;&lt;/strong&gt; disponibles y vemos que tenemos a &lt;strong&gt;rampspace&lt;/strong&gt; ya creado.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# SELECT * FROM pg_tablespace;
+  spcname   | spcowner | spcacl | spcoptions 
+------------+----------+--------+------------
+ pg_default |       10 |        | 
+ pg_global  |       10 |        | 
+ ramspace   |    16384 |        |
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Previamente he creado una base de datos llamada &lt;strong&gt;db_test&lt;/strong&gt; y dentro de ella vamos a crear una tabla llamada &lt;strong&gt;prueba_ram2&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# \connect db_test
+db_test=# CREATE TABLE prueba_ram2(valor char(100)) TABLESPACE ramspace;
+db_test=# ALTER TABLE prueba_ram2 OWNER TO dbadmin;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora bien vamos a verificar que nuestro tablespace que esta en el directoio &lt;strong&gt;pg_tblspc&lt;/strong&gt; este apuntando al directorio de la particion RAM. Podemos observar que le asigno la ID &lt;strong&gt;55061&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls -l /var/lib/pgsql/9.2/data/pg_tblspc
+total 0
+lrwxrwxrwx 1 postgres postgres 14 2014-06-27 23:06 55061 -&amp;gt; /mnt/ramdisk/ramspace
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Y podemos observar tambien que tenemos &lt;strong&gt;&lt;em&gt;el mismo enlace directo&lt;/em&gt;&lt;/strong&gt; generado en el servidor &lt;strong&gt;esclavo&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls -l /var/lib/pgsql/9.2/data_slave/pg_tblspc
+total 0
+lrwxrwxrwx 1 postgres postgres 14 2014-06-27 23:06 55061 -&amp;gt; /mnt/ramdisk/ramspace
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Lo siguiente es manipular el enlace directo del &lt;strong&gt;&lt;em&gt;servidor esclavo&lt;/em&gt;&lt;/strong&gt; y redireccionarlo a un directorio que este en el disco duro. Pero antes de esto tenemos que tener nuestros servicios PostgreSQL.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service postgresql-9.2 stop &amp;amp;&amp;amp; service postgresql-slave9.2 stop
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos una copia de &lt;em&gt;ramspace&lt;/em&gt; al directorio &lt;em&gt;/opt/&lt;/em&gt; y le asignamos el propieratio &lt;em&gt;postgres&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp -rvf /mnt/ramdisk/ramspace /opt/ramspace
+$ chown postgres.postgres /mnt/ramdisk/ram_space
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora vamos a redireccionar el enlace del &lt;strong&gt;&lt;em&gt;servicio esclavo&lt;/em&gt;&lt;/strong&gt; a la copia generada anteriormente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /var/lib/pgsql/9.2/data_slave/pg_tblspc/
+$ rm 55061
+$ ln -s /opt/ramspace 55061
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Verificamos que el enlace este creado y apuntando a &lt;em&gt;/opt/ramspace&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls -l /var/lib/pgsql/9.2/data_slave/pg_tblspc
+total 0
+lrwxrwxrwx 1 postgres postgres 22 2014-06-27 23:27 55061 -&amp;gt; /opt/ramspace
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Y por ultimo iniciamos nuestros servicios PostgreSQL.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service postgresql-9.2 start &amp;amp;&amp;amp; service postgresql-slave9.2 start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Verifiquemos que nuestra replicacion siga funcionando, podemos insertar datos en la tabla que tenemos en &lt;em&gt;RAM&lt;/em&gt; y verificar en el esclavo la replicacion.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Lo siguiente ahora es agregar una verificacion en el &lt;strong&gt;&lt;em&gt;script&lt;/em&gt;&lt;/strong&gt; de inicio del servicio maestro como lo hicimos anteriormente, para garantizar que inicie con el &lt;strong&gt;&lt;em&gt;tablespace&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/init.d/postgresql-9.2
+# Replication configs. Agregar aprox linea 90
+PG_BASE=/mnt/ramdisk/ramspace
+PG_BASE_SLAVE=/opt/ramspace
+#
+# Agregar en aprox. linea 120
+if [ ! -d &quot;$PG_BASE&quot; ]; then
+        cp -r &quot;$PG_BASE_SLAVE&quot; &quot;/mnt/ramdisk/&quot;
+        chown postgres:postgres -R &quot;$PG_BASE&quot;
+fi
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;conclusiones&quot;&gt;Conclusiones&lt;/h3&gt;
+
+&lt;p&gt;Podemos usar esta configuracion en produccion siempre y cuando verificando el uso de espacio de &lt;em&gt;RAM&lt;/em&gt;, como dije anteriormente, la &lt;em&gt;RAM&lt;/em&gt; es un recurso muchas veces muy limitado y debemos tener en cuenta eso, el uso de espacio que pueda usar WAL depende mucho de la cantidad de datos y el nivel de transacciones que se registren en la base de datos que hacen crecer a WAL, sin embargo si nuestra base este de altas transacciones por dia convendria solo usar el hack del tablespace en tablas donde se presente mucho consulta de lectura y obtendriamos una mejor en perfomance en &lt;em&gt;TPS&lt;/em&gt; sobre esa(s) tabla(s).&lt;/p&gt;
+
+&lt;p&gt;Como siempre conviene hacer un analis a largo plazo del crecimiento de la base de datos y corroborar que nuestro hardware en &lt;em&gt;RAM&lt;/em&gt; pueda soportarlo. El beneficio es bastante bueno en &lt;em&gt;TPS&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Espero este articulo les haya servido, si tienen ideas que puedan mejorar la configuracion me encantaria poder saberlo y actualizar el articulo con sus hacks.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Crear usuario de lectura (read-only) en PostgreSQL</title>
-   <link href="jahrmando.github.com/2014/06/27/crear-usuario-lectura-postgresql/"/>
+   <link href="jahrmando.com/2014/06/27/crear-usuario-lectura-postgresql/"/>
    <updated>2014-06-27T13:23:57-05:00</updated>
-   <id>jahrmando.github.com/2014/06/27/crear-usuario-lectura-postgresql</id>
+   <id>jahrmando.com/2014/06/27/crear-usuario-lectura-postgresql</id>
    <content type="html">&lt;p&gt;Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.&lt;/p&gt;
 
 &lt;p&gt;Nos conectamos a la base de datos (test_db) donde vamos a aplicar estos privilegios y con un usuario privilegiado para poder hacer las modificaciones (postgres).&lt;/p&gt;
@@ -374,9 +2529,9 @@ Access privileges
  
  <entry>
    <title>Guía rápida de instalación y administración de PostgreSQL</title>
-   <link href="jahrmando.github.com/2014/06/26/instalacion-administracion-postgresql-centos6/"/>
+   <link href="jahrmando.com/2014/06/26/instalacion-administracion-postgresql-centos6/"/>
    <updated>2014-06-26T15:19:20-05:00</updated>
-   <id>jahrmando.github.com/2014/06/26/instalacion-administracion-postgresql-centos6</id>
+   <id>jahrmando.com/2014/06/26/instalacion-administracion-postgresql-centos6</id>
    <content type="html">&lt;p&gt;En este howto configuraremos la versión de PostgreSQL 9.3 la mas reciente hasta ahora.&lt;/p&gt;
 
 &lt;p&gt;Configurando repositorio para excluir los paquetes “postgresql” del repo Base de CentOS.&lt;/p&gt;
@@ -564,9 +2719,9 @@ host    all             all             192.168.0.0/24          md5
  
  <entry>
    <title>Permitir adjuntos .exe comprimidos en Amavisd-new</title>
-   <link href="jahrmando.github.com/2014/04/22/amavisd-new-permitir-adjuntos-exe-a-trav%C3%A9s-de/"/>
+   <link href="jahrmando.com/2014/04/22/amavisd-new-permitir-adjuntos-exe-a-trav%C3%A9s-de/"/>
    <updated>2014-04-22T13:17:00-05:00</updated>
-   <id>jahrmando.github.com/2014/04/22/amavisd-new-permitir-adjuntos-exe-a-través-de</id>
+   <id>jahrmando.com/2014/04/22/amavisd-new-permitir-adjuntos-exe-a-través-de</id>
    <content type="html">&lt;p&gt;La configuración por defecto del servicio Amavisd-new es un poco restrictiva y para mi gusto buena para el manejo de detección de &lt;strong&gt;SPAM&lt;/strong&gt; y contenido Malware.&lt;/p&gt;
 
 &lt;p&gt;Sin embargo, a veces es necesario adecuarlos, el envió de ejecutables a través de correos electrónicos puede ser “necesario” para el día a día de los usuarios (aka Luser), suponiendo que eres un administrador muy ágil y haz configurado algún tipo de Antivirus (ClamAV por ejemplo) para detectar ejecutables infectados y no permitir la llegada de estos binarios a la bandeja de algún luser, que por naturaleza son confiados con cualquier contenido que les llegue, puedes continuar con este &lt;strong&gt;protip&lt;/strong&gt; de configuración para &lt;strong&gt;Amavisd-new&lt;/strong&gt;.&lt;/p&gt;
@@ -624,9 +2779,9 @@ $banned_filename_re = new_RE(
  
  <entry>
    <title>Plugin Java en Chrome y Firefox en tu Linux</title>
-   <link href="jahrmando.github.com/2014/04/18/configurar-plugin-java-para-firefox-chrome-en-linux/"/>
+   <link href="jahrmando.com/2014/04/18/configurar-plugin-java-para-firefox-chrome-en-linux/"/>
    <updated>2014-04-18T12:42:02-05:00</updated>
-   <id>jahrmando.github.com/2014/04/18/configurar-plugin-java-para-firefox-chrome-en-linux</id>
+   <id>jahrmando.com/2014/04/18/configurar-plugin-java-para-firefox-chrome-en-linux</id>
    <content type="html">&lt;p&gt;Normalmente se me olvida configurar este plugin &lt;strong&gt;Java&lt;/strong&gt;, espero les sea útil como a mi tener una publicación para recordarlo. Supongamos que ya tienen instalado alguna versión del JRE ó JDK de &lt;strong&gt;Java&lt;/strong&gt;, continué con la siguiente configuración:&lt;/p&gt;
 
 &lt;h2 id=&quot;google-chrome&quot;&gt;Google Chrome&lt;/h2&gt;
@@ -705,9 +2860,9 @@ $ locate libnpjp2.so
  
  <entry>
    <title>Obtener una lista de usuarios conectados en SMB Samba</title>
-   <link href="jahrmando.github.com/2014/04/07/obtener-una-lista-de-usuarios-conectados-en-smb/"/>
+   <link href="jahrmando.com/2014/04/07/obtener-una-lista-de-usuarios-conectados-en-smb/"/>
    <updated>2014-04-07T12:36:43-05:00</updated>
-   <id>jahrmando.github.com/2014/04/07/obtener-una-lista-de-usuarios-conectados-en-smb</id>
+   <id>jahrmando.com/2014/04/07/obtener-una-lista-de-usuarios-conectados-en-smb</id>
    <content type="html">&lt;p&gt;Sabemos que el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;smbstatus&lt;/code&gt; nos muestra información acerca del estado actual del servicio samba, como usuarios conectados y ficheros abiertos; con la opción &lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt; podemos tener un filtro de solo procesos y un ejemplo de salida seria:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ smbstatus -p
@@ -749,9 +2904,9 @@ user_03          192.168.0.151
  
  <entry>
    <title>Failed to init inotify - Demasiados ficheros abiertos</title>
-   <link href="jahrmando.github.com/2014/04/01/failed-to-init-inotify-demasiados-ficheros/"/>
+   <link href="jahrmando.com/2014/04/01/failed-to-init-inotify-demasiados-ficheros/"/>
    <updated>2014-04-01T18:00:19-06:00</updated>
-   <id>jahrmando.github.com/2014/04/01/failed-to-init-inotify-demasiados-ficheros</id>
+   <id>jahrmando.com/2014/04/01/failed-to-init-inotify-demasiados-ficheros</id>
    <content type="html">&lt;p&gt;Recientemente se me han presentado estos eventos en un servicio SMB, haciendo la tarea me he encontrado con su respectiva razón y solución a estos eventos. Estos eventos son lanzados por el modulo &lt;strong&gt;inotify&lt;/strong&gt;, que nos proporciona un mecanismo para monitorear eventos en el sistema de archivos.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Apr  1 12:50:57 srv smbd[27909]: [2014/04/01 12:50:57.200596,  0] smbd/notify_inotify.c:302(inotify_setup)
@@ -833,9 +2988,9 @@ fs.inotify.max_user_instances = 256
  
  <entry>
    <title>Error imuxsock begins to drop messages</title>
-   <link href="jahrmando.github.com/2014/03/26/p%C3%A9rdida-de-eventos-en-linux-imuxsock-begins-to/"/>
+   <link href="jahrmando.com/2014/03/26/p%C3%A9rdida-de-eventos-en-linux-imuxsock-begins-to/"/>
    <updated>2014-03-26T17:37:00-06:00</updated>
-   <id>jahrmando.github.com/2014/03/26/pérdida-de-eventos-en-linux-imuxsock-begins-to</id>
+   <id>jahrmando.com/2014/03/26/pérdida-de-eventos-en-linux-imuxsock-begins-to</id>
    <content type="html">&lt;p&gt;Si alguna vez se han encontrado con estos eventos en los registros del sistema unix/linux esto se debe a que el servicio &lt;strong&gt;rsyslog&lt;/strong&gt; no esta registrando ‘eventos’ que los sockets de log del servicio (El evento nos proporciona el &lt;strong&gt;PID&lt;/strong&gt;) le envian a &lt;strong&gt;rsyslog&lt;/strong&gt;, esto porque se han presentado fuera del intervalo configurado.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Mar 26 16:10:44 srv rsyslogd-2177: imuxsock begins to drop messages from pid 25300 due to rate-limiting
@@ -882,9 +3037,9 @@ $SystemLogRateLimitInterval 0
  
  <entry>
    <title>Buscando errores y advertencias en los registros linux</title>
-   <link href="jahrmando.github.com/2014/02/07/buscando-errores-y-advertencias-en-los-registros/"/>
+   <link href="jahrmando.com/2014/02/07/buscando-errores-y-advertencias-en-los-registros/"/>
    <updated>2014-02-07T14:56:00-06:00</updated>
-   <id>jahrmando.github.com/2014/02/07/buscando-errores-y-advertencias-en-los-registros</id>
+   <id>jahrmando.com/2014/02/07/buscando-errores-y-advertencias-en-los-registros</id>
    <content type="html">&lt;p&gt;Es muy común que en los registros encontremos palabras como &lt;strong&gt;error&lt;/strong&gt; ó &lt;strong&gt;warning&lt;/strong&gt; para registrar eventos que estén causando algún problema en el sistema Linux, por ejemplo &lt;em&gt;CentOS&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;Podemos hacer una búsqueda de estas palabras en los registros con &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt; con un regex que filtre las palabras &lt;strong&gt;error&lt;/strong&gt; ó &lt;strong&gt;warning&lt;/strong&gt;. En el siguiente ejemplo haremos el filtro en el registro &lt;strong&gt;/var/log/messages&lt;/strong&gt;&lt;/p&gt;
@@ -907,9 +3062,9 @@ $SystemLogRateLimitInterval 0
  
  <entry>
    <title>Bloquear conexiones HTTPS con DNS y Firewall</title>
-   <link href="jahrmando.github.com/2014/01/30/bloquear-conexiones-https-usando-dns-y-firewall/"/>
+   <link href="jahrmando.com/2014/01/30/bloquear-conexiones-https-usando-dns-y-firewall/"/>
    <updated>2014-01-30T10:56:00-06:00</updated>
-   <id>jahrmando.github.com/2014/01/30/bloquear-conexiones-https-usando-dns-y-firewall</id>
+   <id>jahrmando.com/2014/01/30/bloquear-conexiones-https-usando-dns-y-firewall</id>
    <content type="html">&lt;p&gt;En este caso ejemplificaremos el bloqueo del sitio &lt;strong&gt;facebook.com&lt;/strong&gt;. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.&lt;/p&gt;
 
 &lt;p&gt;En teoría este método consiste en otorgarle al cliente cuando solicite la dirección facebook.com una IP no válida ó bloqueada, con esto rechazaremos las conexiones hacia ese dominio.&lt;/p&gt;
@@ -1011,9 +3166,9 @@ REJECT  lan:192.168.0.5-192.168.0.29  net:173.252.110.27  tcp  443
  
  <entry>
    <title>WhatsApp en tu Fedora</title>
-   <link href="jahrmando.github.com/2013/11/08/whatsapp-en-tu-fedora/"/>
+   <link href="jahrmando.com/2013/11/08/whatsapp-en-tu-fedora/"/>
    <updated>2013-11-08T11:17:00-06:00</updated>
-   <id>jahrmando.github.com/2013/11/08/whatsapp-en-tu-fedora</id>
+   <id>jahrmando.com/2013/11/08/whatsapp-en-tu-fedora</id>
    <content type="html">&lt;p&gt;Saliendo un poco de la temática de servidores, les dejo un pequeño how-to para usar WhatsApp en su Fedora(Probado en la liberación 18).&lt;/p&gt;
 
 &lt;p&gt;Instalamos python-yowsup que es la libreria python para whatsapp que usa yowsup-cli para hacer la magia (conexión).&lt;/p&gt;
@@ -1107,9 +3262,9 @@ $ chmod u+x ~/.purple/plugins/last-whatsapp.so
  
  <entry>
    <title>Configuración de Django en CentOS 6</title>
-   <link href="jahrmando.github.com/2013/10/16/configuracion-de-django-en-centos-6x/"/>
+   <link href="jahrmando.com/2013/10/16/configuracion-de-django-en-centos-6x/"/>
    <updated>2013-10-16T11:06:00-05:00</updated>
-   <id>jahrmando.github.com/2013/10/16/configuracion-de-django-en-centos-6x</id>
+   <id>jahrmando.com/2013/10/16/configuracion-de-django-en-centos-6x</id>
    <content type="html">&lt;p&gt;Stack: NGINX, GUNICORN, VIRTUALENV y SUPERVISOR&lt;/p&gt;
 
 &lt;p&gt;PRE INSTALACION&lt;/p&gt;
@@ -1620,9 +3775,9 @@ $ service iptables restart
  
  <entry>
    <title>Bloquear intentos de sesión fallidas en CentOS</title>
-   <link href="jahrmando.github.com/2013/09/13/bloquear-usuarios-tras-varios-intentos/"/>
+   <link href="jahrmando.com/2013/09/13/bloquear-usuarios-tras-varios-intentos/"/>
    <updated>2013-09-13T13:00:00-05:00</updated>
-   <id>jahrmando.github.com/2013/09/13/bloquear-usuarios-tras-varios-intentos</id>
+   <id>jahrmando.com/2013/09/13/bloquear-usuarios-tras-varios-intentos</id>
    <content type="html">&lt;p&gt;Bloquear usuarios tras intentos de sesión fallidas CentOS 6.&lt;/p&gt;
 
 &lt;p&gt;Parámetros de configuración:&lt;/p&gt;
@@ -1691,9 +3846,9 @@ admin            0
  
  <entry>
    <title>Desactivar la expiración de contraseñas</title>
-   <link href="jahrmando.github.com/2013/09/12/desactivar-la-expiracion-de-contrasenas/"/>
+   <link href="jahrmando.com/2013/09/12/desactivar-la-expiracion-de-contrasenas/"/>
    <updated>2013-09-12T16:04:00-05:00</updated>
-   <id>jahrmando.github.com/2013/09/12/desactivar-la-expiracion-de-contrasenas</id>
+   <id>jahrmando.com/2013/09/12/desactivar-la-expiracion-de-contrasenas</id>
    <content type="html">&lt;p&gt;Con la utilidad chage podemos reasignar los valores de expiración.&lt;/p&gt;
 
 &lt;p&gt;Verificamos las fechas de expiracion de los passwords&lt;/p&gt;
@@ -1732,9 +3887,9 @@ Number of days of warning before password expires : 7
  
  <entry>
    <title>Renombrar interfaz de red en CentOS </title>
-   <link href="jahrmando.github.com/2013/04/05/renombrar-interfaz-de-red-en-centos/"/>
+   <link href="jahrmando.com/2013/04/05/renombrar-interfaz-de-red-en-centos/"/>
    <updated>2013-04-05T21:24:00-06:00</updated>
-   <id>jahrmando.github.com/2013/04/05/renombrar-interfaz-de-red-en-centos</id>
+   <id>jahrmando.com/2013/04/05/renombrar-interfaz-de-red-en-centos</id>
    <content type="html">&lt;p&gt;Es común que al cambiar físicamente una interfaz de red el sistema nos configure este nuevo hardware asignándole una ID de interfaz &lt;strong&gt;eth(X)&lt;/strong&gt;, nos saldrá el error anterior ya que el dispositivo con ID &lt;code class=&quot;highlighter-rouge&quot;&gt;eth0&lt;/code&gt; que estaba configurada no existe, si nosotros queremos usar ese mismo ID de interfaz haga los siguiente.&lt;/p&gt;
 
 &lt;p&gt;Hacemos un respaldo a la configuración&lt;/p&gt;
@@ -1773,9 +3928,9 @@ HWADDR=&quot;08:00:27:53:C5:28&quot;
  
  <entry>
    <title>Configuración de NGINX-CentOS-PHP</title>
-   <link href="jahrmando.github.com/2013/03/27/instalacion-y-configuracion-de-nginx/"/>
+   <link href="jahrmando.com/2013/03/27/instalacion-y-configuracion-de-nginx/"/>
    <updated>2013-03-27T12:13:00-06:00</updated>
-   <id>jahrmando.github.com/2013/03/27/instalacion-y-configuracion-de-nginx</id>
+   <id>jahrmando.com/2013/03/27/instalacion-y-configuracion-de-nginx</id>
    <content type="html">&lt;p&gt;Este post le instalara Nginx y PHP-FPM en Centos&lt;/p&gt;
 
 &lt;p&gt;Instalación NGINX&lt;/p&gt;
@@ -2105,9 +4260,9 @@ server {
  
  <entry>
    <title>Configuración de Alfresco 4 en CentOS</title>
-   <link href="jahrmando.github.com/2013/03/14/instalacion-y-configuracion-de-alfresco/"/>
+   <link href="jahrmando.com/2013/03/14/instalacion-y-configuracion-de-alfresco/"/>
    <updated>2013-03-14T17:02:00-06:00</updated>
-   <id>jahrmando.github.com/2013/03/14/instalacion-y-configuracion-de-alfresco</id>
+   <id>jahrmando.com/2013/03/14/instalacion-y-configuracion-de-alfresco</id>
    <content type="html">&lt;p&gt;Instalaremos ALFRESCO Community desde el &lt;code class=&quot;highlighter-rouge&quot;&gt;.war&lt;/code&gt; del webservice para hacerle deploy en un servicio Tomcat 6, usaremos una base de datos MySQL que este previamente configurado.&lt;/p&gt;
 
 &lt;p&gt;DESCARGA DE ARCHIVOS&lt;/p&gt;
@@ -2421,9 +4576,9 @@ NameVirtualHost *:80
  
  <entry>
    <title>Configuración de fecha y hora en CentOS 6</title>
-   <link href="jahrmando.github.com/2013/03/14/cambiar-la-fecha-hora-y-zona-horaria-en/"/>
+   <link href="jahrmando.com/2013/03/14/cambiar-la-fecha-hora-y-zona-horaria-en/"/>
    <updated>2013-03-14T15:44:00-06:00</updated>
-   <id>jahrmando.github.com/2013/03/14/cambiar-la-fecha-hora-y-zona-horaria-en</id>
+   <id>jahrmando.com/2013/03/14/cambiar-la-fecha-hora-y-zona-horaria-en</id>
    <content type="html">&lt;p&gt;Borramos la zona horaria actual&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo rm /etc/localtime 
@@ -2447,9 +4602,9 @@ $ sudo hwclock --systohc
  
  <entry>
    <title>Obtener los nombres de PC Windows de la red</title>
-   <link href="jahrmando.github.com/2012/12/13/obtener-nombre-netbios-con-nmap/"/>
+   <link href="jahrmando.com/2012/12/13/obtener-nombre-netbios-con-nmap/"/>
    <updated>2012-12-13T19:00:00-06:00</updated>
-   <id>jahrmando.github.com/2012/12/13/obtener-nombre-netbios-con-nmap</id>
+   <id>jahrmando.com/2012/12/13/obtener-nombre-netbios-con-nmap</id>
    <content type="html">&lt;p&gt;Con &lt;strong&gt;NMAP&lt;/strong&gt; se puede obtener mucha informacion importante de la red local a la que estemos conectados, una de ellas es el nombre de algun equipo Windows en la red.&lt;/p&gt;
 
 &lt;p&gt;Se puede conseguir usando los siguientes comandos:&lt;/p&gt;
@@ -2510,9 +4665,9 @@ Nmap done: 1 IP address (1 host up) scanned in 0.34 seconds
  
  <entry>
    <title>Editar la subnet default de VirtualBox</title>
-   <link href="jahrmando.github.com/2012/11/27/cambiar-la-red-subnet-por-defecto-del/"/>
+   <link href="jahrmando.com/2012/11/27/cambiar-la-red-subnet-por-defecto-del/"/>
    <updated>2012-11-27T19:00:00-06:00</updated>
-   <id>jahrmando.github.com/2012/11/27/cambiar-la-red-subnet-por-defecto-del</id>
+   <id>jahrmando.com/2012/11/27/cambiar-la-red-subnet-por-defecto-del</id>
    <content type="html">&lt;p&gt;Cambiar la red (subnet) por defecto del modo NAT de VirtualBox. Verificamos la lista de host invitados registrados&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ VBoxManage list vms
@@ -2541,9 +4696,9 @@ Nmap done: 1 IP address (1 host up) scanned in 0.34 seconds
  
  <entry>
    <title>Informacion de conexion desde la terminal</title>
-   <link href="jahrmando.github.com/2012/10/17/obtener-ip-publica-e-informacion-de/"/>
+   <link href="jahrmando.com/2012/10/17/obtener-ip-publica-e-informacion-de/"/>
    <updated>2012-10-17T22:00:00-05:00</updated>
-   <id>jahrmando.github.com/2012/10/17/obtener-ip-publica-e-informacion-de</id>
+   <id>jahrmando.com/2012/10/17/obtener-ip-publica-e-informacion-de</id>
    <content type="html">&lt;p&gt;Usando CURL y el sitio ifconfig.me podemos obtener información acerca  de nuestra conexión, como ip publica, nombre del host, datos sobre el  agente del usuario, etc. desde nuestra terminal.&lt;/p&gt;
 
 &lt;p&gt;Algunos ejemplos:&lt;/p&gt;
@@ -2621,9 +4776,9 @@ forwarded:
  
  <entry>
    <title>Instalar driver Broadcom 4312 en Fedora</title>
-   <link href="jahrmando.github.com/2012/10/16/instalar-driver-broadcom-4312-en-fedora/"/>
+   <link href="jahrmando.com/2012/10/16/instalar-driver-broadcom-4312-en-fedora/"/>
    <updated>2012-10-16T21:30:00-05:00</updated>
-   <id>jahrmando.github.com/2012/10/16/instalar-driver-broadcom-4312-en-fedora</id>
+   <id>jahrmando.com/2012/10/16/instalar-driver-broadcom-4312-en-fedora</id>
    <content type="html">&lt;p&gt;Un pequeño howto de como activar el adaptador wifi broadcom 4312, en  este caso lo instale en una laptop Dell Inspiron 15 con &lt;strong&gt;fedora 16&lt;/strong&gt; x86_64. Esta es una instalación recomendada para kernel 3.2 ó posterior.&lt;/p&gt;
 
 &lt;p&gt;El driver a usar es el b43. Revisamos si tenemos el modelo de nuestro adaptador Broadcom.&lt;/p&gt;
@@ -2681,9 +4836,9 @@ Extracting...
  
  <entry>
    <title>Estimar la cantidad de espacio usado en directorio linux</title>
-   <link href="jahrmando.github.com/2012/10/16/estimar-la-cantidad-de-espacio-usado-en/"/>
+   <link href="jahrmando.com/2012/10/16/estimar-la-cantidad-de-espacio-usado-en/"/>
    <updated>2012-10-16T20:00:00-05:00</updated>
-   <id>jahrmando.github.com/2012/10/16/estimar-la-cantidad-de-espacio-usado-en</id>
+   <id>jahrmando.com/2012/10/16/estimar-la-cantidad-de-espacio-usado-en</id>
    <content type="html">&lt;p&gt;La utilidad &lt;code class=&quot;highlighter-rouge&quot;&gt;du&lt;/code&gt; nos sirve para estimar la cantidad de disco usado por  un archivo o carpeta.&lt;/p&gt;
 
 &lt;p&gt;En este comando nos arrojara de manera resumida &lt;code class=&quot;highlighter-rouge&quot;&gt;-s&lt;/code&gt; y en forma “human readable” &lt;code class=&quot;highlighter-rouge&quot;&gt;-h&lt;/code&gt; la cantidad de disco duro que se  esta usando en la carpeta home de mi usuario.&lt;/p&gt;
@@ -2697,9 +4852,9 @@ Extracting...
  
  <entry>
    <title>Obtener soporte Samba en PCManFM </title>
-   <link href="jahrmando.github.com/2012/10/15/obtener-soporte-samba-en-pcmanfm/"/>
+   <link href="jahrmando.com/2012/10/15/obtener-soporte-samba-en-pcmanfm/"/>
    <updated>2012-10-15T22:00:00-05:00</updated>
-   <id>jahrmando.github.com/2012/10/15/obtener-soporte-samba-en-pcmanfm</id>
+   <id>jahrmando.com/2012/10/15/obtener-soporte-samba-en-pcmanfm</id>
    <content type="html">&lt;p&gt;Bueno como sabrán y para los que no pues ahora ando usando un Fedora  con LXDE, la cuestión es que esta vez me dio por instalarme el servicio  samba para el trabajo y todo bien hasta que en el explorador PCManFM  (v0.9.10) no podía acceder usando &lt;code class=&quot;highlighter-rouge&quot;&gt;smb://IP&lt;/code&gt; por que la función no venia  soportada.&lt;/p&gt;
 
 &lt;p&gt;Y pues simple,  resulta que solo debemos verificar si teníamos el sistema virtual de  archivos de GNOME (GVFS) y la cual debe darnos el soporte para entrar a  un servicio samba.&lt;/p&gt;
@@ -2741,9 +4896,9 @@ gvfs-smb.i686 1.10.1-3.fc16 updates
  
  <entry>
    <title>OSSEC HIDS Detección de intrusos en CentOS</title>
-   <link href="jahrmando.github.com/2012/10/12/ossec-hids-deteccion-de-intrusos-en/"/>
+   <link href="jahrmando.com/2012/10/12/ossec-hids-deteccion-de-intrusos-en/"/>
    <updated>2012-10-12T21:00:00-05:00</updated>
-   <id>jahrmando.github.com/2012/10/12/ossec-hids-deteccion-de-intrusos-en</id>
+   <id>jahrmando.com/2012/10/12/ossec-hids-deteccion-de-intrusos-en</id>
    <content type="html">&lt;p&gt;OSSEC es un sistema para detección de intrusos basado en Host muy intuitivo y configurable blabla bla blabla bla.. configuremos :)&lt;/p&gt;
 
 &lt;p&gt;AGENTE SERVIDOR&lt;/p&gt;
@@ -3246,9 +5401,9 @@ propios scripts de active-response, etc.&lt;/p&gt;
  
  <entry>
    <title>Como restringir la escala a usuario Root </title>
-   <link href="jahrmando.github.com/2012/10/11/como-restringir-la-escala-usuario-root/"/>
+   <link href="jahrmando.com/2012/10/11/como-restringir-la-escala-usuario-root/"/>
    <updated>2012-10-11T22:00:00-05:00</updated>
-   <id>jahrmando.github.com/2012/10/11/como-restringir-la-escala-usuario-root</id>
+   <id>jahrmando.com/2012/10/11/como-restringir-la-escala-usuario-root</id>
    <content type="html">&lt;p&gt;Como restringir a usuarios el escalar a usuario &lt;em&gt;root&lt;/em&gt; por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema &lt;em&gt;wheel&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;Quitamos el simbolo &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; de comentario de la linea 7 para activar la opcion&lt;/p&gt;
@@ -3289,9 +5444,9 @@ miuser:x:500:
  
  <entry>
    <title>Configurando postfix como smarthost </title>
-   <link href="jahrmando.github.com/2012/10/10/configurando-postfix-como-smarthost/"/>
+   <link href="jahrmando.com/2012/10/10/configurando-postfix-como-smarthost/"/>
    <updated>2012-10-10T20:00:00-05:00</updated>
-   <id>jahrmando.github.com/2012/10/10/configurando-postfix-como-smarthost</id>
+   <id>jahrmando.com/2012/10/10/configurando-postfix-como-smarthost</id>
    <content type="html">&lt;p&gt;Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal. En este ejemplo usare mi cuenta gmail. Recordar en este howto es para usar conexiones ssl que normalmente usa el puerto 465 smtp.&lt;/p&gt;
 
 &lt;p&gt;Instalamos los paquetes necesarios&lt;/p&gt;
@@ -3460,9 +5615,9 @@ Null message body; hope that’s ok
  
  <entry>
    <title>Añadir mas de una IP a una interfaz de red en linux</title>
-   <link href="jahrmando.github.com/2012/10/10/anadir-mas-de-una-ip-una-interfaz-de/"/>
+   <link href="jahrmando.com/2012/10/10/anadir-mas-de-una-ip-una-interfaz-de/"/>
    <updated>2012-10-10T15:03:00-05:00</updated>
-   <id>jahrmando.github.com/2012/10/10/anadir-mas-de-una-ip-una-interfaz-de</id>
+   <id>jahrmando.com/2012/10/10/anadir-mas-de-una-ip-una-interfaz-de</id>
    <content type="html">&lt;p&gt;Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.&lt;/p&gt;
 
 &lt;p&gt;Copiamos la configuracion de la nic a la que le asignaremos la interfaz virtual en este caso &lt;code class=&quot;highlighter-rouge&quot;&gt;eth0&lt;/code&gt;, a la virtual le asignamos el mismo nombre pero con el sufijo &lt;code class=&quot;highlighter-rouge&quot;&gt;:0&lt;/code&gt;. El numero cero es consecutivo, podemos seguir agregando mas nic virtuales.&lt;/p&gt;
@@ -3491,9 +5646,9 @@ ONBOOT=yes
  
  <entry>
    <title>Establecer vigencia y reglas sobre contraseñas a usuarios Linux</title>
-   <link href="jahrmando.github.com/2012/05/22/establecer-vigencia-y-reglas-sobre/"/>
+   <link href="jahrmando.com/2012/05/22/establecer-vigencia-y-reglas-sobre/"/>
    <updated>2012-05-22T20:47:00-05:00</updated>
-   <id>jahrmando.github.com/2012/05/22/establecer-vigencia-y-reglas-sobre</id>
+   <id>jahrmando.com/2012/05/22/establecer-vigencia-y-reglas-sobre</id>
    <content type="html">&lt;p&gt;Lo que haremos en este post es el establecer una política de seguridad para la renovación de contraseñas de los usuarios en el servidor y también sobre reglas para la creación de las mismas.&lt;/p&gt;
 
 &lt;p&gt;RHEL/Fedora/CentOS&lt;/p&gt;
@@ -3554,9 +5709,9 @@ PASS_WARN_AGE 7
  
  <entry>
    <title>Manejo de permisos sobre directorios o archivos en linux</title>
-   <link href="jahrmando.github.com/2012/04/08/nomenclatura-basica-acerca-de-permisos/"/>
+   <link href="jahrmando.com/2012/04/08/nomenclatura-basica-acerca-de-permisos/"/>
    <updated>2012-04-08T14:36:00-05:00</updated>
-   <id>jahrmando.github.com/2012/04/08/nomenclatura-basica-acerca-de-permisos</id>
+   <id>jahrmando.com/2012/04/08/nomenclatura-basica-acerca-de-permisos</id>
    <content type="html">&lt;p&gt;Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:
 Propietario - Grupo - Otros&lt;/p&gt;
 
@@ -3618,9 +5773,9 @@ que no deben tener y con ello comprometer la seguridad de tu sistema.&lt;/p&gt;
  
  <entry>
    <title>Montar particiones NTFS automáticamente en Linux</title>
-   <link href="jahrmando.github.com/2011/03/25/montar-particiones-ntfs-automaticamente/"/>
+   <link href="jahrmando.com/2011/03/25/montar-particiones-ntfs-automaticamente/"/>
    <updated>2011-03-25T18:06:00-06:00</updated>
-   <id>jahrmando.github.com/2011/03/25/montar-particiones-ntfs-automaticamente</id>
+   <id>jahrmando.com/2011/03/25/montar-particiones-ntfs-automaticamente</id>
    <content type="html">&lt;p&gt;Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS. Lo primero que haremos es buscar nuestra partición NTFS y encontrar la información que nos servirá.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo blkid

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Clonación y migración en tiempo real de instancias virtuales Qemu/KVM &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Clonación y migración en tiempo real de instancias virtuales Qemu/KVM</h1>
+  <span class="post-date">09 Dec 2015</span>
+  <p>Hacer una copia del cliente <strong>VM1</strong> teniendo como resultado un cliente con el nombre de <strong>VM1_clone</strong>.</p>
+
+<p>Es necesario suspender ó apagar al cliente para poder clonarlo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ virsh suspend VM1
+Dominio VM1 suspendido
+</code></pre>
+</div>
+
+<p>Para clonar una instancia virtual lo hacemos con el comando <code class="highlighter-rouge">virt-clone</code>. Explicando un poco las opciones básicas seleccionadas acontinuación:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">-o</code>, nombramos el cliente que vamos a clonar</li>
+  <li><code class="highlighter-rouge">-n</code>, es el nombre del nuevo cliente clonado</li>
+  <li><code class="highlighter-rouge">-f</code>, es la dirección absoluta de la nueva imagen de almacenamiento</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.img
+Asignando 'VM1_clone.img' | 40 GB 04:52
+Clone 'VM1_clone' created successfully.
+</code></pre>
+</div>
+
+<p>Al terminar la ejecucion del comando anterior con <code class="highlighter-rouge">virsh resume</code> reanudamos nuestro cliente que esta pausado.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ virsh resume VM1
+</code></pre>
+</div>
+
+<p>Migración de cliente en vivo (Live)</p>
+
+<p>La migración en vivo nos es de utilidad cuando requerimos mover el cliente de su “servidor virtual” hacia otro sin necesidad de apagar el cliente, esto es completamente transparente y es casi nulo que se note la migración.</p>
+
+<p>Requisitos previos:</p>
+
+<p>El medio de almacenamiento del cliente debe estar corriendo sobre un sistema de almacenamiento en red como:</p>
+
+<ul>
+  <li>iSCSI</li>
+  <li>NFS</li>
+  <li>GFS2</li>
+</ul>
+
+<p>Ambos servicios Qemu/KVM deben ser tener la misma versión y las mismas actualizaciones.</p>
+
+<p>Primero debemos tener una configuración para la resolución de host. En este ejemplo nuestros servidores <strong>Qemu/KVM</strong> tienen la siguiente información asignada:</p>
+
+<ul>
+  <li>virt1 tiene asignado la IP 10.0.0.1</li>
+  <li>virt2 tiene asignado la IP 10.0.0.2</li>
+</ul>
+
+<p>En <strong>ambos servidores</strong> tendremos configurado el archivo <strong>host</strong> para que resuelva sus nombres de dominio locales asignados.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/hosts
+127.0.0.1   localhost localhost.localdomain
+::1         localhost localhost.localdomain
+10.0.0.1   virt1
+10.0.0.2   virt2
+</code></pre>
+</div>
+
+<p>En este ejemplo usaremos un servicio <strong>NFS</strong> como <strong>storage pool</strong>, este contiene nuestras imagenes de discos de nuestras instancias virtuales.</p>
+
+<blockquote>
+  <p>Ambos servidores Qemu/KVM deben tener montado en el mismo directorio el recurso NFS.</p>
+</blockquote>
+
+<p>La sintaxis del comando de migración (<code class="highlighter-rouge">virsh migrate</code>) es la siguiente:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ virsh migrate --live --persistent Guest URLConnection
+</code></pre>
+</div>
+
+<p>Donde <strong>Guest</strong>, es el nombre del cliente a migrar.</p>
+
+<p><strong>URLConnection</strong> es la URL de conexión hacia el servidor destino, ejemplo: <strong>qemu+ssh://hostname/system</strong>.</p>
+
+<p>La opcion <code class="highlighter-rouge">--persistent</code> nos hara el movimiento permanente. De lo contrario si esta opcion no es puesta al apagar el cliente en el servidor destino se eliminara las configuraciones.</p>
+
+<p>Listamos las instancias virtuales que se esta ejecutando en <strong>virt1</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(virt1)$ virsh list
+ Id    Nombre                         Estado
+----------------------------------------------------
+ 1     VM1                            ejecutando
+</code></pre>
+</div>
+
+<p>Ahora migramos <strong>VM1</strong> del servidor <strong>virt1</strong> al servidor <strong>virt2</strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(virt1)$ virsh migrate --live --persistent VM1 qemu+ssh://virt2/system
+</code></pre>
+</div>
+
+<blockquote>
+  <p>Notese que el comando anterior usa el servicio SSH y de manera implicita conecta usando el usuario root. Si quisieramos <strong>usar otro usuario</strong> ante ponemos al nombre del hostname el usuario. Por ejemplo: <strong>qemu+ssh://admin@virt2/system</strong></p>
+</blockquote>
+
+<p>Listamos las instancias virtuales y observamos que <strong>VM1</strong> esta apagado en <strong>virt1</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(virt1)$ virsh list --all
+ Id    Nombre                         Estado
+----------------------------------------------------
+ -     VM1                            apagado
+</code></pre>
+</div>
+
+<p>Y ahora listamos las instancias virtuales y vemos a <strong>VM1</strong> que ya se encuentra <strong>ejecutandose</strong> en <strong>virt2</strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(virt2)$ virsh list --all
+ Id    Nombre                         Estado
+----------------------------------------------------
+ 1     VM1                            ejecutando
+</code></pre>
+</div>
+
+<blockquote>
+  <p>Ahora nos queda una instancia de <strong>VM1</strong> en <strong>virt1</strong> que podemos eliminar si deseamos, siempre y cuando <strong>NO borremos la imagen</strong> del medio de almacenamiento ya que se tiene asociado en la instancia alojada en <strong>virt2</strong>.</p>
+</blockquote>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x/">
+            Aplicación de parches en VMware ESXi 5.x
+            <small>20 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/05/15/replicacion-postgresql-con-repmgr-centos/">
+            Administrando replicación en PostgreSQL con REPMGR
+            <small>15 May 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

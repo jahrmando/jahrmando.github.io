@@ -114,6 +114,62 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/2014/07/15/mejorar-rendimiento-postgresql/">
+        Mejorando el rendimiento de PostgreSQL (Linux)
+      </a>
+    </h1>
+
+    <span class="post-date">15 Jul 2014</span>
+
+    <p>En estos dias me dado a la tarea de explorar las opciones de optimizacion que tiene PostgreSQL, ya se tenia hecho una optimizacion en la configuracion general de PostgreSQL (postgresql.conf) de acuerdo con el hardware que tiene el servidor, esto demostro una mejora en el arranque del servicio y en los tiempos de respuesta de las consultas sql. Siempre uso la herramienta <a href="https://github.com/gregs1104/pgtune">pgtune</a> para optimizar estos parametros importantes, como por ejemplo el <strong><em>shared_buffers</em></strong>, <strong><em>effective_cache_size</em></strong> y otros demas importantes.</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/06/27/crear-usuario-lectura-postgresql/">
+        Crear usuario de lectura (read-only) en PostgreSQL
+      </a>
+    </h1>
+
+    <span class="post-date">27 Jun 2014</span>
+
+    <p>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/06/26/instalacion-administracion-postgresql-centos6/">
+        Guía rápida de instalación y administración de PostgreSQL
+      </a>
+    </h1>
+
+    <span class="post-date">26 Jun 2014</span>
+
+    <p>En este howto configuraremos la versión de PostgreSQL 9.3 la mas reciente hasta ahora.</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/2014/04/22/amavisd-new-permitir-adjuntos-exe-a-trav%C3%A9s-de/">
+        Permitir adjuntos .exe comprimidos en Amavisd-new
+      </a>
+    </h1>
+
+    <span class="post-date">22 Apr 2014</span>
+
+    <p>La configuración por defecto del servicio Amavisd-new es un poco restrictiva y para mi gusto buena para el manejo de detección de <strong>SPAM</strong> y contenido Malware.</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/2014/04/18/configurar-plugin-java-para-firefox-chrome-en-linux/">
         Plugin Java en Chrome y Firefox en tu Linux
       </a>
@@ -136,48 +192,6 @@
     <span class="post-date">07 Apr 2014</span>
 
     <p>Sabemos que el comando <code class="highlighter-rouge">smbstatus</code> nos muestra información acerca del estado actual del servicio samba, como usuarios conectados y ficheros abiertos; con la opción <code class="highlighter-rouge">-p</code> podemos tener un filtro de solo procesos y un ejemplo de salida seria:</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/04/01/failed-to-init-inotify-demasiados-ficheros/">
-        Failed to init inotify - Demasiados ficheros abiertos
-      </a>
-    </h1>
-
-    <span class="post-date">01 Apr 2014</span>
-
-    <p>Recientemente se me han presentado estos eventos en un servicio SMB, haciendo la tarea me he encontrado con su respectiva razón y solución a estos eventos. Estos eventos son lanzados por el modulo <strong>inotify</strong>, que nos proporciona un mecanismo para monitorear eventos en el sistema de archivos.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/03/26/p%C3%A9rdida-de-eventos-en-linux-imuxsock-begins-to/">
-        Error imuxsock begins to drop messages
-      </a>
-    </h1>
-
-    <span class="post-date">26 Mar 2014</span>
-
-    <p>Si alguna vez se han encontrado con estos eventos en los registros del sistema unix/linux esto se debe a que el servicio <strong>rsyslog</strong> no esta registrando ‘eventos’ que los sockets de log del servicio (El evento nos proporciona el <strong>PID</strong>) le envian a <strong>rsyslog</strong>, esto porque se han presentado fuera del intervalo configurado.</p>
-
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/2014/02/07/buscando-errores-y-advertencias-en-los-registros/">
-        Buscando errores y advertencias en los registros linux
-      </a>
-    </h1>
-
-    <span class="post-date">07 Feb 2014</span>
-
-    <p>Es muy común que en los registros encontremos palabras como <strong>error</strong> ó <strong>warning</strong> para registrar eventos que estén causando algún problema en el sistema Linux, por ejemplo <em>CentOS</em>.</p>
 
 
   </div>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Como conectarse a Hipchat desde IRSSI &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Como conectarse a Hipchat desde IRSSI</h1>
+  <span class="post-date">21 Mar 2015</span>
+  <p>Para aquellos que quieran integrar su servicio <a href="https://www.hipchat.com">HipChat</a> al programa <a href="http://www.irssi.org/">irssi</a>, espero les sea de utilidad.</p>
+
+<blockquote>
+  <p>Esta configuración la probé en un Fedora 21 de 64Bits.</p>
+</blockquote>
+
+<p>Instalamos algunas dependencias necesarias para compilar el modulo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo yum install loudmouth-devel irssi-devel
+</code></pre>
+</div>
+
+<h2 id="modulo-irssi-xmpp">Modulo irssi-xmpp</h2>
+
+<p>Nos descargamos la ultima versión de <a href="http://cybione.org/~irssi-xmpp/">irssi-xmpp</a>, ya que esa contiene un <em>bugfix</em> que nos permitirá conectarnos exitosamente.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ wget http://cybione.org/~irssi-xmpp/files/irssi-xmpp-0.52.tar.gz
+</code></pre>
+</div>
+
+<p>Extraemos los archivos del archivo y desde una terminal nos cambiamos al directorio.</p>
+
+<p>Compilamos el modulo <strong>irssi-xmpp</strong> de la siguiente forma:</p>
+
+<p>Necesitamos saber en que directorio esta <strong><em>irssi-config.h</em></strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo find / -name irssi-config.h
+</code></pre>
+</div>
+
+<p>Yo lo encontre en <strong>/usr/include/irssi/irssi-config.h</strong>, ahora edito el archivo <em>config.mk</em> y agrego el directorio que esta antes de <strong>include</strong> y lo agrego a la variable <strong><em>PREFIX</em></strong> del archivo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim config.mk
+# paths
+PREFIX ?= /usr
+</code></pre>
+</div>
+
+<p>si nuestro sistema es de <em>64bits</em> edite en el archivo anterior en la variable <strong><em>IRSSI_LIB</em></strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>IRSSI_LIB ?= ${PREFIX}/lib64/irssi
+</code></pre>
+</div>
+
+<p>Ahora compilamos e instalamos con los siguientes comandos.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ make
+$ sudo make install1
+</code></pre>
+</div>
+
+<p>Desde terminal muévase hasta la carpeta donde se instalo los módulos</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cd /usr/lib/irssi/modules
+</code></pre>
+</div>
+
+<p>ó para los de 64bits.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cd /usr/lib64/irssi/modules
+</code></pre>
+</div>
+
+<p>Creamos el siguiente link.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo ln -s libxmpp_core.so libXMPP_core.so
+</code></pre>
+</div>
+
+<h2 id="configuracin-irssi">Configuración IRSSI</h2>
+
+<p>Ahora toca el turno de configurar <strong>IRSSI</strong></p>
+
+<p>El siguiente comando hará que se cargue el modulo <strong><em>irssi-xmpp</em></strong> al inicio de * irssi*</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ echo "load xmpp" &gt;&gt; ~/.irssi/startup
+</code></pre>
+</div>
+
+<p>Abrimos el archivo de configuración de irssi, usando <code class="highlighter-rouge">vim</code> o cualquier editor abrimos el archivo <strong><em>~/.irssi/config</em></strong> que esta en tu carpeta de usuario. Los datos lo tomamos de configuracion de HipChat los tomamos del <a href="https://hipchat.com/account/xmpp">panel de usuario</a></p>
+
+<p>Configuramos una instancia <em>servers</em> para el servicio hipchat:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>servers = (
+  {
+    address = "chat.hipchat.com";
+    chatnet = "hipchat";
+    port = "5223";
+    password = "mipasswordhipchat";
+    use_ssl = "yes";
+    ssl_verify = "no";
+    autoconnect = "yes";
+  }
+);
+</code></pre>
+</div>
+
+<p>Creamos una instancia <em>network</em> para el servidor:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>chatnets = {
+  hipchat = { 
+        type = "XMPP"; 
+        nick = "Username@chat.hipchat.com"; 
+    };
+};
+</code></pre>
+</div>
+
+<p>Damos de alta a los canales en los que estemos agregados, estos los consultamos desde el <a href="https://hipchat.com/rooms">panel de rooms</a>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>channels = (
+  {
+    name = "XMPP_JID@conf.hipchat.com";
+    chatnet = "hipchat";
+    autojoin = "yes";
+  }
+);
+</code></pre>
+</div>
+
+<p>Ahora necesitamos poner nuestro <strong><em>nickname</em></strong> del canal, para esto tiene que ser nuestro nombre completo registrado en <strong>HipChat</strong>, en mi caso <strong><em>Armando Uch</em></strong>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>settings = {
+  "irc/core" = { 
+    alternate_nick = "Armando Uch";
+    };
+};
+</code></pre>
+</div>
+
+<p>Ahora solo queda iniciar el programa <strong>irssi</strong>.</p>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2017/02/20/aplicaci%C3%B3n-de-parches-en-vmware-esxi-5x/">
+            Aplicación de parches en VMware ESXi 5.x
+            <small>20 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/09/clonaci%C3%B3n-y-migraci%C3%B3n-en-tiempo-real-live/">
+            Clonación y migración en tiempo real de instancias virtuales Qemu/KVM
+            <small>09 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>
