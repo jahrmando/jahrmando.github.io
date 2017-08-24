@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Error imuxsock begins to drop messages &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Error imuxsock begins to drop messages</h1>
+  <span class="post-date">26 Mar 2014</span>
+  <p>Si alguna vez se han encontrado con estos eventos en los registros del sistema unix/linux esto se debe a que el servicio <strong>rsyslog</strong> no esta registrando ‘eventos’ que los sockets de log del servicio (El evento nos proporciona el <strong>PID</strong>) le envian a <strong>rsyslog</strong>, esto porque se han presentado fuera del intervalo configurado.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Mar 26 16:10:44 srv rsyslogd-2177: imuxsock begins to drop messages from pid 25300 due to rate-limiting
+Mar 26 16:10:44 srv rsyslogd-2177: imuxsock lost 357 messages from pid 25246 due to rate-limiting
+Mar 26 16:10:45 srv rsyslogd-2177: imuxsock begins to drop messages from pid 25325 due to rate-limiting
+Mar 26 16:10:45 srv rsyslogd-2177: imuxsock lost 1200 messages from pid 25244 due to rate-limiting
+Mar 26 16:10:46 srv rsyslogd-2177: imuxsock begins to drop messages from pid 25231 due to rate-limiting
+Mar 26 16:10:49 srv rsyslogd-2177: imuxsock lost 1041 messages from pid 25326 due to rate-limi
+</code></pre>
+</div>
+
+<p>El modulo <em>imuxsock</em> es el que se encarga de esto, este modulo posee dos variables <code class="highlighter-rouge">$SystemLogRateLimitInterval</code> y <code class="highlighter-rouge">$SystemLogRateLimitBurst</code> donde configuramos cuantos mensajes deben ser enviados por un intervalo de tiempo. Un ejemplo de configuración seria la siguiente:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$SystemLogRateLimitInterval 2
+$SystemLogRateLimitBurst 100
+</code></pre>
+</div>
+
+<p>En la configuración anterior aceptamos cada 2 segundos 100 eventos, si se registran 200 eventos en un intervalo de 2 segundos tendríamos la advertencia que se han perdido 100 mensajes, ejemplo:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>imuxsock begins to drop messages from pid 00000 due to rate-limiting
+imuxsock lost 100 messages from pid 00000 due to rate-limiting
+</code></pre>
+</div>
+
+<p>Existen varios servicios que podrían tener una alta carga de eventos por segundo como un snort o samba. Podríamos estar perdiendo el registro de una gran cantidad de eventos importantes. Lo ideal es ajustar estas variables dependiendo la carga de <strong>rsyslog</strong>.</p>
+
+<p>En este caso nosotros desactivaremos el intervalo de tiempo ajustando la variable <code class="highlighter-rouge">$SystemLogRateLimitInterval</code> a 0 (cero) y permitir recibir todos los eventos que se registren.</p>
+
+<p>Creamos un archivo de configuración para cargar en el servicio <strong>rsyslog</strong> y editamos de la siguiente forma:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ vim /etc/rsyslog.d/fix_imuxsock.conf
+$SystemLogRateLimitInterval 0
+</code></pre>
+</div>
+
+<p>Reiniciamos el servicio <strong>rsyslog</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ service rsyslog restart
+</code></pre>
+</div>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

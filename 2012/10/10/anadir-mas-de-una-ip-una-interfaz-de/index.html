@@ -11,7 +11,7 @@
 
   <title>
     
-      Acerca de &middot; Tech Monkey
+      Añadir mas de una IP a una interfaz de red en linux &middot; Tech Monkey
     
   </title>
 
@@ -57,7 +57,7 @@
       
         
           
-            <a class="sidebar-nav-item active" href="/about/">Acerca de</a>
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
           
         
       
@@ -110,18 +110,67 @@
 
 
     <div class="content container">
-      <div class="page">
-  <h1 class="page-title">Acerca de</h1>
-  <p><strong><em>Greetings human!</em></strong></p>
+      <div class="post">
+  <h1 class="post-title">Añadir mas de una IP a una interfaz de red en linux</h1>
+  <span class="post-date">10 Oct 2012</span>
+  <p>Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.</p>
 
-<p>Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y una breve explicación de lo que aquí encontraras y lo que no encontraras (Windows)..</p>
+<p>Copiamos la configuracion de la nic a la que le asignaremos la interfaz virtual en este caso <code class="highlighter-rouge">eth0</code>, a la virtual le asignamos el mismo nombre pero con el sufijo <code class="highlighter-rouge">:0</code>. El numero cero es consecutivo, podemos seguir agregando mas nic virtuales.</p>
 
-<p>Entusiasta en temas de Linux y Python, pero en general me entusiasma aprender cosas nuevas sobre tecnología.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cd /etc/sysconfig/network-scripts/
+$ sudo cp ifcfg-eth0 ifcfg-eth0:0
+</code></pre>
+</div>
 
-<p>He creado este blog con el único fin de plasmar en alguna parte mis ideas, apuntes, tips y de mas cosas que me parezcan interesantes para compartir con ustedes.</p>
+<p>Configuramos la nic virtual</p>
 
-<p>Por ahora esto es todo para este ‘about’, vuelve pronto!</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>DEVICE=eth0:0 # Nombre de la interfaz
+BOOTPROTO=static
+BROADCAST=10.255.255.255
+HWADDR=00:1E:0B:BC:BE:56 # MAC de la nic eth0
+IPADDR=10.0.0.55 # IP nueva
+NETMASK=255.0.0.0
+NETWORK=10.0.0.0
+ONBOOT=yes
+</code></pre>
+</div>
 
+<p>Reiniciamos el servicio</p>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
 </div>
 
     </div>

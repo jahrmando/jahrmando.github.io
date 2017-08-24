@@ -11,7 +11,7 @@
 
   <title>
     
-      Acerca de &middot; Tech Monkey
+      Configuración de fecha y hora en CentOS 6 &middot; Tech Monkey
     
   </title>
 
@@ -57,7 +57,7 @@
       
         
           
-            <a class="sidebar-nav-item active" href="/about/">Acerca de</a>
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
           
         
       
@@ -110,18 +110,62 @@
 
 
     <div class="content container">
-      <div class="page">
-  <h1 class="page-title">Acerca de</h1>
-  <p><strong><em>Greetings human!</em></strong></p>
+      <div class="post">
+  <h1 class="post-title">Configuración de fecha y hora en CentOS 6</h1>
+  <span class="post-date">14 Mar 2013</span>
+  <p>Borramos la zona horaria actual</p>
 
-<p>Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y una breve explicación de lo que aquí encontraras y lo que no encontraras (Windows)..</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo rm /etc/localtime 
+</code></pre>
+</div>
 
-<p>Entusiasta en temas de Linux y Python, pero en general me entusiasma aprender cosas nuevas sobre tecnología.</p>
+<p>Configuramos creando un enlace simbólico a la zona horaria correspondiente</p>
 
-<p>He creado este blog con el único fin de plasmar en alguna parte mis ideas, apuntes, tips y de mas cosas que me parezcan interesantes para compartir con ustedes.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo ln -s /usr/share/zoneinfo/Mexico/General /etc/localtime
+</code></pre>
+</div>
 
-<p>Por ahora esto es todo para este ‘about’, vuelve pronto!</p>
+<p>Asignamos fecha y luego sincronizacion con la bios. El formato de la fecha es “MMDDhhmmAAAA”, el ejemplo nos muestra una asignacion de fecha y hora 14 de Marzo del 2013 con las 15:17hrs</p>
 
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo date 031415172013
+$ sudo hwclock --systohc
+</code></pre>
+</div>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
 </div>
 
     </div>

@@ -11,7 +11,7 @@
 
   <title>
     
-      Acerca de &middot; Tech Monkey
+      Análisis del rendimiento de Linux en 60 Segundos &middot; Tech Monkey
     
   </title>
 
@@ -57,7 +57,7 @@
       
         
           
-            <a class="sidebar-nav-item active" href="/about/">Acerca de</a>
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
           
         
       
@@ -110,18 +110,64 @@
 
 
     <div class="content container">
-      <div class="page">
-  <h1 class="page-title">Acerca de</h1>
-  <p><strong><em>Greetings human!</em></strong></p>
+      <div class="post">
+  <h1 class="post-title">Análisis del rendimiento de Linux en 60 Segundos</h1>
+  <span class="post-date">04 Dec 2015</span>
+  <p>Les dejo un excelente articulo sobre como poder detectar rapidamente anomalias en el rendimiento de nuestro servidor <strong>Linux</strong>, 60 Segundos pueden ser significativos para resolver incidentes en ambientes productivos y que estos no escalen a problemas mucho mayores.</p>
 
-<p>Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y una breve explicación de lo que aquí encontraras y lo que no encontraras (Windows)..</p>
+<ul>
+  <li><a href="http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html">The Netflix Tech Blog: Análisis del rendimiento de Linux en 60 Segundos</a></li>
+</ul>
 
-<p>Entusiasta en temas de Linux y Python, pero en general me entusiasma aprender cosas nuevas sobre tecnología.</p>
+<p>Les dejo el <strong>cheatsheet</strong> de comando, las cuales nos explican en el articulo el como interpretar los datos de salida de cada uno.</p>
 
-<p>He creado este blog con el único fin de plasmar en alguna parte mis ideas, apuntes, tips y de mas cosas que me parezcan interesantes para compartir con ustedes.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ uptime
+$ dmesg | tail
+$ vmstat 1
+$ mpstat -P ALL 1
+$ pidstat 1
+$ iostat -xz 1
+$ free -m
+$ sar -n DEV 1
+$ sar -n TCP,ETCP 1
+$ top
+</code></pre>
+</div>
 
-<p>Por ahora esto es todo para este ‘about’, vuelve pronto!</p>
+</div>
 
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap/">
+            Limpiar las particiones de intercambio SWAP
+            <small>27 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
 </div>
 
     </div>

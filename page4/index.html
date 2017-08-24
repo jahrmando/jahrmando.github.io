@@ -45,7 +45,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a class="sidebar-nav-item active" href="/">Home</a>
+      <a class="sidebar-nav-item" href="/">Home</a>
 
       
 
@@ -114,70 +114,70 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
-        Análisis del rendimiento de Linux en 60 Segundos
+      <a href="/2014/04/18/configurar-plugin-java-para-firefox-chrome-en-linux/">
+        Plugin Java en Chrome y Firefox en tu Linux
       </a>
     </h1>
 
-    <span class="post-date">04 Dec 2015</span>
+    <span class="post-date">18 Apr 2014</span>
 
-    <p>Les dejo un excelente articulo sobre como poder detectar rapidamente anomalias en el rendimiento de nuestro servidor <strong>Linux</strong>, 60 Segundos pueden ser significativos para resolver incidentes en ambientes productivos y que estos no escalen a problemas mucho mayores.</p>
+    <p>Normalmente se me olvida configurar este plugin <strong>Java</strong>, espero les sea útil como a mi tener una publicación para recordarlo. Supongamos que ya tienen instalado alguna versión del JRE ó JDK de <strong>Java</strong>, continué con la siguiente configuración:</p>
 
 
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
-        Manejar un estado de Mantemiento WebSite con NGINX
+      <a href="/2014/04/07/obtener-una-lista-de-usuarios-conectados-en-smb/">
+        Obtener una lista de usuarios conectados en SMB Samba
       </a>
     </h1>
 
-    <span class="post-date">27 Mar 2015</span>
+    <span class="post-date">07 Apr 2014</span>
 
-    <p>Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline.</p>
+    <p>Sabemos que el comando <code class="highlighter-rouge">smbstatus</code> nos muestra información acerca del estado actual del servicio samba, como usuarios conectados y ficheros abiertos; con la opción <code class="highlighter-rouge">-p</code> podemos tener un filtro de solo procesos y un ejemplo de salida seria:</p>
 
 
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
-        Excelente cheat sheet de VIM
+      <a href="/2014/04/01/failed-to-init-inotify-demasiados-ficheros/">
+        Failed to init inotify - Demasiados ficheros abiertos
       </a>
     </h1>
 
-    <span class="post-date">13 Mar 2015</span>
+    <span class="post-date">01 Apr 2014</span>
 
-    <p>Excelente cheat sheet para principiantes de #VIM (y no generen cadenas aleatorias para poder salir del editor 😁)</p>
+    <p>Recientemente se me han presentado estos eventos en un servicio SMB, haciendo la tarea me he encontrado con su respectiva razón y solución a estos eventos. Estos eventos son lanzados por el modulo <strong>inotify</strong>, que nos proporciona un mecanismo para monitorear eventos en el sistema de archivos.</p>
 
 
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap/">
-        Limpiar las particiones de intercambio SWAP
+      <a href="/2014/03/26/p%C3%A9rdida-de-eventos-en-linux-imuxsock-begins-to/">
+        Error imuxsock begins to drop messages
       </a>
     </h1>
 
-    <span class="post-date">27 Jan 2015</span>
+    <span class="post-date">26 Mar 2014</span>
 
-    <p>Suele suceder que un proceso finalizado nos deje ocupado parte o casi toda la partición swap. Si requiere depurar ese espacio para eso utilizamos el comando <code class="highlighter-rouge">swapoff</code>, este desactiva una partición swap y volcara todo archivo que se este usando a espacio de ram.</p>
+    <p>Si alguna vez se han encontrado con estos eventos en los registros del sistema unix/linux esto se debe a que el servicio <strong>rsyslog</strong> no esta registrando ‘eventos’ que los sockets de log del servicio (El evento nos proporciona el <strong>PID</strong>) le envian a <strong>rsyslog</strong>, esto porque se han presentado fuera del intervalo configurado.</p>
 
 
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/2015/01/20/autocompletado-bash-en-centos/">
-        Autocompletado de comandos con bash en CentOS
+      <a href="/2014/02/07/buscando-errores-y-advertencias-en-los-registros/">
+        Buscando errores y advertencias en los registros linux
       </a>
     </h1>
 
-    <span class="post-date">20 Jan 2015</span>
+    <span class="post-date">07 Feb 2014</span>
 
-    <p>Cuando usamos distribuciones <strong>Linux</strong> (Fedora, Debian, OpenSuse, etc) nos acostumbramos ha tener auto-completado en la terminal, ya que esta característica viene por defecto, pero en <strong>CentOS</strong> (al menos en la versión mininal) no tiene.</p>
+    <p>Es muy común que en los registros encontremos palabras como <strong>error</strong> ó <strong>warning</strong> para registrar eventos que estén causando algún problema en el sistema Linux, por ejemplo <em>CentOS</em>.</p>
 
 
   </div>
@@ -186,10 +186,12 @@
 
 <div class="pagination">
   
-    <a class="pagination-item older" href="/page2">Anteriores</a>
+    <a class="pagination-item older" href="/page5">Anteriores</a>
   
   
-    <span class="pagination-item newer">Recientes</span>
+    
+      <a class="pagination-item newer" href="/page3">Recientes</a>
+    
   
 </div>
     </div>

@@ -1,0 +1,3666 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Tech Monkey</title>
+ <link href="jahrmando.github.com/atom.xml" rel="self"/>
+ <link href="jahrmando.github.com/"/>
+ <updated>2017-08-24T10:36:55-05:00</updated>
+ <id>jahrmando.github.com</id>
+ <author>
+   <name></name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Análisis del rendimiento de Linux en 60 Segundos</title>
+   <link href="jahrmando.github.com/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/"/>
+   <updated>2015-12-04T11:30:32-06:00</updated>
+   <id>jahrmando.github.com/2015/12/04/the-netflix-tech-blog-análisis-del-rendimiento</id>
+   <content type="html">&lt;p&gt;Les dejo un excelente articulo sobre como poder detectar rapidamente anomalias en el rendimiento de nuestro servidor &lt;strong&gt;Linux&lt;/strong&gt;, 60 Segundos pueden ser significativos para resolver incidentes en ambientes productivos y que estos no escalen a problemas mucho mayores.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html&quot;&gt;The Netflix Tech Blog: Análisis del rendimiento de Linux en 60 Segundos&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Les dejo el &lt;strong&gt;cheatsheet&lt;/strong&gt; de comando, las cuales nos explican en el articulo el como interpretar los datos de salida de cada uno.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ uptime
+$ dmesg | tail
+$ vmstat 1
+$ mpstat -P ALL 1
+$ pidstat 1
+$ iostat -xz 1
+$ free -m
+$ sar -n DEV 1
+$ sar -n TCP,ETCP 1
+$ top
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Manejar un estado de Mantemiento WebSite con NGINX</title>
+   <link href="jahrmando.github.com/2015/03/27/sitio-en-mantenimiento-con-nginx/"/>
+   <updated>2015-03-27T11:03:19-06:00</updated>
+   <id>jahrmando.github.com/2015/03/27/sitio-en-mantenimiento-con-nginx</id>
+   <content type="html">&lt;p&gt;Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline.&lt;/p&gt;
+
+&lt;p&gt;La idea es poder intercambiar rápidamente a un “estado de mantenimiento” de sitio controlado por una sentencia &lt;strong&gt;IF&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Todas las configuraciones se hacen dentro de la directiva de configuración &lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Definimos una variable llamada &lt;code class=&quot;highlighter-rouge&quot;&gt;$maintenance&lt;/code&gt; que nos servirá para poder controlar el estatus de nuestro sitio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;set $maintenance TRUE;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora en &lt;strong&gt;todas&lt;/strong&gt; nuestras directivas &lt;strong&gt;location&lt;/strong&gt; de nuestra configuración de sitio pondremos en la parte inicial una sentencia condicional &lt;code class=&quot;highlighter-rouge&quot;&gt;IF&lt;/code&gt; que en caso de ser igual a &lt;strong&gt;TRUE&lt;/strong&gt; retornaremos un &lt;a href=&quot;http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#5xx_Server_Error&quot;&gt;error 503&lt;/a&gt; (usado para manejar el estatus de servicio temporalmente inhabilitado o en mantenimiento), caso contrario continuara con el flujo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location / {
+    # Mantenimiento
+    if ($maintenance = TRUE){ return 503; }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Toca definir como manejaremos el estatus 503 esto con la variable de configuración &lt;code class=&quot;highlighter-rouge&quot;&gt;error_page&lt;/code&gt; (&lt;a href=&quot;http://nginx.org/en/docs/http/ngx_http_core_module.html#error_page&quot;&gt;info&lt;/a&gt;) que nos permite manipular la respuesta que se dará cuando un código de error ocurra.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;error_page 503 /503.html;
+location = /503.html {
+    root /path/to/error/templates/;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un archivo &lt;strong&gt;503.html&lt;/strong&gt; que nos servirá para desplegar el mensaje de estado de mantenimiento, dentro de la directiva &lt;strong&gt;location&lt;/strong&gt; tenemos la variable &lt;strong&gt;root&lt;/strong&gt; donde pondremos el directorio absoluto de la carpeta donde se aloja nuestro archivo html.&lt;/p&gt;
+
+&lt;p&gt;Solo nos queda guardar nuestros cambios y reiniciar el servicio NGINX para probar la configuración.&lt;/p&gt;
+
+&lt;p&gt;Para volver al estado &lt;strong&gt;online&lt;/strong&gt; de nuestro sitio solo necesitamos cambiar el valor a nuestra variable &lt;code class=&quot;highlighter-rouge&quot;&gt;$maintenance&lt;/code&gt; de TRUE a FALSE (o cualquier otro valor) y reiniciar el servicio NGINX.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Excelente cheat sheet de VIM</title>
+   <link href="jahrmando.github.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/"/>
+   <updated>2015-03-13T20:34:09-06:00</updated>
+   <id>jahrmando.github.com/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim</id>
+   <content type="html">&lt;p&gt;Excelente cheat sheet para principiantes de #VIM (y no generen cadenas aleatorias para poder salir del editor 😁)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/tumblr_files/tumblr_nl6kgxBjbX1qcyjxwo1_1280.png&quot; alt=&quot;VIM Cheet&quot; /&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Limpiar las particiones de intercambio SWAP</title>
+   <link href="jahrmando.github.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap/"/>
+   <updated>2015-01-27T14:51:39-06:00</updated>
+   <id>jahrmando.github.com/2015/01/27/como-limpiar-las-particiones-de-intercambio-swap</id>
+   <content type="html">&lt;p&gt;Suele suceder que un proceso finalizado nos deje ocupado parte o casi toda la partición swap. Si requiere depurar ese espacio para eso utilizamos el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;swapoff&lt;/code&gt;, este desactiva una partición swap y volcara todo archivo que se este usando a espacio de ram.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ swapoff -a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Tenga encuenta tener suficiente espacio en RAM para poder volcar los datos de swap.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Ahora tenemos que reactivar nuestras swap, esto lo hacemos con el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;swapon&lt;/code&gt; de la siguiente forma.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ swapon -a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Este comando leerá nuestras particiones swap declaradas en el archivo /etc/fstab y las montara.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Autocompletado de comandos con bash en CentOS</title>
+   <link href="jahrmando.github.com/2015/01/20/autocompletado-bash-en-centos/"/>
+   <updated>2015-01-20T13:47:00-06:00</updated>
+   <id>jahrmando.github.com/2015/01/20/autocompletado-bash-en-centos</id>
+   <content type="html">&lt;p&gt;Cuando usamos distribuciones &lt;strong&gt;Linux&lt;/strong&gt; (Fedora, Debian, OpenSuse, etc) nos acostumbramos ha tener auto-completado en la terminal, ya que esta característica viene por defecto, pero en &lt;strong&gt;CentOS&lt;/strong&gt; (al menos en la versión mininal) no tiene.&lt;/p&gt;
+
+&lt;p&gt;Para tener esta característica en la terminal instalemos el paquete &lt;strong&gt;bash-completion&lt;/strong&gt; que viene en los repositorios base.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install bash-completion -y
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Configuración de NGINX con autenticación HTTP en CentOS</title>
+   <link href="jahrmando.github.com/2015/01/08/nginx-autenticacion-http-centos/"/>
+   <updated>2015-01-08T12:00:28-06:00</updated>
+   <id>jahrmando.github.com/2015/01/08/nginx-autenticacion-http-centos</id>
+   <content type="html">&lt;p&gt;Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.&lt;/p&gt;
+
+&lt;p&gt;La utilidad &lt;code class=&quot;highlighter-rouge&quot;&gt;htpasswd&lt;/code&gt; nos permite manejar los accesos de usuario para la autenticación básica por HTTP, esto en CentOS se encuentra en el paquete &lt;strong&gt;httpd-tools&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Instalamos el paquete httpd-tools.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install httpd-tools
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Agregamos el usuario, usando la opción &lt;code class=&quot;highlighter-rouge&quot;&gt;-c&lt;/code&gt; para crear el archivo de base de datos y este se alojara en el directorio &lt;strong&gt;/etc/nginx/htpasswd&lt;/strong&gt;, con la opción &lt;code class=&quot;highlighter-rouge&quot;&gt;-s&lt;/code&gt; habilitamos que la contraseña sea cifrada en &lt;strong&gt;SHA&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ htpasswd -s -c /etc/nginx/htpasswd [mi usuario]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asignamos como propietario al usuario y grupo NGINX.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chown nginx:nginx /etc/nginx/htpasswd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asignamos acceso de solo lectura a usuario y grupo.&lt;/p&gt;
+
+&lt;p&gt;$ chmod 440 /etc/nginx/htpasswd&lt;/p&gt;
+
+&lt;p&gt;Seguimos con la configuración del servicio NGINX, dentro del bloque &lt;strong&gt;server&lt;/strong&gt; usamos el bloque &lt;strong&gt;location&lt;/strong&gt; donde describimos el acceso a nuestro recurso /manager/, con las directivas &lt;strong&gt;allow&lt;/strong&gt; y &lt;strong&gt;deny&lt;/strong&gt; restringimos el acceso vía IP ó subred.&lt;/p&gt;
+
+&lt;p&gt;Con el modulo &lt;strong&gt;ngx_http_auth_basic_module&lt;/strong&gt; solicitamos acceso vía usuario-contraseña, esta se activa con la directiva &lt;strong&gt;auth_basic&lt;/strong&gt; y con la directiva &lt;strong&gt;auth_basic_user_file&lt;/strong&gt; especificamos el directorio donde se encuentra nuestro base de datos de usuarios (generado con &lt;code class=&quot;highlighter-rouge&quot;&gt;htpasswd&lt;/code&gt; anteriormente) y con la directiva &lt;strong&gt;alias&lt;/strong&gt; describimos el directorio en el servidor.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/nginx/sites-available/my_site.conf
+server {
+[...]
+    location /manager/ {
+        alias /www/data/;
+        allow 127.0.0.1;
+        allow 192.168.X.0/24;
+        deny all;
+        auth_basic &quot;Acceso restringido&quot;;
+        auth_basic_user_file /etc/nginx/htpasswd;
+    }
+[...]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Recargamos el servicio NGINX para aplicar los cambios.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service nginx reload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Guardar un archivo sin permisos de escritura en VIM</title>
+   <link href="jahrmando.github.com/2014/09/29/como-forzar-vim-para-guardar-un-archivo-sin/"/>
+   <updated>2014-09-29T10:01:00-05:00</updated>
+   <id>jahrmando.github.com/2014/09/29/como-forzar-vim-para-guardar-un-archivo-sin</id>
+   <content type="html">&lt;p&gt;Se que no somos perfectos y yo en lo particular cometo el error de abrir un archivo para editarlo a la cual no tengo permisos de escritura, y claro! me doy cuenta cuando ya llevo varios minutos trabajando sobre ese archivo, siempre sucede y es inevitable.&lt;/p&gt;
+
+&lt;p&gt;Con el fin de que no suceda de nuevo he encontrado este pequeño VIM hack. Creamos un command-line (cmap) VIM de la siguiente forma en el archivo de configuracion local de VIM &lt;code class=&quot;highlighter-rouge&quot;&gt;.vimrc&lt;/code&gt;, esta se encuentra en el HOME del usuario.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vi .vimrc
+&quot; Forzar guardar si requiere privilegios de superusuario 
+cmap w!! w !sudo tee &amp;gt; /dev/null %
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Este comando toma el input actual y crea un documento con en el mismo nombre y en el mismo directorio del archivo abierto (lo sobrescribe) y usando &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo&lt;/code&gt; obtiene privilegios de súperusuario para crearlo.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Puedes encontrar mas información &lt;a href=&quot;http://stackoverflow.com/questions/2600783/how-does-the-vim-write-with-sudo-trick-work&quot;&gt;aquí&lt;/a&gt; sobre este hack.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Después de esto cuando tengamos problemas para poder escribir nuestros cambios en el documento ejecutamos en modo comando &lt;code class=&quot;highlighter-rouge&quot;&gt;w!!&lt;/code&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Como redireccionar el trafico HTTP hacia HTTPS con NGINX</title>
+   <link href="jahrmando.github.com/2014/09/24/como-redireccionar-el-trafico-http-hacia-https-con/"/>
+   <updated>2014-09-24T11:02:11-05:00</updated>
+   <id>jahrmando.github.com/2014/09/24/como-redireccionar-el-trafico-http-hacia-https-con</id>
+   <content type="html">&lt;p&gt;Cuando tengamos que mudar un sitio web completamente a protocolo seguro &lt;strong&gt;HTTPS&lt;/strong&gt; necesitamos que toda petición que venga como &lt;strong&gt;HTTP&lt;/strong&gt; sea redirigido hacia el protocolo seguro.&lt;/p&gt;
+
+&lt;p&gt;Creamos dos instancias &lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt;, una para el puerto 80 (http) y otra para el puerto 443 (https).&lt;/p&gt;
+
+&lt;p&gt;Para la instancia &lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt; del puerto 443 pondremos toda la configuración del sitio y con los debidos ajustes que &lt;strong&gt;SSL&lt;/strong&gt; requiere.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
+    listen 443 ssl;
+    server_name  example.com;
+    server_tokens off;
+
+    # Toda tu configuracion del sitio acontinuacion
+    #
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para la instancia &lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt; del puerto 80 pondremos los ajustes de redirección, en la linea de configuración que empieza con &lt;code class=&quot;highlighter-rouge&quot;&gt;return&lt;/code&gt; especifica que cuando hay una petición este devolverá un estado &lt;strong&gt;301&lt;/strong&gt; (Movido permanentemente) y lo va redirigir a la misma &lt;strong&gt;URI&lt;/strong&gt; pero con el ajuste en el protocolo, en este caso el protocolo &lt;strong&gt;HTTPS&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
+    listen 80;
+    server_name  example.com;
+    server_tokens off;
+    return 301 https://$server_name$request_uri;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Con esto podemos asegurar que las peticiones a nuestra pagina sean solo por &lt;strong&gt;HTTPS&lt;/strong&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Herramientas para monitoreo linux</title>
+   <link href="jahrmando.github.com/2014/08/20/herramientas-monitoreo-linux/"/>
+   <updated>2014-08-20T20:44:15-05:00</updated>
+   <id>jahrmando.github.com/2014/08/20/herramientas-monitoreo-linux</id>
+   <content type="html">&lt;p&gt;Una descripción gráfica de herramientas que podemos usar para monitorear diversas partes en las que se conforma un S.O Linux/Unix&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/tumblr_files/tumblr_namvhrFdOi1qcyjxwo1_1280.png&quot; alt=&quot;herramientas&quot; /&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Top 10 IPs mas visitados en Apache / Nginx</title>
+   <link href="jahrmando.github.com/2014/08/16/obtener-las-10-ips-que-mas-visitan-un-sitio-en/"/>
+   <updated>2014-08-16T13:39:00-05:00</updated>
+   <id>jahrmando.github.com/2014/08/16/obtener-las-10-ips-que-mas-visitan-un-sitio-en</id>
+   <content type="html">&lt;p&gt;Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de &lt;strong&gt;Apache&lt;/strong&gt; ó &lt;strong&gt;NGINX&lt;/strong&gt;, ademas de listar el numero de accesos encontrados para cada IP.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat site.access.log | awk &#39;{print $1}&#39; | sort | uniq -c | sort -nr | head -n 10
+78320 187.xxx.xxx.74
+75052 187.xxx.xxx.76
+74229 187.xxx.xxx.206
+72214 187.xxx.xxx.79
+70507 192.168.xxx.200
+68457 187.xxx.xxx.123
+67956 187.xxx.xxx.207
+66438 187.xxx.xxx.78
+64883 187.xxx.xxx.201
+64874 187.xxx.xxx.202
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Lista de comandos muy útil para auditar</title>
+   <link href="jahrmando.github.com/2014/08/07/una-lista-de-comandos-muy-%C3%BAtil-para-auditar/"/>
+   <updated>2014-08-07T11:17:56-05:00</updated>
+   <id>jahrmando.github.com/2014/08/07/una-lista-de-comandos-muy-útil-para-auditar</id>
+   <content type="html">&lt;p&gt;Una lista de comandos muy útil para auditar sesiones en Linux/Unix&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/tumblr_files/tumblr_n9y2lwdzkv1qcyjxwo1_1280.jpg&quot; alt=&quot;comandos&quot; /&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Generar listado de contribuidores en un repositorio GIT</title>
+   <link href="jahrmando.github.com/2014/07/29/listado-contribuidores-repositorio-git/"/>
+   <updated>2014-07-29T12:19:00-05:00</updated>
+   <id>jahrmando.github.com/2014/07/29/listado-contribuidores-repositorio-git</id>
+   <content type="html">&lt;p&gt;Una forma sencilla de generar una lista completa de correos electronicos de los que han contribuido en un proyecto &lt;strong&gt;GIT&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ git log --pretty=format:&quot;%aE&quot; | sort -u    
+userA@hotmail.com
+userB@gmail.com
+userC@outlook.com
+userD@gmail.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Crear usuario de lectura (read-only) en PostgreSQL</title>
+   <link href="jahrmando.github.com/2014/06/27/crear-usuario-lectura-postgresql/"/>
+   <updated>2014-06-27T13:23:57-05:00</updated>
+   <id>jahrmando.github.com/2014/06/27/crear-usuario-lectura-postgresql</id>
+   <content type="html">&lt;p&gt;Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.&lt;/p&gt;
+
+&lt;p&gt;Nos conectamos a la base de datos (test_db) donde vamos a aplicar estos privilegios y con un usuario privilegiado para poder hacer las modificaciones (postgres).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ su - postgres -c &#39;psql -U postgres -d test_db&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el &lt;a href=&quot;http://www.postgresql.org/docs/8.1/static/role-membership.html&quot;&gt;ROL&lt;/a&gt; &lt;strong&gt;read_user&lt;/strong&gt; con privilegios limitados.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;test_db=# CREATE ROLE read_user WITH LOGIN ENCRYPTED PASSWORD &#39;password&#39; NOSUPERUSER INHERIT NOCREATEROLE NOREPLICATION NOCREATEDB;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Damos privilegio &lt;code class=&quot;highlighter-rouge&quot;&gt;CONNECT&lt;/code&gt; para que nuestro usuario &lt;strong&gt;read_user&lt;/strong&gt; puede conectarse a la base de datos &lt;strong&gt;test_db&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;test_db=# GRANT CONNECT ON DATABASE test_db TO read_user;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Al usuario &lt;strong&gt;read_user&lt;/strong&gt; le vamos a dar los privilegios de &lt;code class=&quot;highlighter-rouge&quot;&gt;SELECT&lt;/code&gt; en las todas las tablas en el &lt;code class=&quot;highlighter-rouge&quot;&gt;SCHEMA&lt;/code&gt; public (Que por defecto es el esquema que usa postgresql para una base de datos) y el privilegio &lt;code class=&quot;highlighter-rouge&quot;&gt;EXECUTE&lt;/code&gt; sobre funciones en la base de datos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;test_db=# GRANT SELECT ON ALL TABLES IN SCHEMA public TO read_user;
+test_db=# GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO read_user;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora bien los comandos anteriores solo tienen efecto sobre las tablas existentes, necesitamos modificar los &lt;a href=&quot;http://www.postgresql.org/docs/9.2/interactive/sql-alterdefaultprivileges.html&quot;&gt;privilegios por defecto&lt;/a&gt; de la base de datos &lt;strong&gt;test_db&lt;/strong&gt; para que se apliquen los privilegios anteriores a nuevas tablas.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;test_db=# ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO read_user;
+test_db=# ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO read_user;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para ver los privilegios actuales de las tables en la base de datos ejecutamos &lt;code class=&quot;highlighter-rouge&quot;&gt;\z&lt;/code&gt; en el cmd.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;test_db=# \z
+Access privileges
+  Schema  |        Name        |   Type   |     Access privileges     | Column access privileges
+----------+--------------------------+----------+---------------------------+-------------------
+ public   | prueba_tabla       | table    | postgres=arwdDxt/postgres+| 
+          |                    |          | read_user=r/postgres      |
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Guía rápida de instalación y administración de PostgreSQL</title>
+   <link href="jahrmando.github.com/2014/06/26/instalacion-administracion-postgresql-centos6/"/>
+   <updated>2014-06-26T15:19:20-05:00</updated>
+   <id>jahrmando.github.com/2014/06/26/instalacion-administracion-postgresql-centos6</id>
+   <content type="html">&lt;p&gt;En este howto configuraremos la versión de PostgreSQL 9.3 la mas reciente hasta ahora.&lt;/p&gt;
+
+&lt;p&gt;Configurando repositorio para excluir los paquetes “postgresql” del repo Base de CentOS.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/yum.repos.d/CentOS-Base.repo
+[base]
+...
+...
+exclude=postgresql*
+
+[updates]
+...
+...
+exclude=postgresql*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalación de repositorio Postgresql. Puedes buscar el repositorio mas adecuado a tu arquitectura y la versión mas actual en &lt;a href=&quot;http://yum.postgresql.org/repopackages.php&quot;&gt;yum.postgresql.org&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /tmp/
+$ wget http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm
+$ yum localinstall pgdg-centos93-9.3-1.noarch.rpm
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalando los paquetes del servicio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install postgresql93-server postgresql93-contrib
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Inicializando la base de datos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service postgresql-9.3 initdb
+Iniciando la base de datos:                                [  OK  ]
+$ service postgresql-9.3 start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configurando auto-arranque del servicio y runlevels&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chkconfig postgresql-9.3 on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuración básica del servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/pgsql/9.3/data/postgresql.conf
+
+listen_addresses = &#39;*&#39;
+port = 5432
+max_connections = 120
+superuser_reserved_connections = 3
+
+shared_buffers = 1024MB   # 25% RAM
+
+temp_buffers = 16MB   # Default 8MB
+
+work_mem = 2MB    # min 64kB deft 1MB
+maintenance_work_mem = 32MB  # min 1MB deft 16MB
+max_stack_depth = 4MB   # min 100kB deft 2MB
+
+effective_cache_size = 128MB  # Deft 128MB. Optimo %70 Ram max
+
+log_line_prefix = &#39;&amp;lt; %t %u %d %r &amp;gt;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;optimizar-la-configuracin&quot;&gt;Optimizar la configuración.&lt;/h2&gt;
+
+&lt;p&gt;Si lo que queremos es tener una mejor configuración de PostgreSQL de acuerdo a nuestro Hardware disponible le recomiendo para esto la herramienta &lt;strong&gt;pgtune&lt;/strong&gt;. Esta herramienta te genera una configuración tomando en cuenta tu Hardware. Lo instalamos de la siguiente forma.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Necesitas el repositorio &lt;a href=&quot;http://wiki.centos.org/AdditionalResources/Repositories&quot;&gt;EPEL&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo yum install pgtune --enablerepo epel
+$ export PGDATA=/var/lib/pgsql/9.3/data/
+$ sudo pgtune -i $PGDATA/postgresql.conf -o $PGDATA/postgresql.conf.pgtune
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Se genera un nuevo archivo de configuración nombrado postgresql.conf.pgtune que puedes ya usar para tu servicio. Resguardamos la configuración actual, luego sobrescribimos con nuestra nueva configuración y reiniciamos el servicio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo cp $PGDATA/postgresql.conf $PGDATA/postgresql.conf.old
+$ sudo cp $PGDATA/postgresql.conf.pgtune $PGDATA/postgresql.conf
+$ sudo service postgresql-9.3 restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;configuracin-de-accesos&quot;&gt;Configuración de accesos.&lt;/h2&gt;
+
+&lt;p&gt;Configure a su criterio los accesos de conexión que desea tener.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo vim /var/lib/pgsql/9.3/data/pg_hba.conf
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# &quot;local&quot; is for Unix domain socket connections only
+local   all             all                                     peer
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            ident
+host    all             all             10.0.0.0/8              md5
+host    all             all             192.168.0.0/24          md5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;firewall-iptables&quot;&gt;Firewall (iptables)&lt;/h2&gt;
+
+&lt;p&gt;Abrimos el puerto del servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 5432 -j ACCEPT
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el firewall&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service iptables restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;administracin&quot;&gt;Administración&lt;/h2&gt;
+
+&lt;p&gt;Entrar como superususario&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo -u postgres psql postgres
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Crear usuario o ROL&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# CREATE ROLE demorole1 WITH LOGIN ENCRYPTED PASSWORD &#39;ultrapassword&#39; NOSUPERUSER INHERIT NOCREATEROLE NOREPLICATION CREATEDB;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Cambiar contraseña de un usuario&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# ALTER USER demorole1 WITH LOGIN ENCRYPTED PASSWORD &#39;password&#39;; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Cambiar privilegios&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# ALTER ROLE demorole1 CREATEROLE CREATEDB REPLICATION SUPERUSER;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Eliminar ROL&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# DROP ROLE demorole1;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Crear base de datos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# CREATE DATABASE demodb1 WITH OWNER demorole1 ENCODING &#39;UTF8&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asignar una DB a un usuario&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# GRANT ALL PRIVILEGES ON DATABASE demodb1 TO demorole1;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Eliminar DB&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;postgres=# DROP DATABASE demodb1;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Respaldar una base de datos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pg_dump -h localhost -p 5432 -U username -F c -b -v -f &quot;my_db.backup&quot; db_to_backup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Restaurar base de datos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pg_restore -h localhost -d db_to_restore -U someuser somedb.backup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Permitir adjuntos .exe comprimidos en Amavisd-new</title>
+   <link href="jahrmando.github.com/2014/04/22/amavisd-new-permitir-adjuntos-exe-a-trav%C3%A9s-de/"/>
+   <updated>2014-04-22T13:17:00-05:00</updated>
+   <id>jahrmando.github.com/2014/04/22/amavisd-new-permitir-adjuntos-exe-a-través-de</id>
+   <content type="html">&lt;p&gt;La configuración por defecto del servicio Amavisd-new es un poco restrictiva y para mi gusto buena para el manejo de detección de &lt;strong&gt;SPAM&lt;/strong&gt; y contenido Malware.&lt;/p&gt;
+
+&lt;p&gt;Sin embargo, a veces es necesario adecuarlos, el envió de ejecutables a través de correos electrónicos puede ser “necesario” para el día a día de los usuarios (aka Luser), suponiendo que eres un administrador muy ágil y haz configurado algún tipo de Antivirus (ClamAV por ejemplo) para detectar ejecutables infectados y no permitir la llegada de estos binarios a la bandeja de algún luser, que por naturaleza son confiados con cualquier contenido que les llegue, puedes continuar con este &lt;strong&gt;protip&lt;/strong&gt; de configuración para &lt;strong&gt;Amavisd-new&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Localicemos nuestro archivo de configuración de Amavisd-new, esta nombrada como &lt;strong&gt;amavisd.conf&lt;/strong&gt;, puedes hacer uso de &lt;code class=&quot;highlighter-rouge&quot;&gt;locate&lt;/code&gt; o &lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; para encontrarlo. En &lt;strong&gt;CentOS&lt;/strong&gt; lo puedes encontrar en &lt;strong&gt;/etc/amavisd.conf&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;En el archivo de configuración nos enfocaremos en la variable ‘&lt;strong&gt;$banned_filename_re&lt;/strong&gt;’, este contiene las reglas de tipo Regex para el manejo de las politicas de acceso de los archivos adjuntos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ /etc/amavisd.conf
+.
+.
+$banned_filename_re = new_RE(
+    ### BLOCKED ANYWHERE
+    qr&#39;^\.(exe-ms|dll)$&#39;,                   # banned file(1) types, rudimentary
+.
+.
+    ### BLOCK THE FOLLOWING, EXCEPT WITHIN UNIX ARCHIVES:
+    [ qr&#39;^\.(rpm|cpio|tar)$&#39;       =&amp;gt; 0 ],  # allow any in Unix-type archives
+.
+.
+    qr&#39;.\.(exe|vbs|pif|scr|cpl)$&#39;i,         # banned extension - basic
+.
+.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Arriba esta la configuración por default de esa variable, en la sección &lt;strong&gt;BLOCKED ANYWHERE&lt;/strong&gt; donde se lista &lt;strong&gt;exe-ms&lt;/strong&gt; ó &lt;strong&gt;exe&lt;/strong&gt;, debemos comentar esa linea, siendo un poco mas restrictivos retirar solo esas palabras.&lt;/p&gt;
+
+&lt;p&gt;Después en la sección de las excepciones de empaquetado, que podemos ver debajo del comentario &lt;strong&gt;BLOCK THE FOLLOWING, EXCEPT WITHIN UNIX ARCHIVES&lt;/strong&gt; se listan los tipos de archivos empaquetadores que tienen permitido contener cualquier tipo de archivos, allí es donde agregamos las nuestras, en este ejemplo agrego rar y zip. La configuración queda de la siguiente forma:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ /etc/amavisd.conf
+.
+.
+$banned_filename_re = new_RE(
+    ### BLOCKED ANYWHERE
+    #qr&#39;^\.(exe-ms|dll)$&#39;,                   # banned file(1) types, rudimentary
+.
+.
+    ### BLOCK THE FOLLOWING, EXCEPT WITHIN UNIX ARCHIVES:
+    [ qr&#39;^\.(rpm|cpio|tar)$&#39;       =&amp;gt; 0 ],  # allow any in Unix-type archives
+    [ qr&#39;^\.(rar|zip)$&#39;       =&amp;gt; 0 ],       # allow any in RAR and ZIP archives
+.
+.
+    qr&#39;.\.(exe|vbs|pif|scr|cpl)$&#39;i,         # banned extension - basic
+.
+.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Si nos damos cuenta al final aun listo como regla bloquear la extension &lt;strong&gt;exe&lt;/strong&gt;, esto solo si se adjunta este tipo de archivo fuera de mis empaquetadores permitidos.&lt;/p&gt;
+
+&lt;p&gt;Solo nos queda reiniciar ó recargar el servicio &lt;strong&gt;Amavisd-new&lt;/strong&gt; en nuestro servidor para aplicar los cambios.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Plugin Java en Chrome y Firefox en tu Linux</title>
+   <link href="jahrmando.github.com/2014/04/18/configurar-plugin-java-para-firefox-chrome-en-linux/"/>
+   <updated>2014-04-18T12:42:02-05:00</updated>
+   <id>jahrmando.github.com/2014/04/18/configurar-plugin-java-para-firefox-chrome-en-linux</id>
+   <content type="html">&lt;p&gt;Normalmente se me olvida configurar este plugin &lt;strong&gt;Java&lt;/strong&gt;, espero les sea útil como a mi tener una publicación para recordarlo. Supongamos que ya tienen instalado alguna versión del JRE ó JDK de &lt;strong&gt;Java&lt;/strong&gt;, continué con la siguiente configuración:&lt;/p&gt;
+
+&lt;h2 id=&quot;google-chrome&quot;&gt;Google Chrome&lt;/h2&gt;
+
+&lt;p&gt;Creamos un directorio denominado plugins si aún no existe.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir -p /opt/google/chrome/plugins
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Nos cambiamos al directorio de plugins creado.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /opt/google/chrome/plugins
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un enlace simbólico.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ln -s /usr/java/jre1.7.0_55/lib/amd64/libnpjp2.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Tome en cuenta que el directorio donde se encuentra &lt;strong&gt;libnpjp2.so&lt;/strong&gt; puede variar según su configuración &lt;strong&gt;Java&lt;/strong&gt;. Para localizarlo podemos ejecutar &lt;code class=&quot;highlighter-rouge&quot;&gt;locate&lt;/code&gt; y encontrar el ó los directorios donde este el plugin.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo updatedb
+$ locate libnpjp2.so
+/usr/java/jdk1.6.0_43/jre/lib/amd64/libnpjp2.so
+/usr/java/jre1.7.0_21/lib/amd64/libnpjp2.so
+/usr/java/jre1.7.0_55/lib/amd64/libnpjp2.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Tengo tres directorios actualmente, configurare con el mas reciente &lt;strong&gt;/usr/java/jre1.7.0_55/lib/amd64/libnpjp2.so&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Reiniciamos el explorador&lt;/p&gt;
+
+&lt;h2 id=&quot;mozilla-firefox&quot;&gt;Mozilla Firefox&lt;/h2&gt;
+
+&lt;p&gt;Creemos un directorio denominado plugins si aún no existe.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir -p /usr/lib/mozilla/plugins
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Ó si estas usando S.0 de 64bits&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir -p /usr/lib64/mozilla/plugins
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Nos cambiamos al directorio de plugins creado.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /usr/lib/mozilla/plugins
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Ó si estas usando S.0 de 64bits&lt;/p&gt;
+&lt;/blockquote&gt;
+
+ 	$ cd /usr/lib64/mozilla/plugins
+
+&lt;p&gt;Creamos un enlace simbólico.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ln -s /usr/java/jre1.7.0_55/lib/amd64/libnpjp2.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el explorador&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Obtener una lista de usuarios conectados en SMB Samba</title>
+   <link href="jahrmando.github.com/2014/04/07/obtener-una-lista-de-usuarios-conectados-en-smb/"/>
+   <updated>2014-04-07T12:36:43-05:00</updated>
+   <id>jahrmando.github.com/2014/04/07/obtener-una-lista-de-usuarios-conectados-en-smb</id>
+   <content type="html">&lt;p&gt;Sabemos que el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;smbstatus&lt;/code&gt; nos muestra información acerca del estado actual del servicio samba, como usuarios conectados y ficheros abiertos; con la opción &lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt; podemos tener un filtro de solo procesos y un ejemplo de salida seria:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ smbstatus -p
+
+Samba version 3.5.10-125.el6
+PID     Username      Group         Machine                        
+---------------------------------------------------------------
+13777     user_01   user_01   machine_01 (192.168.0.161)
+9272      user_02  user_02  machine_02 (192.168.0.182)
+11400     user_03    user_03    machine_03    (192.168.0.151)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Vemos que la salida contiene la lista de usuarios conectados pero nos falta aplicarle formato para solo extraer la información requerida el &lt;strong&gt;usuario&lt;/strong&gt; y la &lt;strong&gt;IP&lt;/strong&gt;. Para ello usaremos los comandos &lt;code class=&quot;highlighter-rouge&quot;&gt;sed&lt;/code&gt; y &lt;code class=&quot;highlighter-rouge&quot;&gt;awk&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;En el segundo bloque uso &lt;code class=&quot;highlighter-rouge&quot;&gt;sed&lt;/code&gt; para eliminar las primeras 4 lineas de la salida, en el tercer bloque elimino los símbolos &lt;strong&gt;(&lt;/strong&gt; y &lt;strong&gt;)&lt;/strong&gt; que contiene las &lt;strong&gt;IPs&lt;/strong&gt;, por ultimo con &lt;code class=&quot;highlighter-rouge&quot;&gt;awk&lt;/code&gt; imprimo las columna 2 y 5 con el siguiente formato: la primera columna tipo cadena de 20 caracteres &lt;code class=&quot;highlighter-rouge&quot;&gt;%-20s&lt;/code&gt;, una tabulacion &lt;code class=&quot;highlighter-rouge&quot;&gt;\t&lt;/code&gt;, una columna tipo cadena &lt;code class=&quot;highlighter-rouge&quot;&gt;%s&lt;/code&gt; y una nueva linea &lt;code class=&quot;highlighter-rouge&quot;&gt;\n&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ smbstatus -p | sed &#39;1,4d&#39; | sed &#39;s/(\|)//g&#39; | awk &#39;{printf &quot;%-20s\t%s\n&quot;, $2, $5}&#39;
+user_01          192.168.0.161
+user_02          192.168.0.182
+user_03          192.168.0.151
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;La salida ahora es una lista de &lt;strong&gt;usuario - IP&lt;/strong&gt;, que de igual forma podemos contar el numero de lineas impresas para determinar la &lt;strong&gt;cantidad de usuarios conectados&lt;/strong&gt; usando &lt;code class=&quot;highlighter-rouge&quot;&gt;wc -l&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ smbstatus -p | sed &#39;1,4d&#39;| sed &#39;s/(\|)//g&#39; | awk &#39;{printf &quot;%-20s\t%s\n&quot;, $2, $5}&#39; | wc -l
+3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ó de forma mas breve, solo conservando el bloque donde eliminamos las primeras 4 lineas:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;smbstatus -p | sed &#39;1,4d&#39; | wc -l
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Failed to init inotify - Demasiados ficheros abiertos</title>
+   <link href="jahrmando.github.com/2014/04/01/failed-to-init-inotify-demasiados-ficheros/"/>
+   <updated>2014-04-01T18:00:19-06:00</updated>
+   <id>jahrmando.github.com/2014/04/01/failed-to-init-inotify-demasiados-ficheros</id>
+   <content type="html">&lt;p&gt;Recientemente se me han presentado estos eventos en un servicio SMB, haciendo la tarea me he encontrado con su respectiva razón y solución a estos eventos. Estos eventos son lanzados por el modulo &lt;strong&gt;inotify&lt;/strong&gt;, que nos proporciona un mecanismo para monitorear eventos en el sistema de archivos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Apr  1 12:50:57 srv smbd[27909]: [2014/04/01 12:50:57.200596,  0] smbd/notify_inotify.c:302(inotify_setup)
+Apr  1 12:50:57 srv smbd[27909]:   Failed to init inotify - Demasiados ficheros abiertos
+Apr  1 12:50:59 srv smbd[27909]: [2014/04/01 12:50:59.198617,  0] smbd/notify_inotify.c:302(inotify_setup)
+Apr  1 12:50:59 srv smbd[27909]:   Failed to init inotify - Demasiados ficheros abiertos
+Apr  1 12:51:01 srv smbd[27909]: [2014/04/01 12:51:01.212549,  0] smbd/notify_inotify.c:302(inotify_setup)
+Apr  1 12:51:01 srv smbd[27909]:   Failed to init inotify - Demasiados ficheros abiertos
+Apr  1 12:52:06 srv smbd[27909]: [2014/04/01 12:52:06.727637,  0] smbd/notify_inotify.c:302(inotify_setup)
+Apr  1 12:52:06 srv smbd[27909]:   Failed to init inotify - Demasiados ficheros abiertos
+Apr  1 12:52:18 srv smbd[27909]: [2014/04/01 12:52:18.989593,  0] smbd/notify_inotify.c:302(inotify_setup)
+Apr  1 12:52:18 srv smbd[27909]:   Failed to init inotify - Demasiados ficheros abiertos
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Cada instancia &lt;strong&gt;inotify&lt;/strong&gt; esta asociado con una &lt;strong&gt;“watch list”&lt;/strong&gt; dentro de esta cada elemento &lt;strong&gt;‘watch’&lt;/strong&gt; tiene asociado un directorio o archivo para su monitoreo, para limitar el uso de recursos del sistema por parte de este modulo posee dos variables para esto: &lt;strong&gt;‘/proc/sys/fs/inotify/max_user_instances’&lt;/strong&gt; y &lt;strong&gt;‘/proc/sys/fs/inotify/max_user_watches’&lt;/strong&gt; y estos pueden ser incrementados a conveniencia.&lt;/p&gt;
+
+&lt;p&gt;Citando el manual de &lt;strong&gt;inotify&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/proc/sys/fs/inotify/max_user_instances&lt;/p&gt;
+
+  &lt;p&gt;This specifies an upper limit on the number of inotify instances that can be created per real user ID.&lt;/p&gt;
+
+  &lt;p&gt;/proc/sys/fs/inotify/max_user_watches&lt;/p&gt;
+
+  &lt;p&gt;This specifies an upper limit on the number of watches that can be created per real user ID.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;SMB hace uno del modulo &lt;strong&gt;inotify&lt;/strong&gt; para monitorear los archivos que los usuarios usan, por ejemplo: el registro de actividades de los usuarios podemos monitorear que archivos ha leido, modificado o eliminado.&lt;/p&gt;
+
+&lt;p&gt;Pues si presentamos estos eventos antes mencionados es porque SMB esta creando mas instancias &lt;strong&gt;inotify&lt;/strong&gt; por PID que las permitidas, esto pues se origina por la carga del servicio y exigencias de archivos por parte de los usuarios.&lt;/p&gt;
+
+&lt;p&gt;La solución esta en &lt;strong&gt;incrementar estos valores&lt;/strong&gt; adecuando al nivel de peticiones.&lt;/p&gt;
+
+&lt;p&gt;Reviso el valor asignado a estas variables.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat /proc/sys/fs/inotify/max_user_instances
+128
+
+$ cat /proc/sys/fs/inotify/max_user_watches
+8192
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Incremento el valor de las instancias permitidas por usuario que a mi parecer es demasiado bajo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/sysctl.conf
+fs.inotify.max_user_instances = 256
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Cargamos las configuraciones con sysctl.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sysctl -p
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Verificamos que el valor este aplicado.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat /proc/sys/fs/inotify/max_user_instances
+256
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En mi caso fue suficiente incrementar al valor &lt;strong&gt;256&lt;/strong&gt; de &lt;strong&gt;max_user_instances&lt;/strong&gt; y deje de presentar estos eventos.&lt;/p&gt;
+
+&lt;p&gt;Si quieres saber mas sobre como funciona &lt;strong&gt;inotify&lt;/strong&gt; puedes hecharle un vistazo al proyecto python &lt;a href=&quot;https://github.com/seb-m/pyinotify&quot;&gt;pyinotify&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Mas información:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://man7.org/linux/man-pages/man7/inotify.7.html&quot;&gt;man7.org&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.edugeek.net/forums/nix/111651-smbd-failed-init-inotify-too-many-files-open.html&quot;&gt;edugeek.net&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.cyberciti.biz/faq/making-changes-to-proc-filesystem-permanently/&quot;&gt;cyberciti.biz&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Error imuxsock begins to drop messages</title>
+   <link href="jahrmando.github.com/2014/03/26/p%C3%A9rdida-de-eventos-en-linux-imuxsock-begins-to/"/>
+   <updated>2014-03-26T17:37:00-06:00</updated>
+   <id>jahrmando.github.com/2014/03/26/pérdida-de-eventos-en-linux-imuxsock-begins-to</id>
+   <content type="html">&lt;p&gt;Si alguna vez se han encontrado con estos eventos en los registros del sistema unix/linux esto se debe a que el servicio &lt;strong&gt;rsyslog&lt;/strong&gt; no esta registrando ‘eventos’ que los sockets de log del servicio (El evento nos proporciona el &lt;strong&gt;PID&lt;/strong&gt;) le envian a &lt;strong&gt;rsyslog&lt;/strong&gt;, esto porque se han presentado fuera del intervalo configurado.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Mar 26 16:10:44 srv rsyslogd-2177: imuxsock begins to drop messages from pid 25300 due to rate-limiting
+Mar 26 16:10:44 srv rsyslogd-2177: imuxsock lost 357 messages from pid 25246 due to rate-limiting
+Mar 26 16:10:45 srv rsyslogd-2177: imuxsock begins to drop messages from pid 25325 due to rate-limiting
+Mar 26 16:10:45 srv rsyslogd-2177: imuxsock lost 1200 messages from pid 25244 due to rate-limiting
+Mar 26 16:10:46 srv rsyslogd-2177: imuxsock begins to drop messages from pid 25231 due to rate-limiting
+Mar 26 16:10:49 srv rsyslogd-2177: imuxsock lost 1041 messages from pid 25326 due to rate-limi
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El modulo &lt;em&gt;imuxsock&lt;/em&gt; es el que se encarga de esto, este modulo posee dos variables &lt;code class=&quot;highlighter-rouge&quot;&gt;$SystemLogRateLimitInterval&lt;/code&gt; y &lt;code class=&quot;highlighter-rouge&quot;&gt;$SystemLogRateLimitBurst&lt;/code&gt; donde configuramos cuantos mensajes deben ser enviados por un intervalo de tiempo. Un ejemplo de configuración seria la siguiente:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$SystemLogRateLimitInterval 2
+$SystemLogRateLimitBurst 100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En la configuración anterior aceptamos cada 2 segundos 100 eventos, si se registran 200 eventos en un intervalo de 2 segundos tendríamos la advertencia que se han perdido 100 mensajes, ejemplo:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;imuxsock begins to drop messages from pid 00000 due to rate-limiting
+imuxsock lost 100 messages from pid 00000 due to rate-limiting
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Existen varios servicios que podrían tener una alta carga de eventos por segundo como un snort o samba. Podríamos estar perdiendo el registro de una gran cantidad de eventos importantes. Lo ideal es ajustar estas variables dependiendo la carga de &lt;strong&gt;rsyslog&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;En este caso nosotros desactivaremos el intervalo de tiempo ajustando la variable &lt;code class=&quot;highlighter-rouge&quot;&gt;$SystemLogRateLimitInterval&lt;/code&gt; a 0 (cero) y permitir recibir todos los eventos que se registren.&lt;/p&gt;
+
+&lt;p&gt;Creamos un archivo de configuración para cargar en el servicio &lt;strong&gt;rsyslog&lt;/strong&gt; y editamos de la siguiente forma:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/rsyslog.d/fix_imuxsock.conf
+$SystemLogRateLimitInterval 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el servicio &lt;strong&gt;rsyslog&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service rsyslog restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Buscando errores y advertencias en los registros linux</title>
+   <link href="jahrmando.github.com/2014/02/07/buscando-errores-y-advertencias-en-los-registros/"/>
+   <updated>2014-02-07T14:56:00-06:00</updated>
+   <id>jahrmando.github.com/2014/02/07/buscando-errores-y-advertencias-en-los-registros</id>
+   <content type="html">&lt;p&gt;Es muy común que en los registros encontremos palabras como &lt;strong&gt;error&lt;/strong&gt; ó &lt;strong&gt;warning&lt;/strong&gt; para registrar eventos que estén causando algún problema en el sistema Linux, por ejemplo &lt;em&gt;CentOS&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Podemos hacer una búsqueda de estas palabras en los registros con &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt; con un regex que filtre las palabras &lt;strong&gt;error&lt;/strong&gt; ó &lt;strong&gt;warning&lt;/strong&gt;. En el siguiente ejemplo haremos el filtro en el registro &lt;strong&gt;/var/log/messages&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ grep --color -iE &#39;error|warning&#39; /var/log/messages
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;De igual forma podemos ponerlo en modo “&lt;strong&gt;monitor&lt;/strong&gt;” la salida usando &lt;code class=&quot;highlighter-rouge&quot;&gt;tail -f&lt;/code&gt; y con la opción &lt;code class=&quot;highlighter-rouge&quot;&gt;-n&lt;/code&gt; partir el seguimiento desde las ultimas &lt;em&gt;N&lt;/em&gt; lineas.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ tail -f -n 100 /var/log/messages | grep --color -iE &#39;error|warning&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Esto nos es útil solo si aun no tienen el servicio &lt;em&gt;journal&lt;/em&gt; ya que bastaría con hacer &lt;strong&gt;journalctl -p err&lt;/strong&gt; para filtrar errores.&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Bloquear conexiones HTTPS con DNS y Firewall</title>
+   <link href="jahrmando.github.com/2014/01/30/bloquear-conexiones-https-usando-dns-y-firewall/"/>
+   <updated>2014-01-30T10:56:00-06:00</updated>
+   <id>jahrmando.github.com/2014/01/30/bloquear-conexiones-https-usando-dns-y-firewall</id>
+   <content type="html">&lt;p&gt;En este caso ejemplificaremos el bloqueo del sitio &lt;strong&gt;facebook.com&lt;/strong&gt;. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.&lt;/p&gt;
+
+&lt;p&gt;En teoría este método consiste en otorgarle al cliente cuando solicite la dirección facebook.com una IP no válida ó bloqueada, con esto rechazaremos las conexiones hacia ese dominio.&lt;/p&gt;
+
+&lt;p&gt;Pero si lo que queremos es controlar quienes pueden acceder, podemos controlar que IP publica válida resolver para el dominio ya que el servicio facebook.com posee un balanceo de carga de peticiones, esto significa que cada que hacemos una petición al dominio nos es otorgado diferentes IPs, esto nos hace casi imposible bloquear efectivamente a facebook.com desde el firewall.&lt;/p&gt;
+
+&lt;p&gt;Este método requiere que tengamos en DNS interno (BIND) en la red LAN previamente configurado. En este ejemplo nuestro servidor tiene asignado la IP &lt;strong&gt;192.168.0.1&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Que los clientes tengan configurado nuestra dirección IP del DNS interno (192.168.0.1) para que resuelvan IPs en nuestro servidor. Si tienes un servicio de DHCP es necesario agregar la IP &lt;strong&gt;192.168.0.1&lt;/strong&gt; como DNS.&lt;/p&gt;
+
+&lt;p&gt;El servicio &lt;strong&gt;shorewall&lt;/strong&gt; previamente configurado, pero bastaría con bloquear en su firewall los puertos e IPs que se mencionaran mas adelante.&lt;/p&gt;
+
+&lt;h2 id=&quot;configurando-en-el-servicio-dns-bind&quot;&gt;Configurando en el servicio DNS (Bind)&lt;/h2&gt;
+
+&lt;p&gt;Obtenemos una IP válida al servicio facebook.com.&lt;/p&gt;
+
+&lt;p&gt;Con el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;nslookup&lt;/code&gt; resolvemos el dominio y la respuesta fue la IP &lt;strong&gt;173.252.110.27&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ nslookup facebook.com
+Server:         192.168.0.1
+Address:        192.168.0.1#53
+
+Name:   facebook.com
+Address: 173.252.110.27
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos la zona para el dominio facebook.com&lt;/p&gt;
+
+&lt;p&gt;En nuestro directorio de configuración de &lt;strong&gt;BIND&lt;/strong&gt; creamos el siguiente archivo de configuración de la zona y este resolverá todas las peticiones con la IP &lt;em&gt;173.252.110.27&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim facebook.zone                                     
+$TTL 1W
+@               IN SOA  dns   root      (
+    2014012401  ; serial  (year, month, day, count)
+    2W          ; refresh
+    1H          ; retry
+    6W          ; expiry
+    1W          ; minimum
+    )
+
+                 IN NS         dns
+                 IN MX     10  mailserver
+
+@                IN A          173.252.110.27
+*                IN A          173.252.110.27
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Habilitamos la zona facebook.com&lt;/p&gt;
+
+&lt;p&gt;En nuestra configuración de &lt;strong&gt;BIND&lt;/strong&gt; habilitamos la zona de la siguiente manera.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim named.conf
+## Zona falsa
+zone &quot;facebook.com&quot; IN {
+        type master;
+        file &quot;facebook.zone&quot;;
+        allow-update { none; };
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el servicio para aplicar cambios.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service named restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;bloqueando-en-el-firewall&quot;&gt;Bloqueando en el firewall&lt;/h2&gt;
+
+&lt;p&gt;Suponiendo que nuestro servicio shorewall tenemos las zonas de red &lt;strong&gt;&lt;em&gt;lan&lt;/em&gt;&lt;/strong&gt; que hace referencia obviamente a nuestra red LAN y que la zona &lt;strong&gt;&lt;em&gt;net&lt;/em&gt;&lt;/strong&gt; hace referencia a la red Internet, teniendo esto en cuenta realizamos la siguiente configuración.&lt;/p&gt;
+
+&lt;p&gt;En nuestro archivo de reglas de shorewall &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/shorewall/rules&lt;/code&gt; configuramos la siguiente regla según sea el caso que deseemos aplicar:&lt;/p&gt;
+
+&lt;p&gt;Si queremos bloquear las peticiones de la red LAN.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/shorewall/rules
+REJECT  lan  net:173.252.110.27  tcp  443
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Determinando un rango de IPs bloqueadas.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/shorewall/rules
+REJECT  lan:192.168.0.5-192.168.0.29  net:173.252.110.27  tcp  443
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el servicio para aplicar cambios.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service shorewall restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Como configuración extra podríamos agregar una regla al firewall que solo permita para la red LAN el puerto 53 TCP/UDP peticiones hacia la IP de nuestro servidor DNS interno. Con esto evitaríamos que un astuto quiera usar un servicio DNS ajeno al nuestro.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>WhatsApp en tu Fedora</title>
+   <link href="jahrmando.github.com/2013/11/08/whatsapp-en-tu-fedora/"/>
+   <updated>2013-11-08T11:17:00-06:00</updated>
+   <id>jahrmando.github.com/2013/11/08/whatsapp-en-tu-fedora</id>
+   <content type="html">&lt;p&gt;Saliendo un poco de la temática de servidores, les dejo un pequeño how-to para usar WhatsApp en su Fedora(Probado en la liberación 18).&lt;/p&gt;
+
+&lt;p&gt;Instalamos python-yowsup que es la libreria python para whatsapp que usa yowsup-cli para hacer la magia (conexión).&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Aparentemente en Fedora 19 esta en repo oficial&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ touch /etc/yum.repos.d/rpm-sphere.repo
+$ vim /etc/yum.repos.d/rpm-sphere.repo
+[rpm-sphere]
+name=RPM Sphere
+baseurl=http://download.opensuse.org/repositories/home:/zhonghuaren/Fedora_18/
+gpgkey=http://download.opensuse.org/repositories/home:/zhonghuaren/Fedora_18/repodata/repomd.xml.key
+enabled=1
+gpgcheck=1
+
+$ sudo yum install python-yowsup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora bien bajamos la  fuente de python-yowsup que contiene la utilidad yowsup-cli que sirve para registrar y activar nuestro whatsapp.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Descargamos y descomprimimos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ wget https://github.com/tgalal/yowsup/archive/master.zip
+$ unzip master.zip
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Copiamos un ejemplo de configuracion y configuramos nuestras variables.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp yowsup-master/src/config.example ~/.my_watts.conf
+$ vim ~/.my_watts.conf
+cc=52 # Clave de pais
+phone=520000000000 # Numero telefonico mas la clave del pais
+id=FF:FF:FF:FF:FF:FF # MAC 
+password= # Dejar en blanco
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Permiso de ejecución&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chmod u+x yowsup-master/src/yowsup-cli
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hacemos la petición de nuestro código de activación. Esto enviara un sms al numero telefónico.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yowsup-master/src/yowsup-cli -c ~/.my_watts.conf --requestcode sms
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Registramos la clave para obtener nuestro usuario y contraseña&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yowsup-master/src/yowsup-cli -c ~/.my_watts.conf --register 000-000
+pw: # Aqui te devuelve la contraseña
+login: 5210000000000 # El numero telefonico q es tu usuario
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instala el pidgin&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo yum install pidgin
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Descargamos el plugin para pidgin de whatsapp&lt;/p&gt;
+
+&lt;p&gt;En esta &lt;a href=&quot;http://davidgf.net/nightly/whatsapp-purple/&quot;&gt;url&lt;/a&gt; tenemos el plugin ya precompilado. Escoja la suya de acuerdo a su arquitectura.&lt;/p&gt;
+
+&lt;p&gt;Ejemplo de descarga:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ wget http://davidgf.net/nightly/whatsapp-purple/x64/last-whatsapp.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Lo instalamos en los plugins&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir ~/.purple/plugins
+$ mv Descargas/last-whatsapp.so ~/.purple/plugins
+$ chmod u+x ~/.purple/plugins/last-whatsapp.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora abres el pidgin y registras un usuario nuevo, seleccionas el protocolo WhatsApp, y llenas tus datos de usuario y contraseña.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Configuración de Django en CentOS 6</title>
+   <link href="jahrmando.github.com/2013/10/16/configuracion-de-django-en-centos-6x/"/>
+   <updated>2013-10-16T11:06:00-05:00</updated>
+   <id>jahrmando.github.com/2013/10/16/configuracion-de-django-en-centos-6x</id>
+   <content type="html">&lt;p&gt;Stack: NGINX, GUNICORN, VIRTUALENV y SUPERVISOR&lt;/p&gt;
+
+&lt;p&gt;PRE INSTALACION&lt;/p&gt;
+
+&lt;p&gt;Instalamos los siguientes paquetes para compilaciones. Es de utilidad en algunos paquetes que instalemos dentro de PIP y los archivos de desarrollo de python.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install gcc make python-devel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;PIP, VIRTUALENV&lt;/p&gt;
+
+&lt;p&gt;Instalamos PIP desde los repositorios EPEL&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum -y install python-pip --enablerepo epel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalamos virtualenvwrapper desde PIP, este instalara como dependencia a virtualenv.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pip install virtualenvwrapper
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos nuestras variables de sistema para virtualenv y lo alojamos en el archivo de configuración bash del usuario unix.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ echo &#39;export WORKON_HOME=/opt/virtualenvs&#39; &amp;gt;&amp;gt; $HOME/.bashrc
+$ echo &#39;export VIRTUALENVWRAPPER_HOOK_DIR=$WORKON_HOME/hooks&#39; &amp;gt;&amp;gt; $HOME/.bashrc
+$ echo &#39;source /usr/bin/virtualenvwrapper.sh&#39; &amp;gt;&amp;gt; $HOME/.bashrc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos la carpeta para HOOKs.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /opt/virtualenvs/hooks
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un entorno virtual de prueba&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkvirtualenv projectwebapp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Salimos del entorno virtual&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(projectwebapp)$ deactivate
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;DJANGO&lt;/p&gt;
+
+&lt;p&gt;Creamos una carpeta donde alojaremos nuestros proyectos Django y nos cambiamos al directorio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /home/www/
+$ cd /home/www
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Habilitamos el entorno virtual para el proyecto&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;www $ workon projectwebapp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalamos Django desde PIP y creamos un proyecto Django&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(projectwebapp) www $ pip install django
+(projectwebapp) www $ django-admin.py startproject projectwebapp
+(projectwebapp) www $ cd projectwebapp/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos el servicio http de Django nativo para probar que todo este funcional hasta este punto.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(projectwebapp) projectwebapp $ python manage.py runserver
+Validating models...
+0 errors found
+October 15, 2013 - 13:54:33
+Django version 1.5.4, using settings &#39;projectwebapp.settings&#39;
+Development server is running at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Detenemos el servicio Django con el atajo de teclado &lt;code class=&quot;highlighter-rouge&quot;&gt;CONTROL-C&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;GUNICORN. Python WSGI HTTP Server&lt;/p&gt;
+
+&lt;p&gt;Instalamos gunicorn via PIP dentro del entorno virtual del proyecto. También se instala setproctitle que nos permite renombrar el proceso gunicorn por el nombre del proyecto Django.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(projectwebapp) projectwebapp $ pip install gunicorn setproctitle
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Estando en la carpeta del proyecto iniciamos el proyecto con gunicorn usando el modulo WSGI del proyecto Django.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(projectwebapp) projectwebapp $ gunicorn projectwebapp.wsgi
+2013-10-15 15:05:17 [13252] [INFO] Starting gunicorn 18.0
+2013-10-15 15:05:17 [13252] [INFO] Listening at: http://127.0.0.1:8000 (13252)
+2013-10-15 15:05:17 [13252] [INFO] Using worker: sync
+2013-10-15 15:05:17 [13257] [INFO] Booting worker with pid: 13257
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Detenemos el servicio Gunicorn con el atajo de teclado CONTROL-C.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;^C2013-10-15 15:05:33 [13257] [INFO] Worker exiting (pid: 13257)
+2013-10-15 15:05:33 [13252] [INFO] Handling signal: int
+2013-10-15 15:05:33 [13252] [INFO] Shutting down: Master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Salimos del entorno virtual&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(projectwebapp) projectwebapp $ deactive
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el directorio donde alojaremos el script bash que nos iniciara el Gunicorn, debemos tener creado antes el directorio &lt;code class=&quot;highlighter-rouge&quot;&gt;/opt/gunicorn/&lt;/code&gt; para alojar mas proyectos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /opt/gunicorn/projectwebapp/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos y editamos el archivo script para ejecutar el proyecto con gunicorn&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;vim /opt/gunicorn/projectwebapp/gunicorn_start.sh
+&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;DJANGODIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/www/projectwebapp             &lt;span class=&quot;c&quot;&gt;# Directorio del proyecto Django&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;SOCKFILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/run/gunicorn/projectwebapp.sock &lt;span class=&quot;c&quot;&gt;# Unix socket&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;USER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nginx                                    &lt;span class=&quot;c&quot;&gt;# Usuario &lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;GROUP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;root                                    &lt;span class=&quot;c&quot;&gt;# Grupo&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;NUM_WORKERS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3                                 &lt;span class=&quot;c&quot;&gt;# Numero de procesos para gunicorn&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;DJANGO_SETTINGS_MODULE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;projectwebapp.settings &lt;span class=&quot;c&quot;&gt;# Archivo settings del proyecto&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;DJANGO_WSGI_MODULE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;projectwebapp.wsgi         &lt;span class=&quot;c&quot;&gt;# Modulo WSGI del proyecto&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Activar el entorno virtual&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$DJANGODIR&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; /usr/bin/virtualenvwrapper.sh
+workon projectwebapp
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DJANGO_SETTINGS_MODULE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$DJANGO_SETTINGS_MODULE&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PYTHONPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$DJANGODIR&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$PYTHONPATH&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Crear el directorio del socket si no existe&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;RUNDIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;dirname &lt;span class=&quot;nv&quot;&gt;$SOCKFILE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt; -d &lt;span class=&quot;nv&quot;&gt;$RUNDIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; mkdir -p &lt;span class=&quot;nv&quot;&gt;$RUNDIR&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Iniciar el proyecto Django&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# No se usa el modo --daemon ya que este sera manejado por supervisor&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;gunicorn &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DJANGO_WSGI_MODULE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --workers &lt;span class=&quot;nv&quot;&gt;$NUM_WORKERS&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --user&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt; --group&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$GROUP&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --log-level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;debug &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --bind&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;unix:&lt;span class=&quot;nv&quot;&gt;$SOCKFILE&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Permisos de ejecución&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chmod u+x /opt/gunicorn/projectwebapp/gunicorn_start.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ejecutamos el script para probar el funcionamiento correcto&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ /opt/gunicorn/projectwebapp/gunicorn_start.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;SUPERVISOR&lt;/p&gt;
+
+&lt;p&gt;Es un servicio de monitoreo y control de procesos. Instalamos la mas reciente versión de supervisor desde PIP.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pip install supervisor
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el archivo de configuración.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ echo_supervisord_conf &amp;gt; /etc/supervisord.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos la carpeta de logs.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /var/log/supervisor
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuramos los siguientes parámetros.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/supervisord.conf
+# Modifique las siguientes configuraciones
+[unix_http_server] 
+...
+file=/var/run/supervisor.sock
+...
+[supervisord]
+...
+logfile=/var/log/supervisor/supervisord.log
+pidfile=/var/run/supervisord.pid 
+umask=022
+user=root
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el script para supervisor que ejecutara el servicio como daemon y auto inicio con el sistema. Este es una adaptación propia basado en el script de &lt;strong&gt;&lt;em&gt;Mike McGrath&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/init.d/supervisord
+#!/bin/bash
+#
+# supervisord   This scripts turns supervisord on
+#
+# chkconfig: - 95 04
+#
+# processname:  supervisord
+# config: /etc/supervisord.conf
+#
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+RETVAL=0
+conffile=${CONFFILE-/etc/supervisord.conf}
+user=${USER-root}
+
+start() {
+        echo -n $&quot;Starting supervisord: &quot;
+        runuser -l ${user} -c &quot;supervisord -c ${conffile}&quot; &amp;amp;&amp;amp; echo_success || echo_failure
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] &amp;amp;amp;&amp;amp;amp; touch /var/lock/subsys/supervisord
+        }
+
+stop() {
+ echo -n $&quot;Stopping supervisord: &quot;
+ killproc supervisord
+ echo
+ [ $RETVAL -eq 0 ] &amp;amp;amp;&amp;amp;amp; rm -f /var/lock/subsys/supervisord
+ }
+
+restart() {
+ stop
+ start
+ }
+
+case &quot;$1&quot; in
+  start)
+ start
+ ;;
+  stop) 
+ stop
+ ;;
+  restart|force-reload|reload)
+ restart
+ ;;
+  condrestart)
+ [ -f /var/lock/subsys/supervisord ] &amp;amp;amp;&amp;amp;amp; restart
+ ;;
+  status)
+ status supervisord
+ RETVAL=$?
+ ;;
+  *)
+ echo $&quot;Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}&quot;
+ exit 1
+ esac
+
+exit $RETVAL
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Damos de alta nuestro script como servicio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chkconfig --add supervisord
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Lo agregamos al inicio de sistema con el runrevel por defecto.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chkconfig supervisord on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos el servicio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service supervisord start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuramos una instancia de programa agregando nuestro script gunicorn que ejecuta nuestra app Django.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/supervisord.conf
+# Agregue este bloque de configuracion segun su proyecto
+[program:projectwebapp]
+command=/opt/gunicorn/projectwebapp/gunicorn_start.sh
+user=root
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/projectwebapp.log
+redirect_stderr=True
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos supervisor&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service supervisord restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;NGINX. HTTP Server&lt;/p&gt;
+
+&lt;p&gt;Instalamos la repo NGINX oficial.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ touch /etc/yum.repos.d/nginx.repo
+$ vim /etc/yum.repos.d/nginx.repo
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/6/$basearch/
+gpgcheck=0
+enabled=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalamos nginx, los agregamos al inicio de sistema e iniciamos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install nginx
+$ chkconfig nginx on
+$ service nginx start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos las carpetas donde alojamos configuración de los sitios.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /etc/nginx/sites-available
+$ mkdir /etc/nginx/sites-enabled
+$ mkdir /var/log/nginx/sites
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un respaldo de la configuración global y aplicamos las configuraciones siguientes para el servicio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+$ vim /etc/nginx/nginx.conf
+user  nginx;
+# Numero de CPUs
+worker_processes  2;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+    }
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;
+                      &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;
+                      &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    ## Optimiza el rendimiento de sendfile al enviar tramas HTTP
+    ## en un solo paquete.
+    tcp_nopush     on;
+    ## Soporte gzip. Reduce la cantidad de datos a transferir
+    gzip  on;
+
+    ## Configuracion de buffers
+    client_body_buffer_size  1K;
+    client_header_buffer_size 1k;
+    client_max_body_size 1k;
+    large_client_header_buffers 2 1k;
+
+    ## Configuracion de timeouts 
+    client_body_timeout   10;
+    client_header_timeout 10;
+    keepalive_timeout     5 5;
+    send_timeout          10;
+
+    include /etc/nginx/conf.d/*.conf;
+
+    ## Directorio de configuracion para vhost&#39;s en linea
+    include /etc/nginx/sites-enabled/*.conf;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Agregamos la ip 127.0.0.1 para escucha solo local del sitio default, también podemos borrar este archivo si quieren des-habilitar completamente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/nginx/conf.d/default.conf 
+server {
+    listen       127.0.0.1:80;
+    
+    Creamos y configuramos el sitio para nuestro proyecto projectwebapp de la siguiente manera. 
+
+$ vim /etc/nginx/sites-available/projectwebapp.conf
+# Configuracion NGINX para projectwebapp
+#
+upstream projectwebapp {
+  server unix:/var/run/gunicorn/projectwebapp.sock fail_timeout=0;
+  }
+
+server {
+    listen       10.0.0.23:80;
+
+    # Configuracion HTTPS
+    # listen       10.0.0.23:443 ssl;
+
+    server_name  app.example.com;
+    server_tokens off;
+
+    access_log  /var/log/nginx/sites/projectwebapp.access.log;
+    error_log  /var/log/nginx/sites/projectwebapp.error.log;
+
+    # Configuracion HTTPS
+    #ssl_certificate     /etc/nginx/ssl/server.crt;
+    #ssl_certificate_key /etc/nginx/ssl/server.key;
+    #ssl_prefer_server_ciphers on;
+    #ssl_protocols       SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+    #ssl_session_cache shared:SSL:2m;
+    #ssl_ciphers RC4:HIGH:!MD5:!aNULL:!DH:!EDH;
+
+    # HTTP Strict Transport Security (HSTS). Configuracion HTTPS
+    #add_header Strict-Transport-Security max-age=31536000;
+
+    # Limite subidas de archivos.
+    client_max_body_size 1M;
+
+    # Acceso solo por medio del dominio
+    if ( $host !~ ^(app.example.com)$ ) {
+         return 444;
+    }
+    # Metodos http permitidos
+    if ($request_method !~ ^(GET|HEAD|POST)$ ) {
+         return 444;
+    }
+    # Directorio para STATIC
+    location /static/ {
+            alias /home/www/projectwebapp/projectwebapp/static/;
+    }
+    # Directorio para MEDIA
+    location /media/ {
+            alias /home/www/projectwebapp/projectwebapp/media/;
+    }
+
+    location / {
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Configuracion HTTPS
+        #proxy_set_header X-Forwarded-Proto https;
+
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+
+        if (!-f $request_filename) {
+            proxy_pass http://projectwebapp;
+            break;
+        }
+    }
+
+   # Paginas de error 
+    error_page 500 502 503 504 /500.html;
+    location = /500.html {
+        root /home/www/projectwebapp/templates/;
+    }
+    error_page 404 /404.html;
+    location = /404.html {
+        root /home/www/projectwebapp/templates/;
+    }
+
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Habilitamos nuestro archivo de sitio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ln -s /etc/nginx/sites-available/projectwebapp.conf /etc/nginx/sites-enabled/projectwebapp.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos nginx&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service nginx restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;IPTABLES. Firewall&lt;/p&gt;
+
+&lt;p&gt;No olvidar abrir los respectivos puertos que usara nginx para darle salida a nuestros sitios.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+$ service iptables restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Bloquear intentos de sesión fallidas en CentOS</title>
+   <link href="jahrmando.github.com/2013/09/13/bloquear-usuarios-tras-varios-intentos/"/>
+   <updated>2013-09-13T13:00:00-05:00</updated>
+   <id>jahrmando.github.com/2013/09/13/bloquear-usuarios-tras-varios-intentos</id>
+   <content type="html">&lt;p&gt;Bloquear usuarios tras intentos de sesión fallidas CentOS 6.&lt;/p&gt;
+
+&lt;p&gt;Parámetros de configuración:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;deny - Numero de intentos&lt;/li&gt;
+  &lt;li&gt;even_deny_root - Bloquear también a root&lt;/li&gt;
+  &lt;li&gt;unlock_time - Tiempo de bloqueo, esta en segundos&lt;/li&gt;
+  &lt;li&gt;root_unlock_time - Tiempo de bloqueo de root, esta en segundos&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Agregamos las siguientes lineas de configuración en el archivo &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/pam.d/password-auth&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;auth        required      pam_tally2.so  file=/var/log/tallylog deny=3 even_deny_root unlock_time=3600
+account     required      pam_tally2.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;El archivo de configuración quedaría como el siguiente ejemplo:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/pam.d/password-auth
+#%PAM-1.0
+# This file is auto-generated.
+# User changes will be destroyed the next time authconfig is run.
+auth        required      pam_tally2.so  file=/var/log/tallylog deny=3 even_deny_root unlock_time=120
+auth        required      pam_env.so
+auth        sufficient    pam_unix.so nullok try_first_pass
+auth        requisite     pam_succeed_if.so uid &amp;amp;gt;= 500 quiet
+auth        required      pam_deny.so
+
+account     required      pam_unix.so
+account     sufficient    pam_localuser.so
+account     sufficient    pam_succeed_if.so uid &amp;amp;lt; 500 quiet
+account     required      pam_permit.so
+account     required      pam_tally2.so
+
+password    requisite     pam_cracklib.so try_first_pass retry=3 type=
+password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+password    required      pam_deny.so
+
+session     optional      pam_keyinit.so revoke
+session     required      pam_limits.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required      pam_unix.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Con el comando &lt;code class=&quot;highlighter-rouge&quot;&gt;pam_tally2&lt;/code&gt; podemos ver el contador de intentos de sesión fallidas por el usuario&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pam_tally2 --user=admin
+Login           Failures Latest failure     From
+admin            4    09/12/13 17:06:10  192.168.0.30
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciando el contador para el usuario&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pam_tally2 --user=admin --reset
+$ pam_tally2 --user=admin
+Login           Failures Latest failure     From
+admin            0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Desactivar la expiración de contraseñas</title>
+   <link href="jahrmando.github.com/2013/09/12/desactivar-la-expiracion-de-contrasenas/"/>
+   <updated>2013-09-12T16:04:00-05:00</updated>
+   <id>jahrmando.github.com/2013/09/12/desactivar-la-expiracion-de-contrasenas</id>
+   <content type="html">&lt;p&gt;Con la utilidad chage podemos reasignar los valores de expiración.&lt;/p&gt;
+
+&lt;p&gt;Verificamos las fechas de expiracion de los passwords&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chage -l usuario
+
+Last password change                                    : Jul 23, 2012
+Password expires     : Sep 21, 2012
+Password inactive     : Sep 28, 2012
+Account expires      : never
+Minimum number of days between password change  : 1
+Maximum number of days between password change  : 60
+Number of days of warning before password expires : 7
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Tenemos dos modos para poder modificar la expiración:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Modo interactivo. En prompt iras escribiendo los valores que se te solicitan&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chage usuario
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Modo comando. Restablecer valores por defecto.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chage -I -1 -m 0 -M 99999 -E -1 usuario
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Renombrar interfaz de red en CentOS </title>
+   <link href="jahrmando.github.com/2013/04/05/renombrar-interfaz-de-red-en-centos/"/>
+   <updated>2013-04-05T21:24:00-06:00</updated>
+   <id>jahrmando.github.com/2013/04/05/renombrar-interfaz-de-red-en-centos</id>
+   <content type="html">&lt;p&gt;Es común que al cambiar físicamente una interfaz de red el sistema nos configure este nuevo hardware asignándole una ID de interfaz &lt;strong&gt;eth(X)&lt;/strong&gt;, nos saldrá el error anterior ya que el dispositivo con ID &lt;code class=&quot;highlighter-rouge&quot;&gt;eth0&lt;/code&gt; que estaba configurada no existe, si nosotros queremos usar ese mismo ID de interfaz haga los siguiente.&lt;/p&gt;
+
+&lt;p&gt;Hacemos un respaldo a la configuración&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp /etc/udev/rules.d/70-persistent-net.rules 70-persistent-net.rules.backup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Es probable que udev nos haya agregado la linea (12) con el nuevo dispositivo y asignado una ID para la nueva interfaz que hemos colocado, en la opción “NAME” lo cambiamos por &lt;strong&gt;eth0&lt;/strong&gt; y comentamos o eliminamos la linea (9) donde estaba asignado “NAME” como &lt;code class=&quot;highlighter-rouge&quot;&gt;eth0&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/udev/rules.d/70-persistent-net.rules
+# This file was automatically generated by the /lib/udev/write_net_rules
+# program, run by the persistent-net-generator.rules rules file.
+#
+# You can modify it, as long as you keep each rule on a single
+# line, and change only the value of the NAME= key.
+
+# PCI device 0x8086:0x100e (e1000)
+#SUBSYSTEM==&quot;net&quot;, ACTION==&quot;add&quot;, DRIVERS==&quot;?*&quot;, ATTR{address}==&quot;08:00:27:4b:4b:48&quot;, ATTR{type}==&quot;1&quot;, KERNEL==&quot;eth*&quot;, NAME=&quot;eth0&quot;
+
+# PCI device 0x8086:0x100e (e1000)
+SUBSYSTEM==&quot;net&quot;, ACTION==&quot;add&quot;, DRIVERS==&quot;?*&quot;, ATTR{address}==&quot;08:00:27:53:c5:28&quot;, ATTR{type}==&quot;1&quot;, KERNEL==&quot;eth*&quot;, NAME=&quot;eth0&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Lo que sigue es asignar el numero de MAC que tenemos en el archivo anterior a la configuracion de red de la interfaz eth0.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/sysconfig/network-scripts/ifcfg-eth0 
+HWADDR=&quot;08:00:27:53:C5:28&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el sistema para poder aplicar los cambios.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Configuración de NGINX-CentOS-PHP</title>
+   <link href="jahrmando.github.com/2013/03/27/instalacion-y-configuracion-de-nginx/"/>
+   <updated>2013-03-27T12:13:00-06:00</updated>
+   <id>jahrmando.github.com/2013/03/27/instalacion-y-configuracion-de-nginx</id>
+   <content type="html">&lt;p&gt;Este post le instalara Nginx y PHP-FPM en Centos&lt;/p&gt;
+
+&lt;p&gt;Instalación NGINX&lt;/p&gt;
+
+&lt;p&gt;Descargamos el repositorio del sitio oficial NGINX, lo instalamos e inhabilitamos su carga automática.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ wget http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+$ yum localinstall nginx-release-centos-6-0.el6.ngx.noarch.rpm 
+$ vim /etc/yum.repos.d/nginx.repo 
+# nginx.repo
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/6/$basearch/
+gpgcheck=0
+# 1:Activo 0: Desactivado
+enabled=0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalamos el paquete NGINX usando el repositorio previamente instalado, despues activamos el inicio automatico del servicio con el sistema.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install nginx --enablerepo nginx
+$ chkconfig nginx on
+$ service nginx start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Como buena practica de configuración, creamos la carpeta “sites-available” donde alojaremos los archivos de configuración de nuestros sitios (virtualhost) y la carpeta “sites-enabled” que nos servirá para crear enlaces simbólicos hacia los archivos de configuración “sites-available” esto ponerlos en un estado “online”.  De igual forma creamos el directorio “sites” dentro de la carpeta de logs de NGINX como buena practica para tener ordenado nuestros registros de cada sitio que levantemos.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /etc/nginx/sites-available
+$ mkdir /etc/nginx/sites-enabled
+$ mkdir /var/log/nginx/sites
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos un respaldo de la configuración global y aplicamos las configuraciones siguientes para el servicio.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+$ vim /etc/nginx/nginx.conf
+user  nginx;
+## Numero de CPUs
+worker_processes  2;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+events {
+    worker_connections  1024;
+    }
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+    log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;
+                      &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;
+                      &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;
+    access_log  /var/log/nginx/access.log  main;
+    sendfile        on;
+    ## Optimiza el rendimiento de sendfile al enviar tramas HTTP
+    ## en un solo paquete.
+    tcp_nopush     on;
+    ## Soporte gzip. Reduce la cantidad de datos a transferir
+    gzip  on;
+    ## Configuracion de buffers
+    client_body_buffer_size  1K;
+    client_header_buffer_size 1k;
+    client_max_body_size 1k;
+    large_client_header_buffers 2 1k;
+    ## Configuracion de timeouts 
+    client_body_timeout   10;
+    client_header_timeout 10;
+    keepalive_timeout     5 5;
+    send_timeout          10;
+    include /etc/nginx/conf.d/*.conf;
+
+    ## Directorio de configuracion para vhost&#39;s en linea
+    include /etc/nginx/sites-enabled/*.conf;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Agregamos la ip &lt;code class=&quot;highlighter-rouge&quot;&gt;127.0.0.1&lt;/code&gt; para escucha solo local del sitio default, también podemos borrar este archivo si quieren deshabilitar completamente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/nginx/conf.d/default.conf 
+server {
+    listen       127.0.0.1:80;
+    
+    Abrimos el puerto 80 en el firewall y reiniamos el servicio 
+
+$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+$ service iptables restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Soporte PHP&lt;/p&gt;
+
+&lt;p&gt;Instalamos los paquetes para el soporte a PHP con PHP-FPM, habilitamos PHP-FPM como servicio, lo cargamos para que inicie con el sistema operativo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install php-fpm php-common php-pecl-apc php-cli php-pear php-pdo \
+php-mysql php-gd php-mbstring php-xml
+$ chkconfig --add php-fpm
+$ chkconfig php-fpm on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Cambiamos el propietario por nginx, limitamos el tiempo de ejecución de una petición php y aseguramos que solo se usen extensiones php validas.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/php-fpm.d/www.conf 
+;listen = 127.0.0.1:9000
+listen = /var/run/php5-fpm.sock
+;listen.allowed_clients = 127.0.0.1
+;user = apache
+;group = apache
+user = nginx
+group = nginx
+request_terminate_timeout = 30s
+security.limit_extensions = .php .php3 .php4 .php5 
+php_value[session.save_handler] = files
+php_value[session.save_path] = /var/lib/php/session
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asegúrese de que exista este directorio &lt;code class=&quot;highlighter-rouge&quot;&gt;/var/lib/php/session/&lt;/code&gt; ya que es donde se guardara las sesiones php y el directorio &lt;code class=&quot;highlighter-rouge&quot;&gt;/var/lib/php/tmp/&lt;/code&gt; donde se alojaremos archivos temporales que se suban.&lt;/p&gt;
+
+&lt;p&gt;$ mkdir /var/lib/php
+$ mkdir /var/lib/php/session
+$ mkdir /var/lib/php/tmp/
+$ chown nginx:nginx -R /var/lib/php/
+$ chmod 750 -r /var/lib/php/session/&lt;/p&gt;
+
+&lt;p&gt;Creamos un archivo de llamado security.ini para PHP donde pondremos algunas configuraciones que reforzaran la seguridad de su sitio, ponga a consideración personal aplicarlas o modificar las variables de acuerdo a su servidor.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$  vim /etc/php.d/security.ini 
+; Ocultar version de PHP
+expose_php=Off
+; Ocultar errores
+display_errors=Off
+; Bloquear subidas de archivos
+;file_uploads=Off
+; ó limitar los archivos a subir
+file_uploads=On
+upload_max_filesize=1M
+; Bloquear ejecucion remota via ftp,http
+allow_url_fopen=Off
+allow_url_include=Off
+; Desactivar (Obsoleto a partir de PHP 5.4.0)
+magic_quotes_gpc=Off
+; Limita los paquetes POST, (Default 8M)
+post_max_size=1M
+; Control de recursos
+max_execution_time =  30
+max_input_time = 30
+memory_limit = 8M
+; Desactivar funciones que podrían ser explotadas
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen,curl_multi_exec,parse_ini_file,show_source,phpinfo
+; Directorio temporal
+upload_tmp_dir = /var/lib/php/tmp/
+; Limitar la ejecución a php en directorio
+open_basedir = /home/www/ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos el servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service php-fpm start
+Iniciando php-fpm:                                         [  OK  ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuramos el vhost&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/nginx/sites-available/ejemplo.com.mx.conf 
+server {
+    listen       [IP]:80;
+    server_name  www.ejemplo.com.mx ejemplo.com.mx;
+    ## Deshabilitamos que imprima la version de NGINX ##
+    server_tokens off;
+    ## Registros del virtualhost ##
+    access_log  /var/log/nginx/sites/ejemplo.access.log;
+    error_log  /var/log/nginx/sites/ejemplo.error.log;
+    ## Acceso solo por hostname valido ##
+    if ( $host !~ ^(ejemplo.com.mx|www.ejemplo.com.mx)$ ) {
+         return 444;
+    }
+    ## Metodos validos ##
+    if ($request_method !~ ^(GET|HEAD|POST)$ ) {
+         return 444;
+    }
+    location / {
+     ## Los index validos, entre ellos el .php
+        index  index.html index.htm index.php;
+        ## Directorio absoluto
+        root  /home/www/ejemplo.com.mx/public_html;
+        ## Soporte PHP ##
+        location ~ \.php$ {
+                root            public_html;
+                fastcgi_pass    unix:/var/run/php5-fpm.sock;
+                fastcgi_index   index.php;
+                fastcgi_param   SCRIPT_FILENAME  /home/www/ejemplo.com.mx/public_html$fastcgi_script_name;
+                include         /etc/nginx/fastcgi_params;
+        }
+        ## Denegar accesos a archivos ocultos ##
+        location ~ /\. { deny  all; }
+        ## Bloquear logs de archivos estaticos ###
+        location ~* \.(jpg|jpeg|gif|png|css|js|ico|xml)$ {
+                access_log        off;
+                log_not_found     off;
+                expires           360d;
+        }
+    }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Habilitamos la configuración de nuestro sitio y reiniciamos el servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /etc/nginx/sites-enabled/
+$ ln -s /etc/nginx/sites-available/ejemplo.com.mx.conf
+$ service nginx restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Soporte SSL&lt;/p&gt;
+
+&lt;p&gt;Para soporte SSL agregamos la siguiente configuracion&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/nginx/sites-available/ejemplo.com.mx.conf 
+server {
+    ## Escucha en puerto 443
+    listen      [IP]:443 ssl;
+    ## Soporte SSL ##
+    ssl_certificate     /etc/nginx/ssl/server.crt;
+    ssl_certificate_key /etc/nginx/ssl/server.key;
+    ssl_prefer_server_ciphers on;
+    ssl_protocols       SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+    ssl_session_cache shared:SSL:2m;
+    ssl_ciphers RC4:HIGH:!MD5:!aNULL:!DH:!EDH;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el directorio para nuestro certificado (5 años de vigencia, modifique la cantidad de días a su gusto) y la creamos dentro de la carpeta&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /etc/nginx/ssl/
+$ cd /etc/nginx/ssl/
+[user@host ssl]# openssl genrsa -des3 -out server.key 2048
+[user@host ssl]# openssl req -new -key server.key -out server.csr
+[user@host ssl]# cp server.key server.key.com
+[user@host ssl]# openssl rsa -in server.key.com -out server.key
+[user@host ssl]# openssl x509 -req -days 1825 -in server.csr -signkey server.key -out server.crt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Abrimos el puerto 443 en el firewall y reiniciamos el servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
+$ service iptables restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service nginx restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuración de logrotate&lt;/p&gt;
+
+&lt;p&gt;Agregamos el directorio donde estamos poniendo nuestros logs de sitios en el archivo de configuración de logrotate de nginx.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/logrotate.d/nginx 
+/var/log/nginx/*.log /var/log/nginx/*/*.log {
+        weekly
+        missingok
+        rotate 4
+        compress
+        delaycompress
+        notifempty
+        create 640 nginx nginx
+        sharedscripts
+        postrotate
+                [ -f /var/run/nginx.pid ] &amp;amp;amp;&amp;amp;amp; kill -USR1 `cat /var/run/nginx.pid`
+        endscript
+        }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Soporte PROXY estilo apache&lt;/p&gt;
+
+&lt;p&gt;Incluimos en un archivo de configuración separada los parámetros para proxy&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ touch /etc/nginx/proxy.conf 
+$ vim /etc/nginx/proxy.conf 
+proxy_redirect          off;
+proxy_set_header        Host            $host;
+proxy_set_header        X-Real-IP       $remote_addr;
+proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+client_max_body_size    10m;
+client_body_buffer_size 128k;
+proxy_connect_timeout   90;
+proxy_send_timeout      90;
+proxy_read_timeout      90;
+proxy_buffers           32 4k;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuración extra para los vhost que requieran el proxy&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/nginx/sites-available/ejemplo.com.mx.conf 
+upstream srv1 {
+  server [IP o Domain name]:80;
+  }
+server {
+    #...
+    #...
+
+    location /alproxy/ {
+        proxy_pass http://srv1/;
+        include /etc/nginx/proxy.conf;
+    }
+
+    #...
+    #...
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Configuración de Alfresco 4 en CentOS</title>
+   <link href="jahrmando.github.com/2013/03/14/instalacion-y-configuracion-de-alfresco/"/>
+   <updated>2013-03-14T17:02:00-06:00</updated>
+   <id>jahrmando.github.com/2013/03/14/instalacion-y-configuracion-de-alfresco</id>
+   <content type="html">&lt;p&gt;Instalaremos ALFRESCO Community desde el &lt;code class=&quot;highlighter-rouge&quot;&gt;.war&lt;/code&gt; del webservice para hacerle deploy en un servicio Tomcat 6, usaremos una base de datos MySQL que este previamente configurado.&lt;/p&gt;
+
+&lt;p&gt;DESCARGA DE ARCHIVOS&lt;/p&gt;
+
+&lt;p&gt;Descargamos los paquetes que nos servirán en la instalación.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://wiki.alfresco.com/wiki/Community_file_list_4.2.c&quot;&gt;alfresco-community-4.2.c.zip&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.oracle.com/technetwork/es/java/javase/downloads/index.html&quot;&gt;jdk-7u17-linux-x64.rpm&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;INSTALACION Y CONFIGURACION DE TOMCAT&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install tomcat6
+$ vim /etc/sysconfig/tomcat6
+# Agregar al final del archivo
+JAVA_OPTS=&quot;$JAVA_OPTS -Xms512m -Xmx512m -XX:MaxPermSize=256m&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;INSTALACION Y CONFIGURACION DE JAVA&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ chmod u+x jdk-7u17-linux-x64.rpm
+$ yum localinstall jdk-7u17-linux-x64.rpm
+$ /usr/sbin/alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_17/bin/java 17000 \
+&amp;gt; --slave /usr/lib/jvm/jre jre /usr/java/jdk1.7.0_17/jre \
+&amp;gt; --slave /usr/lib/jvm-exports/jre jre_exports /usr/java/jdk1.7.0_17/jre \
+&amp;gt; --slave /usr/bin/keytool keytool /usr/java/jdk1.7.0_17/bin/keytool \
+&amp;gt; --slave /usr/bin/rmiregistry rmiregistry /usr/java/jdk1.7.0_17/bin/rmiregistry \
+&amp;gt; --slave /usr/bin/javaws javaws /usr/java/jdk1.7.0_17/bin/javaws
+$ /usr/sbin/alternatives --install /usr/bin/javac javac /usr/java/jdk1.7.0_17/bin/javac 1700 \
+&amp;gt; --slave /usr/lib/jvm/java java_sdk /usr/java/jdk1.7.0_17 \
+&amp;gt; --slave /usr/lib/jvm-exports/java java_sdk_exports /usr/java/jdk1.7.0_17/ \
+&amp;gt; --slave /usr/bin/javadoc javadoc /usr/java/jdk1.7.0_17/bin/javadoc \
+&amp;gt; --slave /usr/bin/javah javah /usr/java/jdk1.7.0_17/bin/javah \
+&amp;gt; --slave /usr/bin/jar jar /usr/java/jdk1.7.0_17/bin/jar \
+&amp;gt; --slave /usr/bin/jarsigner jarsigner /usr/java/jdk1.7.0_17/bin/jarsigner \
+&amp;gt; --slave /usr/bin/rmic rmic /usr/java/jdk1.7.0_17/bin/rmic
+$ alternatives --config java
+Hay 2 programas que proporcionan &#39;java&#39;.
+  Selección    Comando
+  -----------------------------------------------
+*+ 1           /usr/java/jdk1.6.0_43/bin/java
+   2           /usr/java/jdk1.7.0_17/bin/java
+   Presione Intro para mantener la selección actual[+], o escriba el número de la selección:  2
+$ alternatives --config javac
+Hay 2 programas que proporcionan &#39;javac&#39;.
+  Selección    Comando
+  -----------------------------------------------
+*+ 1           /usr/java/jdk1.6.0_43/bin/javac
+   2           /usr/java/jdk1.7.0_17/bin/javac
+   Presione Intro para mantener la selección actual[+], o escriba el número de la selección:  2
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;INSTALACION DE SERVICIOS DEPENDIENTES&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install libreoffice-base libreoffice-calc libreoffice-core libreoffice-draw libreoffice-graphicfilter libreoffice-impress libreoffice-math libreoffice-writer libreoffice-xsltfilter libreoffice-headless xml-commons-apis mysql-connector-java ImageMagick t1lib
+$ yum install swftools --enablerepo rpmforge
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;CONFIGURACION DE ALFRESCO&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir alfresco
+$ cd alfresco
+$ mv alfresco-community-4.2.c.zip alfresco/
+$ unzip alfresco-community-4.2.c.zip
+$ cp web-server/webapps/* /var/lib/tomcat6/webapps/
+$ cp -r web-server/shared /var/lib/tomcat6/
+$ cp -r web-server/endorsed/ /var/lib/tomcat6/
+$ chown :tomcat -R /var/lib/tomcat6/
+$ chmod 775 -R /var/lib/tomcat6/
+$ vim /etc/tomcat6/catalina.properties
+# Agregar al final del archivo
+shared.loader=/usr/share/java/mysql-connector-java.jar,${catalina.base}/shared/classes,${catalina.base}/shared/lib/*.jar
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos y detenemos el servicio para que generar los archivos de configuración del servicio&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service tomcat6 start
+Starting tomcat6:                               [  OK  ]
+$ service tomcat6 status
+tomcat6 (pid 2613) is running...                [  OK  ]
+$ service tomcat6 stop
+Stopping tomcat6:                               [  OK  ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el archivo de configuración del webservice alfresco desde la plantilla&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /var/lib/tomcat6/shared/classes/
+$ cp alfresco-global.properties.sample alfresco-global.properties
+$ chmod 600 alfresco-global.properties
+$ chown tomcat:tomcat alfresco-global.properties
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos el directorio de repositorio de alfresco&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /var/lib/alf_data
+$ chown tomcat:tomcat /var/lib/alf_data
+$ chmod 700 /var/lib/alf_data
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuramos el servicio alfresco&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim alfresco-global.properties
+#
+# Sample custom content and index data location
+#
+dir.root=/var/lib/alf_data
+dir.keystore=/var/lib/tomcat6/webapps/alfresco/WEB-INF/classes/alfresco/keystore
+#
+# Sample database connection properties
+#
+db.username=MiUsuario
+db.password=MiPassword
+#
+# MySQL connection
+# Tome en CUENTA la URL de conexion apunta a LOCALHOST, 
+db.driver=com.mysql.jdbc.Driver
+db.url=jdbc:mysql://localhost:3306/alfresco?useUnicode=yes&amp;amp;amp;characterEncoding=UTF-8
+# Libreoffice service
+ooo.exe=/usr/bin/soffice
+ooo.enabled=true
+jodconverter.officeHome=/usr/bin/libreoffice
+jodconverter.portNumbers=8101
+jodconverter.enabled=true
+# Utilidades del sistema 
+img.dyn=/usr/lib64/ImageMagick-6.5.4
+img.exe=/usr/bin/convert
+swf.exe=/usr/bin/pdf2swf
+# Outbound SMTP 
+mail.host=mail.midominio.com.mx
+mail.port=465
+mail.username=mi_usuario
+mail.password=MiPassword
+mail.encoding=UTF-8
+
+mail.from.default=noreply@midominio.com.mx
+mail.from.enabled=true
+mail.protocol=smtps
+mail.smtp.auth=false
+mail.smtp.debug=false
+mail.smtp.timeout=5000
+mail.smtp.starttls.enable=false
+
+mail.smtps.auth=true
+mail.smtps.starttls.enable=true
+#
+authentication.chain=alfrescoNtlm1:alfrescoNtlm
+#
+#
+# URL Generation Parameters
+#
+alfresco.context=alfresco
+alfresco.host=alfresco.midominio.com
+alfresco.port=8080
+alfresco.protocol=http
+#
+share.context=share
+share.host=share.midominio.com
+share.port=8080
+share.protocol=http
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /var/lib/tomcat6/webapps/alfresco/WEB-INF/classes/log4j.properties
+log4j.appender.File.File=/var/log/tomcat6/alfresco.log
+
+$ vim /var/lib/tomcat6/webapps/share/WEB-INF/classes/log4j.properties
+log4j.appender.File.File=/var/log/tomcat6/share.log
+
+$ vim /var/lib/tomcat6/webapps/alfresco/WEB-INF/classes/alfresco/subsystems/fileServers/default/file-servers.properties
+# Por defecto estas variables estan en TRUE cabialas a FALSE si no usaras los 
+# servicios que se listan
+cifs.enabled=false
+ftp.enabled=false
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;VALIDACION DEL CERTIFICADO DE MAIL - SSL CA java&lt;/p&gt;
+
+&lt;p&gt;Aplica este caso solo si tu servidor de correo usa un CA (certificado de autoridad) no valido y que tu conexión lo haras por SMTPS SSL. Cuando tu certificado de CA la has expedido de manera personal y no por una institución (VerySing ejemplo) es necesario agregar tu CA a los repositorios de tu maquina virtual de java, de lo contrario no podrás hacer una conexión SSL a tu servidor de correos.&lt;/p&gt;
+
+&lt;p&gt;Descargando SSLPoke que nos permitira hacer una prueba de conexion SSL con Java&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ wget -O SSLPoke.class http://confluence.atlassian.com/download/attachments/180292346/SSLPoke.class?version=1&amp;amp;modificationDate=1236556489366
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ejecutando para probar la conexion SSL con java&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ java SSLPoke mail.midominio.com.mx 465
+sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+    at sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:385)
+    at sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:292)
+    at sun.security.validator.Validator.validate(Validator.java:260)
+    at sun.security.ssl.X509TrustManagerImpl.validate(X509TrustManagerImpl.java:326)
+    at sun.security.ssl.X509TrustManagerImpl.checkTrusted(X509TrustManagerImpl.java:231)
+    at sun.security.ssl.X509TrustManagerImpl.checkServerTrusted(X509TrustManagerImpl.java:126)
+    at sun.security.ssl.ClientHandshaker.serverCertificate(ClientHandshaker.java:1323)
+    at sun.security.ssl.ClientHandshaker.processMessage(ClientHandshaker.java:153)
+    at sun.security.ssl.Handshaker.processLoop(Handshaker.java:868)
+    at sun.security.ssl.Handshaker.process_record(Handshaker.java:804)
+    at sun.security.ssl.SSLSocketImpl.readRecord(SSLSocketImpl.java:1016)
+    at sun.security.ssl.SSLSocketImpl.performInitialHandshake(SSLSocketImpl.java:1312)
+    at sun.security.ssl.SSLSocketImpl.writeRecord(SSLSocketImpl.java:702)
+    at sun.security.ssl.AppOutputStream.write(AppOutputStream.java:122)
+    at sun.security.ssl.AppOutputStream.write(AppOutputStream.java:136)
+    at SSLPoke.main(SSLPoke.java:31)
+    Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+    at sun.security.provider.certpath.SunCertPathBuilder.engineBuild(SunCertPathBuilder.java:196)
+    at java.security.cert.CertPathBuilder.build(CertPathBuilder.java:268)
+    at sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:380)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Este error sale porque no se pudo realizar la conexion debido a un CA Invalido o no encontrado en el repositorio&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Configurar InstallCert y para validar el CA del servidor&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ wget -O InstallCert.java http://confluence.atlassian.com/download/attachments/180292346/InstallCert.java?version=1&amp;amp;modificationDate=1315453596921
+$ chmod ug+x InstallCert.java
+$ javac InstallCert.java
+$ java InstallCert mail.midominio.com.mx:465
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Copiando el certificado CA&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cp jssecacerts /usr/java/jdk1.7.0_17/jre/lib/security/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Volvemos a intentar conectarnos por SSL y probar el certificado&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ java SSLPoke mail.midominio.com.mx 465
+Successfully connected
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;CONFIGURACION DE IPTABLES FIREWALL&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+$ service iptables restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;CONFIGURACION DE HOST NAME&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 alfresco alfresco.midominio.com share.midominio.com
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 alfresco alfresco.midominio.com share.midominio.com
+10.0.0.XX   alfresco alfresco.midominio.com share.midominio.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;PROXY HTTP&lt;/p&gt;
+
+&lt;p&gt;Configuraremos un proxy para re-dirección con apache para no tener que acceder al servicio por el puerto 8080 y este sea mas ameno el link a los lusers.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install httpd
+$ chkconfig httpd on
+$ vim /etc/httpd/conf/httpd.conf
+#
+ServerAdmin admin@midominio.com.mx
+ServerName alfresco.midominio.com:80
+#
+NameVirtualHost *:80
+#
+&amp;lt;VirtualHost *:80&amp;gt;
+	ServerName share.midominio.com
+	ProxyRequests Off
+	RewriteEngine On
+	Redirect / http://share.midominio.com/share
+	ProxyPass /share http://share.midominio.com:8080/share
+	ProxyPassReverse /share http://share.midominio.com:8080/share
+	ErrorLog /var/log/httpd/share.midominio.com.error.log
+	CustomLog /var/log/httpd/share.midominio.com.access.log common
+&amp;lt;/VirtualHost&amp;gt; 
+#
+&amp;lt;VirtualHost *:80&amp;gt;
+	ServerName alfresco.red-alf.com
+	ProxyRequests Off
+	RewriteEngine On
+	RewriteRule ^/alfresco/(.*) /$1 [PT]
+	ProxyPass / http://127.0.0.1:8080/alfresco/
+	ProxyPassReverse / http://127.0.0.1:8080/alfresco/
+	ErrorLog /var/log/httpd/alfresco.midominio.com.error.log
+	CustomLog /var/log/httpd/alfresco.midominio.com.access.log common
+&amp;lt;/VirtualHost&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reinciamos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ service httpd start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Configuración de fecha y hora en CentOS 6</title>
+   <link href="jahrmando.github.com/2013/03/14/cambiar-la-fecha-hora-y-zona-horaria-en/"/>
+   <updated>2013-03-14T15:44:00-06:00</updated>
+   <id>jahrmando.github.com/2013/03/14/cambiar-la-fecha-hora-y-zona-horaria-en</id>
+   <content type="html">&lt;p&gt;Borramos la zona horaria actual&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo rm /etc/localtime 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuramos creando un enlace simbólico a la zona horaria correspondiente&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ln -s /usr/share/zoneinfo/Mexico/General /etc/localtime
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asignamos fecha y luego sincronizacion con la bios. El formato de la fecha es “MMDDhhmmAAAA”, el ejemplo nos muestra una asignacion de fecha y hora 14 de Marzo del 2013 con las 15:17hrs&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo date 031415172013
+$ sudo hwclock --systohc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Obtener los nombres de PC Windows de la red</title>
+   <link href="jahrmando.github.com/2012/12/13/obtener-nombre-netbios-con-nmap/"/>
+   <updated>2012-12-13T19:00:00-06:00</updated>
+   <id>jahrmando.github.com/2012/12/13/obtener-nombre-netbios-con-nmap</id>
+   <content type="html">&lt;p&gt;Con &lt;strong&gt;NMAP&lt;/strong&gt; se puede obtener mucha informacion importante de la red local a la que estemos conectados, una de ellas es el nombre de algun equipo Windows en la red.&lt;/p&gt;
+
+&lt;p&gt;Se puede conseguir usando los siguientes comandos:&lt;/p&gt;
+
+&lt;p&gt;nmap -sU -sS –script smb-os-discovery.nse -p U:137,T:139 IPHOST
+nmap –script smb-os-discovery.nse -p445 IPHOST&lt;/p&gt;
+
+&lt;p&gt;Observaciones&lt;/p&gt;
+
+&lt;p&gt;Revisar si tenemos el script &lt;strong&gt;smb-os-discovery.nse&lt;/strong&gt; en el directorio de plugins de nmap, usualmente en el path &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/share/nmap/scripts/&lt;/code&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Ejecute con privilegios root o usando sudo&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Ejemplo 1:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo nmap -sU -sS --script smb-os-discovery.nse -p U:137,T:139 192.168.1.130
+Starting Nmap 6.01 ( http://nmap.org ) at 2012-12-13 13:03 CST
+Nmap scan report for 192.168.1.130
+Host is up (0.00057s latency).
+PORT    STATE SERVICE
+139/tcp open  netbios-ssn
+137/udp open  netbios-ns
+MAC Address: 08:00:27:ED:F6:BD (Cadmus Computer Systems)
+Host script results:
+| smb-os-discovery: 
+|   OS: Windows XP (Windows 2000 LAN Manager)
+|   Computer name: lalala-b45630c3
+|   NetBIOS computer name: LALALA-B45630C3
+|   Workgroup: GRUPO_TRABAJO
+|_  System time: 2012-12-13 13:03:25 UTC+1
+Nmap done: 1 IP address (1 host up) scanned in 0.39 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ejemplo 1:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo nmap --script smb-os-discovery.nse -p445 192.168.1.130
+Starting Nmap 6.01 ( http://nmap.org ) at 2012-12-13 13:08 CST
+Nmap scan report for 192.168.1.130
+Host is up (0.00056s latency).
+PORT    STATE SERVICE
+445/tcp open  microsoft-ds
+MAC Address: 08:00:27:ED:F6:BD (Cadmus Computer Systems)
+Host script results:
+| smb-os-discovery: 
+|   OS: Windows XP (Windows 2000 LAN Manager)
+|   Computer name: lalala-b45630c3
+|   NetBIOS computer name: LALALA-B45630C3
+|   Workgroup: GRUPO_TRABAJO
+|_  System time: 2012-12-13 13:08:54 UTC+1
+Nmap done: 1 IP address (1 host up) scanned in 0.34 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Editar la subnet default de VirtualBox</title>
+   <link href="jahrmando.github.com/2012/11/27/cambiar-la-red-subnet-por-defecto-del/"/>
+   <updated>2012-11-27T19:00:00-06:00</updated>
+   <id>jahrmando.github.com/2012/11/27/cambiar-la-red-subnet-por-defecto-del</id>
+   <content type="html">&lt;p&gt;Cambiar la red (subnet) por defecto del modo NAT de VirtualBox. Verificamos la lista de host invitados registrados&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ VBoxManage list vms
+&quot;CentOS.Server.1&quot; {4d4d80ed-a07e-4a98-98ee-19952ea0ba6c}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Registramos nuestro nuevo host invitado, escribimos el path donde se encuentra nuestro archivo &lt;strong&gt;&lt;em&gt;.vbox&lt;/em&gt;&lt;/strong&gt; del host que queremos registrar.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ VBoxManage registervm /home/jahrmando/VirtualBox/CentOSServer2/CentOSServer2.vbox
+[user@host ~]$ VBoxManage list vms
+&quot;CentOS.Server.1&quot; {4d4d80ed-a07e-4a98-98ee-19952ea0ba6c}
+&quot;CentOS Server 2&quot; {4b3dc98b-a63f-4794-a508-b63619ff29e4}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Aplicamos el cambio de la subnet que queremos aplicar, en este caso la opcion &lt;strong&gt;&lt;em&gt;–natnetX&lt;/em&gt;&lt;/strong&gt; llamese &lt;strong&gt;&lt;em&gt;X&lt;/em&gt;&lt;/strong&gt; a la ID de la interfaz de red que esta en modo NAT.&lt;/p&gt;
+
+&lt;p&gt;La sintaxis quedaria como: &lt;code class=&quot;highlighter-rouge&quot;&gt;VBoxManage modifyvm [UID] --natnet[n] &quot;subnet&quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ VBoxManage modifyvm 4b3dc98b-a63f-4794-a508-b63619ff29e4 --natnet1 &quot;172.16/16&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Informacion de conexion desde la terminal</title>
+   <link href="jahrmando.github.com/2012/10/17/obtener-ip-publica-e-informacion-de/"/>
+   <updated>2012-10-17T22:00:00-05:00</updated>
+   <id>jahrmando.github.com/2012/10/17/obtener-ip-publica-e-informacion-de</id>
+   <content type="html">&lt;p&gt;Usando CURL y el sitio ifconfig.me podemos obtener información acerca  de nuestra conexión, como ip publica, nombre del host, datos sobre el  agente del usuario, etc. desde nuestra terminal.&lt;/p&gt;
+
+&lt;p&gt;Algunos ejemplos:&lt;/p&gt;
+
+&lt;p&gt;IP Publica&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ curl ifconfig.me/ip 
+189.212.XXX.XXX 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Nombre del host remoto&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ curl ifconfig.me/host 
+133-312-XXX-XXX.static.isp.net 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;User agent&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ curl ifconfig.me/ua
+curl/7.21.7 (i386-redhat-linux-gnu) libcurl/7.21.7 NSS/3.13.3.0 zlib/1.2.5 libidn/1.22 libssh2/1.2.7 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Puerto&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ curl ifconfig.me/port 51861 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;IP privada&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ curl ifconfig.me/forwarded 192.168.4.20 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;O también toda la información&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ curl ifconfig.me/all 
+ip_addr: 189.212.XXX.XXX 
+remote_host: 133-312-XXX-XXX.static.isp.net 
+user_agent: curl/7.21.7 (i386-redhat-linux-gnu) libcurl/7.21.7 NSS/3.13.3.0 zlib/1.2.5 libidn/1.22 libssh2/1.2.7 
+port: 51861 
+lang:  
+connection: keep-alive 
+keep_alive:  
+encoding:  
+mime: */* 
+charset:  
+via: 1.1 xxx.xxx.com:3128 (squid/2.6.STABLE21) 
+forwarded: 192.168.4.20 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Algo curioso de CURL es que acepta conexiones de tipo proxy (cosa que  no me había fijado), así que también podemos navegar de forma anónima  si usamos el TOR u otro servicio similar. Un ejemplo de como se  reflejaría los una petición a ifconfig.me bajo conexión TOR.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ curl --proxy1.0 127.0.0.1:8118 ifconfig.me/all 
+ip_addr: 77.247.181.165 
+remote_host: politkovskaja.torservers.net 
+user_agent: curl/7.21.7 (i386-redhat-linux-gnu) libcurl/7.21.7 NSS/3.13.3.0 zlib/1.2.5 libidn/1.22 libssh2/1.2.7 
+port: 64556 
+lang:
+connection:
+keep_alive:
+encoding:
+mime: */* 
+charset:
+via:
+forwarded:
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Instalar driver Broadcom 4312 en Fedora</title>
+   <link href="jahrmando.github.com/2012/10/16/instalar-driver-broadcom-4312-en-fedora/"/>
+   <updated>2012-10-16T21:30:00-05:00</updated>
+   <id>jahrmando.github.com/2012/10/16/instalar-driver-broadcom-4312-en-fedora</id>
+   <content type="html">&lt;p&gt;Un pequeño howto de como activar el adaptador wifi broadcom 4312, en  este caso lo instale en una laptop Dell Inspiron 15 con &lt;strong&gt;fedora 16&lt;/strong&gt; x86_64. Esta es una instalación recomendada para kernel 3.2 ó posterior.&lt;/p&gt;
+
+&lt;p&gt;El driver a usar es el b43. Revisamos si tenemos el modelo de nuestro adaptador Broadcom.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ lspci -vnn -d 14e4:
+02:00.0 Network controller [0280]: Broadcom Corporation BCM4312 802.11b/g LP-PHY [14e4:4315] (rev 01)
+Subsystem: Hewlett-Packard Company Device [103c:365e]
+Flags: bus master, fast devsel, latency 0, IRQ 17
+Memory at 56000000 (64-bit, non-prefetchable) [size=16K]
+Capabilities: &amp;lt;access denied&amp;gt;
+Kernel driver in use: b43-pci-bridge
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalamos el b43-fwcutter y wget&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install b43-fwcutter wget kernel-devel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Creamos una variable de entorno llamado &lt;strong&gt;FIRMWARE_INSTALL_DIR&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ export FIRMWARE_INSTALL_DIR=&quot;/lib/firmware&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Descargamos y extraemos el driver
+ 
+	$ wget http://www.lwfinger.com/b43-firmware/broadcom-wl-5.100.138.tar.bz2
+	$ tar -xf broadcom-wl-5.100.138.tar.bz2&lt;/p&gt;
+
+&lt;p&gt;Instalamos el firmware&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ b43-fwcutter -w &quot;$FIRMWARE_INSTALL_DIR&quot; broadcom-wl-5.100.138/linux/wl_apsta.o
+This file is recognised as:
+  filename   :  wl_apsta.o
+  version    :  666.2
+  MD5        :  e1b05e268bcdbfef3560c28fc161f30e
+  Extracting b43/lp0initvals14.fw
+Extracting...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Confirmamos la instalación&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ifconfig 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Veremos nuestra interfaz de red wifi como &lt;strong&gt;wlan0&lt;/strong&gt; probablemente.&lt;/p&gt;
+
+&lt;p&gt;Mas información: &lt;a href=&quot;http://linuxwireless.org/en/users/Drivers/b43#Fedora&quot;&gt;Link&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Estimar la cantidad de espacio usado en directorio linux</title>
+   <link href="jahrmando.github.com/2012/10/16/estimar-la-cantidad-de-espacio-usado-en/"/>
+   <updated>2012-10-16T20:00:00-05:00</updated>
+   <id>jahrmando.github.com/2012/10/16/estimar-la-cantidad-de-espacio-usado-en</id>
+   <content type="html">&lt;p&gt;La utilidad &lt;code class=&quot;highlighter-rouge&quot;&gt;du&lt;/code&gt; nos sirve para estimar la cantidad de disco usado por  un archivo o carpeta.&lt;/p&gt;
+
+&lt;p&gt;En este comando nos arrojara de manera resumida &lt;code class=&quot;highlighter-rouge&quot;&gt;-s&lt;/code&gt; y en forma “human readable” &lt;code class=&quot;highlighter-rouge&quot;&gt;-h&lt;/code&gt; la cantidad de disco duro que se  esta usando en la carpeta home de mi usuario.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]$ sudo du -sh /home/
+47G /home/ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Obtener soporte Samba en PCManFM </title>
+   <link href="jahrmando.github.com/2012/10/15/obtener-soporte-samba-en-pcmanfm/"/>
+   <updated>2012-10-15T22:00:00-05:00</updated>
+   <id>jahrmando.github.com/2012/10/15/obtener-soporte-samba-en-pcmanfm</id>
+   <content type="html">&lt;p&gt;Bueno como sabrán y para los que no pues ahora ando usando un Fedora  con LXDE, la cuestión es que esta vez me dio por instalarme el servicio  samba para el trabajo y todo bien hasta que en el explorador PCManFM  (v0.9.10) no podía acceder usando &lt;code class=&quot;highlighter-rouge&quot;&gt;smb://IP&lt;/code&gt; por que la función no venia  soportada.&lt;/p&gt;
+
+&lt;p&gt;Y pues simple,  resulta que solo debemos verificar si teníamos el sistema virtual de  archivos de GNOME (GVFS) y la cual debe darnos el soporte para entrar a  un servicio samba.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum list gvfs*
+Complementos cargados:fastestmirror, langpacks, presto, refresh-packagekit
+Loading mirror speeds from cached hostfile
+* fedora: ftp.usf.edu
+* livna: rpm.livna.org
+* rpmfusion-free: mirror.hiwaay.net
+* rpmfusion-free-updates: mirror.hiwaay.net
+* rpmfusion-nonfree: mirror.hiwaay.net
+* rpmfusion-nonfree-updates: mirror.hiwaay.net
+* updates: ftp.usf.edu
+Paquetes instalados
+gvfs.i686 1.10.1-3.fc16 @updates
+gvfs-afc.i686 1.10.1-3.fc16 @updates
+
+Paquetes disponibles 
+gvfs-afp.i686 1.10.1-3.fc16 updates
+gvfs-archive.i686 1.10.1-3.fc16 updates
+gvfs-devel.i686 1.10.1-3.fc16 updates
+gvfs-fuse.i686 1.10.1-3.fc16 updates
+gvfs-gphoto2.i686 1.10.1-3.fc16 updates
+gvfs-obexftp.i686 1.10.1-3.fc16 updates
+gvfs-smb.i686 1.10.1-3.fc16 updates
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Y pues el paquete gvfs-smb.i686 pues no mas no vino instalado al menos en la instalación de Fedora 16 con LXDE usando el CDLive.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum -y install gvfs-smb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Después de instalado me resolvió el “problema”&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>OSSEC HIDS Detección de intrusos en CentOS</title>
+   <link href="jahrmando.github.com/2012/10/12/ossec-hids-deteccion-de-intrusos-en/"/>
+   <updated>2012-10-12T21:00:00-05:00</updated>
+   <id>jahrmando.github.com/2012/10/12/ossec-hids-deteccion-de-intrusos-en</id>
+   <content type="html">&lt;p&gt;OSSEC es un sistema para detección de intrusos basado en Host muy intuitivo y configurable blabla bla blabla bla.. configuremos :)&lt;/p&gt;
+
+&lt;p&gt;AGENTE SERVIDOR&lt;/p&gt;
+
+&lt;p&gt;Según el manual oficial de OSSEC lo define como la pieza central de la implantación de OSSEC. Almacena las bases de datos, la comprobación de integridad de archivos y registros, eventos y el sistema de auditoría. Todas las reglas, decodificadores y las opciones principales de configuración se almacenan de forma centralizada en el agente servidor, por lo que es fácil de administrar, incluso un gran número de agentes clientes.&lt;/p&gt;
+
+&lt;p&gt;Descargamos y descomprimimos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# wget http://www.ossec.net/files/ossec-hids-latest.tar.gz
+[ ~]# tar -zxvf ossec-hids-*.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalación&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# cd  ossec-hids-2.6/
+[ ossec-hids-2.6]# ./install.sh  
+
+1- What kind of installation do you want? (server, agent, local) [Default: server]: server
+2- Setting up the configuration environment.
+3- Configuring the OSSEC HIDS.
+  3.1- Do you want e-mail notification? (y/n) [Default: y]: y
+   - What’s your e-mail address? micorreo@miproveedor.com                                    
+   - What’s your SMTP server ip/host? mail.miproveedor.com
+  3.2- Do you want to run the integrity check daemon? (y/n) [y]: y
+  3.3- Do you want to run the rootkit detection engine? (y/n) [y]: y
+  3.4- Active response allows you to execute a specific
+       command based on the events received. For example,
+       you can block an IP address or disable access for
+       a specific user. 
+       More information at:
+       http://www.ossec.net/en/manual.html#active-response
+   - Do you want to enable active response? (y/n) [y]: y
+     - Active response enabled.
+   - By default, we can enable the host-deny and the
+     firewall-drop responses. The first one will add
+     a host to the /etc/hosts.deny and the second one
+     will block the host on iptables (if linux) or on
+     ipfilter (if Solaris, FreeBSD or NetBSD).
+   - They can be used to stop SSHD brute force scans,
+     portscans and some other forms of attacks. You can
+     also add them to block on snort events, for example.
+   - Do you want to enable the firewall-drop response? (y/n) [y]: y
+   - Do you want to add more IPs to the white list? (y/n)? [n]: n
+  3.5- Do you want to enable remote syslog (port 514 udp)? (y/n) [y]: n
+    — /var/log/messages (syslog)
+    — /var/log/secure (syslog)
+    — /var/log/maillog (syslog)
+Configuration complete. 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ajustes en el firewall, necesitamos abrir el puerto 1514 UDP, en iptables la regla constaría de la siguiente forma.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# vi /etc/sysconfig/iptables
+-A INPUT -m state —state NEW -m udp -p udp —dport 1514 -j ACCEPT  
+[ ~]# service iptables restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para que entendamos un poco los archivos de instalación de OSSEC que se alojan en /var/ossec/, donde podemos ver el siguiente despliegue de archivos importantes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;/var/ossec/etc/ossec.conf&lt;/strong&gt; Archivo de configuración principal.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/var/ossec/bin/&lt;/strong&gt; Directorio de binarios del servicio OSSEC.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/var/ossec/logs/&lt;/strong&gt; Directorio de logs.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/var/ossec/logs/alerts/alerts.log&lt;/strong&gt; Log donde se guardan las alertas generadas.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/var/ossec/rules/&lt;/strong&gt; Directorio que contiene las reglas de alarmas.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/var/ossec/active-response/bin/&lt;/strong&gt; Directorio de binarios que ejecuta el active-response.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/var/ossec/logs/active-responses.log&lt;/strong&gt; Log del active-response, se guarda los ejecutados.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/var/ossec/etc/decoder.xml&lt;/strong&gt; Decodificadores de logs de sistema.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ejemplo de archivo de configuración principal /var/ossec/etc/ossec.conf&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;ossec_config&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;global&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;email_notification&amp;gt;&lt;/span&gt;yes&lt;span class=&quot;nt&quot;&gt;&amp;lt;/email_notification&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;email_to&amp;gt;&lt;/span&gt;sysadmin@correo.com&lt;span class=&quot;nt&quot;&gt;&amp;lt;/email_to&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;smtp_server&amp;gt;&lt;/span&gt;mail.correo.com&lt;span class=&quot;nt&quot;&gt;&amp;lt;/smtp_server&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;email_from&amp;gt;&lt;/span&gt;noreply@correo.com&lt;span class=&quot;nt&quot;&gt;&amp;lt;/email_from&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/global&amp;gt;&lt;/span&gt;
+
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;alerts&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;log_alert_level&amp;gt;&lt;/span&gt;1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/log_alert_level&amp;gt;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Nivel de alerta que sera notificado. Default 1 --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;email_alert_level&amp;gt;&lt;/span&gt;7&lt;span class=&quot;nt&quot;&gt;&amp;lt;/email_alert_level&amp;gt;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Nivel de alerta que sera notificado. Default 1 --&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/alerts&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Enviar notificaciones de correo a otro personal --&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;email_alerts&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;email_to&amp;gt;&lt;/span&gt;personal_01@correo.com&lt;span class=&quot;nt&quot;&gt;&amp;lt;/email_to&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Destinatario --&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;level&amp;gt;&lt;/span&gt;11&lt;span class=&quot;nt&quot;&gt;&amp;lt;/level&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Nivel mínima de alerta a notificar --&amp;gt;&lt;/span&gt;
+       &lt;span class=&quot;nt&quot;&gt;&amp;lt;format&amp;gt;&lt;/span&gt;sms&lt;span class=&quot;nt&quot;&gt;&amp;lt;/format&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Formato de correo --&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/email_alerts&amp;gt;&lt;/span&gt; 
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Enviar resúmenes de login diarios de eventos --&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;reports&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;category&amp;gt;&lt;/span&gt;authentication_success&lt;span class=&quot;nt&quot;&gt;&amp;lt;/category&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Categoría de resumen --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Reporte diario: Successful logins&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Asunto del e-mail --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;email_to&amp;gt;&lt;/span&gt;personal@correo.com&lt;span class=&quot;nt&quot;&gt;&amp;lt;/email_to&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Destinatario --&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/reports&amp;gt;&lt;/span&gt; 
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Configuraciones de verificación de archivos. Syscheck --&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;syscheck&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;frequency&amp;gt;&lt;/span&gt;21600&lt;span class=&quot;nt&quot;&gt;&amp;lt;/frequency&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Frecuencia de ejecuacion del syscheck en segundos —&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;alert_new_files&amp;gt;&lt;/span&gt;yes&lt;span class=&quot;nt&quot;&gt;&amp;lt;/alert_new_files&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Alerta la creación de nuevos archivos —&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Directorios a revisar  (todas las verificaciones activadas) —&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;directories&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;check_all=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;”yes”&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;/etc,/usr/bin,/usr/sbin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/directories&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;directories&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;check_all=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;”yes”&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;/bin,/sbin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/directories&amp;gt;&lt;/span&gt; 
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Archivos o directorios a ignorar --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/mtab&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/mnttab&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/hosts.deny&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/mail/statistics&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/random-seed&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/adjtime&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/httpd/logs&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/utmpx&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/wtmpx&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/cups/certs&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/dumpdates&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/svc/volatile&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;/etc/openvpn/servers/VPN-SERVER/logs/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Ejemplo -Ignorar logs de OpenVPN --&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Archivos MS Windows  a ignorar —&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/System32/LogFiles&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/Debug&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/WindowsUpdate.log&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/iis6.log&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/system32/wbem/Logs&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/system32/wbem/Repository&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/Prefetch&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/PCHEALTH/HELPCTR/DataColl&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/SoftwareDistribution&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/Temp&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/system32/config&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/system32/spool&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ignore&amp;gt;&lt;/span&gt;C:\WINDOWS/system32/CatRoot&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ignore&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/syscheck&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Configuraciones de Rootkit --&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;rootcheck&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;rootkit_files&amp;gt;&lt;/span&gt;/var/ossec/etc/shared/rootkit_files.txt&lt;span class=&quot;nt&quot;&gt;&amp;lt;/rootkit_files&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;rootkit_trojans&amp;gt;&lt;/span&gt;/var/ossec/etc/shared/rootkit_trojans.txt&lt;span class=&quot;nt&quot;&gt;&amp;lt;/rootkit_trojans&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;system_audit&amp;gt;&lt;/span&gt;/var/ossec/etc/shared/system_audit_rcl.txt&lt;span class=&quot;nt&quot;&gt;&amp;lt;/system_audit&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;system_audit&amp;gt;&lt;/span&gt;/var/ossec/etc/shared/cis_rhel_linux_rcl.txt&lt;span class=&quot;nt&quot;&gt;&amp;lt;/system_audit&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;system_audit&amp;gt;&lt;/span&gt;/var/ossec/etc/shared/cis_rhel5_linux_rcl.txt&lt;span class=&quot;nt&quot;&gt;&amp;lt;/system_audit&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/rootcheck&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Lista blanca, ips que active-response debe ignorar --&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;global&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;white_list&amp;gt;&lt;/span&gt;127.0.0.1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/white_list&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;white_list&amp;gt;&lt;/span&gt;^localhost.localdomain$&lt;span class=&quot;nt&quot;&gt;&amp;lt;/white_list&amp;gt;&lt;/span&gt; 
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;white_list&amp;gt;&lt;/span&gt;192.168.0.30&lt;span class=&quot;nt&quot;&gt;&amp;lt;/white_list&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— IP de personal de confianza 01 —&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;white_list&amp;gt;&lt;/span&gt;192.168.0.21&lt;span class=&quot;nt&quot;&gt;&amp;lt;/white_list&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— IP de personal de confianza 02 —&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/global&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Respuesta activa a alertas. Active-response. http://www.ossec.net/doc/manual/ar/ar-unix.html. Que en realidad es la acción que se desencadena al presentarse una determinada alerta de nuestro HIDS. --&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;active-response&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;command&amp;gt;&lt;/span&gt;host-deny&lt;span class=&quot;nt&quot;&gt;&amp;lt;/command&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Nombre de el comando a usar —&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;location&amp;gt;&lt;/span&gt;local&lt;span class=&quot;nt&quot;&gt;&amp;lt;/location&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Donde se ejecutara el comando (local/server/defined-agent/all) —&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;rules_id&amp;gt;&lt;/span&gt;11451,11452&lt;span class=&quot;nt&quot;&gt;&amp;lt;/rules_id&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Lista de reglas (Separados por comas) (0-9) —&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;timeout&amp;gt;&lt;/span&gt;6000&lt;span class=&quot;nt&quot;&gt;&amp;lt;/timeout&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Tiempo de bloqueo —&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/active-response&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Otras opciones
+&amp;lt;disabled&amp;gt;Desactiva el active-response si esta como “yes”&amp;lt;/disabled&amp;gt;
+&amp;lt;agent_id&amp;gt;ID del agente (cuando se usa defined agent)&amp;lt;/agent_id&amp;gt;
+&amp;lt;level&amp;gt;Nivel mínimo de alarma que crea el evento (0-9)&amp;lt;/level&amp;gt;
+&amp;lt;rules_group&amp;gt;Lista de grupos de reglas (Separados por comas) (A-Za-z0-9)&amp;lt;/rules_group&amp;gt; 
+
+--&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Logs de sistema del servidor que serán monitoreados, formato del log que sera leído (syslog/snort-full/snort-fast/squid/iis/eventlog/mysql_log/postgresql_log/nmapg/apache/djb-multilog/syslog-pipe
+/multi-line/command/full_command) --&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;cp&quot;&gt;&amp;lt;!— Generados en la instalación, pero son personalizables.—&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;localfile&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;log_format&amp;gt;&lt;/span&gt;syslog&lt;span class=&quot;nt&quot;&gt;&amp;lt;/log_format&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;location&amp;gt;&lt;/span&gt;/var/log/messages&lt;span class=&quot;nt&quot;&gt;&amp;lt;/location&amp;gt;&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;&amp;lt;!— PATH del log —&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/localfile&amp;gt;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos el servicio ossec.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# /var/ossec/bin/ossec-control start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Dar de alta a clientes&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# /var/ossec/bin/manage_agents
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: A
+
+- Adding a new agent (use ‘\q’ to return to the main menu).
+  Please provide the following:
+   * A name for the new agent: cliente01
+   * The IP Address of the new agent: &amp;lt;IP&amp;gt;
+   * An ID for the new agent[001]: (ENTER)
+Agent information:
+   ID:001 
+   Name:cliente01
+   IP Address:&amp;lt;IP&amp;gt;
+
+Confirm adding it?(y/n): y
+Agent added.
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: L
+
+Available agents:
+   ID: 001, Name: cliente01, IP: &amp;lt;IP&amp;gt;
+
+** Press ENTER to return to the main menu.
+
+(ENTER)
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: q
+
+** You must restart the server for your changes to have effect.
+
+manage_agents: Exiting .. 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Base de datos para logs y alertas&lt;/p&gt;
+
+&lt;p&gt;Las alertas por default son notificadas por e-mail como medio de salida y estas son guardadas como logs en el directorio /var/ossec/logs/alerts/ y los logs enviados por los agentes cliente en el directorio /var/ossec/logs/archives/. De forma alternativa también podemos ir los guardando en una base de datos.&lt;/p&gt;
+
+&lt;p&gt;Configuración de base de datos (mysql)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# mysql -u root -p
+mysql&amp;gt; create database ossec;
+mysql&amp;gt; grant INSERT,SELECT,UPDATE,CREATE,DELETE,EXECUTE on ossec.* to ossecuser@&amp;lt;ip_ossec_servidor&amp;gt;;
+Query OK, 0 rows affected (0.00 sec)
+mysql&amp;gt; set password for ossecuser@&amp;lt;ip_ossec_servidor&amp;gt;=PASSWORD(‘ossecpassword’);
+Query OK, 0 rows affected (0.00 sec)
+mysql&amp;gt; flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+mysql&amp;gt; quit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Importamos el esquema de base de datos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# mysql -u root -p ossec &amp;lt; /var/ossec/etc/mysql/mysql.schema
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Abrimos /var/ossec/etc/ossec.conf y configuramos el archivo principal con los siguiente:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;database_output&amp;gt;
+    &amp;lt;hostname&amp;gt;IP&amp;lt;/hostname&amp;gt; &amp;lt;!-- IP del servidor de BD --&amp;gt;
+    &amp;lt;username&amp;gt;ossecuser&amp;lt;/username&amp;gt; &amp;lt;!-- usuario BD --&amp;gt;
+    &amp;lt;password&amp;gt;ossecpassword&amp;lt;/password&amp;gt; &amp;lt;!-- contraseña de usuario BD --&amp;gt;
+    &amp;lt;database&amp;gt;ossecdb&amp;lt;/database&amp;gt; &amp;lt;!--  Nombre de la BD --&amp;gt;
+    &amp;lt;type&amp;gt;mysql&amp;lt;/type&amp;gt; &amp;lt;!-- Tipo de base de datos (mysql/postgresql) --&amp;gt;
+&amp;lt;/database_output&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Habilitamos el soporte de base de datos y reiniciamos el servicio ossec&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# /var/ossec/bin/ossec-control enable database 
+# /var/ossec/bin/ossec-control restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;AGENTE CLIENTE&lt;/p&gt;
+
+&lt;p&gt;El agente cliente es aquel computador que pretende ser monitoreado, los clientes mandan información al servidor que procesara este y generara las alarmas o eventos pertinentes.&lt;/p&gt;
+
+&lt;p&gt;Descargamos y descomprimimos&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# wget http://www.ossec.net/files/ossec-hids-latest.tar.gz 
+[ ~]# tar -zxvf ossec-hids-*.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instalación y configuración del cliente&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# cd ossec-hids-*
+[ossec-hids-2.6]# ./install.sh
+
+  ** Para instalação em português, escolha [br].
+  ** 要使用中文进行安装, 请选择 [cn].
+  ** Fur eine deutsche Installation wohlen Sie [de].
+  ** Για εγκατάσταση στα Ελληνικά, επιλέξτε [el].
+  ** For installation in English, choose [en].
+  ** Para instalar en Español , eliga [es].
+  ** Pour une installation en français, choisissez [fr]
+  ** Per l’installazione in Italiano, scegli [it].
+  ** 日本語でインストールします．選択して下さい．[jp].
+  ** Voor installatie in het Nederlands, kies [nl].
+  ** Aby instalować w języku Polskim, wybierz [pl].
+  ** Для инструкций по установке на русском ,введите [ru].
+  ** Za instalaciju na srpskom, izaberi [sr].
+  ** Türkçe kurulum için seçin [tr].
+  (en/br/cn/de/el/es/fr/it/jp/nl/pl/ru/sr/tr) [en]: es
+
+ OSSEC HIDS v2.6 Guión de instalación - http://www.ossec.net
+ Usted esta por comenzar el proceso de instalación del OSSEC HIDS.
+ Usted debe tener un compilador de C previamente instalado en el sistema.
+ Si usted tiene alguna pregunta o comentario, por favor envie un correo
+ electrónico a dcid@ossec.net &amp;lt;mailto:dcid@ossec.net&amp;gt;  (daniel.cid@gmail.com
+ &amp;lt;mailto:daniel.cid@gmail.com&amp;gt; )
+  - Sistema: Linux xxx.xxx.com
+  - Usuario: root
+  - servidor: xxx.xxx.com
+
+  — Presione ENTER para continuar ó Ctrl-C para abortar. —
+
+1- Que tipo de instalación Usted desea (servidor, agente, local ó ayuda)? agente
+  - Usted eligió instalación de Agente(cliente).
+
+2- Configurando las variables de entorno de la instalación.
+ - Eliga donde instalar OSSEC HIDS [/var/ossec]: (ENTER)
+    - La instalación se realizará en  /var/ossec .
+
+3- Configurando el sistema OSSEC HIDS.
+  3.1- Cuál es la direccion del servidor OSSEC HIDS?: &amp;lt;IP SERVIDOR&amp;gt;
+   - Agregando el IP del servidor &amp;lt;IP SERVIDOR&amp;gt;
+
+  3.2- Desea Usted agregar el servidor de integridad del sistema? (s/n) [s]: s
+   - Ejecutando syscheck (servidor de integridad del sistema).
+
+  3.3- Desea Usted agregar el sistema de detección de rootkit? (s/n) [s]: s
+   - Ejecutando rootcheck (sistema de detección de rootkit).
+
+  3.4 - Desea Usted habilitar respuesta activa? (s/n) [s]: s
+   - Respuesta activa habilitada.
+
+  3.5- Estableciendo la configuración para analizar los siguientes registros:
+    — /var/log/messages # Estos logs pueden variar, ossec escanea y busca logs alojados en el sistema para escanear
+    — /var/log/secure
+    — /var/log/xferlog
+    — /var/log/maillog
+    — /var/log/httpd/error_log (apache log)
+    — /var/log/httpd/access_log (apache log)
+ - Si Usted deseara monitoriar algún otro registro, solo
+   tendrá que editar el archivo ossec.conf y agregar una
+   nueva entrada de tipo localfile.
+   Cualquier otra pregunta de configuración podra ser
+   respondida visitandonos en linea en http://www.ossec.net .
+   —- Presione ENTER para continuar —-
+                            (ENTER)
+
+5- Instalando el sistema
+ - Ejecutando el Makefile
+ - El sistema es Redhat Linux.
+ - Init script modificado para empezar OSSEC HIDS durante el arranque.
+ - Configuración finalizada correctamente.
+ - Para comenzar OSSEC HIDS:
+        /var/ossec/bin/ossec-control start
+ - Para detener OSSEC HIDS:
+        /var/ossec/bin/ossec-control stop
+ - La configuración puede ser leída ó mofificada en /var/ossec/etc/ossec.conf
+
+    Gracias por usar OSSEC HIDS.
+    Si tuviera Usted alguna duda, sugerencia ó haya encontrado
+    algun desperfecto, contactese con nosotros a contact@ossec.net
+    ó usando nuestrs lista pública de correo en ossec-list@ossec.net
+    Más información puede ser encontrada en http://www.ossec.net
+           —-  Presione ENTER para finalizar. —-
+                            (ENTER)
+       (Tal vez encuentre más información a continuación).
+ - Usted debe de añadir este agente en el servidor así podran
+   comunicarse el úno con el ótro. Una vez culminada la tarea
+   podra ejecutar la herramienta ‘manage_agents’ para importar
+   la autentificación de llaves extraidas del servidor.
+   /var/ossec/bin/manage_agents
+
+   Más información en:
+   http://www.ossec.net/en/manual.html#ma
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Activar agente cliente&lt;/p&gt;
+
+&lt;p&gt;Extraer la llave correspondiente al agente cliente desde el agente servidor.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# /var/ossec/bin/manage_agents  
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: E
+Available agents:
+   ID: 001, Name: cliente01, IP: &amp;lt;IP CLIENTE&amp;gt;
+Provide the ID of the agent to extract the key (or ‘\q’ to quit): 001
+
+Agent key information for ‘001’ is:
+MDE0IHZwbi1mdy5yZWQtYWxmLmNvbSAxMC4wLjAuMjU0IGZhZjhhZWE4MDY1ZmVlMTUwMGIyN2ViNTk4M2FjODAzZTQwMzA5MzQ3ZjYzNzgzNWFhZDM2OTY5YmFkZDc5OTM=
+
+** Press ENTER to return to the main menu. (ENTER)
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: q
+manage_agents: Exiting ..  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ingresar la llave extraída al agente cliente.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# /var/ossec/bin/manage_client  
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (I)mport key from the server (I).
+   (Q)uit.
+Choose your action: I or Q: I
+* Provide the Key generated by the server.
+* The best approach is to cut and paste it.
+*** OBS: Do not include spaces or new lines.
+
+Paste it here (or ‘\q’ to quit): MDE0IHZwbi1mdy5yZWQtYWxmLmNvbSAxMC4wLjAuMjU0IGZhZjhhZWE4MDY1ZmVlMTUwMGIyN2ViNTk4M2FjODAzZTQwMzA5MzQ3ZjYzNzgzNWFhZDM2OTY5YmFkZDc5OTM=
+Agent information:
+   ID:001
+   Name:cliente01
+   IP Address: IP CLIENTE
+
+Confirm adding it?(y/n): y
+Added.
+** Press ENTER to return to the main menu.
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (I)mport key from the server (I).
+   (Q)uit.
+Choose your action: I or Q: q
+** You must restart the server for your changes to have effect.
+manage_agents: Exiting ..
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Iniciamos el agente cliente&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]# /var/ossec/bin/ossec-control start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Cabe mencionar que esta instalacion es basica, como dije anteriormente este HIDS 
+es muy configurable, como crear reglas personalizadas de alarmas, crear tus 
+propios scripts de active-response, etc.&lt;/p&gt;
+
+&lt;p&gt;PD: Si encuentran errores de edición son bienvenidas :) &lt;em&gt;se toma la ultima chela&lt;/em&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Como restringir la escala a usuario Root </title>
+   <link href="jahrmando.github.com/2012/10/11/como-restringir-la-escala-usuario-root/"/>
+   <updated>2012-10-11T22:00:00-05:00</updated>
+   <id>jahrmando.github.com/2012/10/11/como-restringir-la-escala-usuario-root</id>
+   <content type="html">&lt;p&gt;Como restringir a usuarios el escalar a usuario &lt;em&gt;root&lt;/em&gt; por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema &lt;em&gt;wheel&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Quitamos el simbolo &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; de comentario de la linea 7 para activar la opcion&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]# vim /etc/pam.d/su
+#%PAM-1.0
+auth sufficient pam_rootok.so
+# Uncomment the following line to implicitly trust users in the “wheel” group.
+#auth sufficient pam_wheel.so trust use_uid
+# Uncomment the following line to require a user to be in the “wheel” group.
+auth required pam_wheel.so use_uid
+auth include system-auth
+auth include postlogin
+account sufficient pam_succeed_if.so uid = 0 use_uid quiet
+account include system-auth
+password include system-auth
+session include system-auth
+session include postlogin
+session optional pam_xauth.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Agregar a usuarios a grupo wheel para tener acceso a su&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]# gpasswd -a miuser wheel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Comprobamos que pertenesca nuestro usuario al grupo.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[user@host ~]# grep miuser /etc/group
+wheel:x:10:root,miuser 
+miuser:x:500:
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Configurando postfix como smarthost </title>
+   <link href="jahrmando.github.com/2012/10/10/configurando-postfix-como-smarthost/"/>
+   <updated>2012-10-10T20:00:00-05:00</updated>
+   <id>jahrmando.github.com/2012/10/10/configurando-postfix-como-smarthost</id>
+   <content type="html">&lt;p&gt;Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal. En este ejemplo usare mi cuenta gmail. Recordar en este howto es para usar conexiones ssl que normalmente usa el puerto 465 smtp.&lt;/p&gt;
+
+&lt;p&gt;Instalamos los paquetes necesarios&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ yum install postfix stunnel -y
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Preparando stunnel&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ openssl genrsa -out privkey.pem 2048
+$ openssl req -new -x509 -key privkey.pem -out cacert.pem -days 1095
+$ cat privkey.pem cacert.pem &amp;gt; /etc/stunnel/stunnel.pem
+$ chmod 0400 /etc/stunnel/stunnel.pem
+$ mkdir /var/run/stunnel
+$ chown nobody:nobody /var/run/stunnel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Aplicando los parámetros de configuración&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/stunnel/stunnel.conf 
+cert = /etc/stunnel/stunnel.pem
+chroot = /var/run/stunnel/
+pid = /stunnel.pid
+setuid = nobody
+setgid = nobody
+[smtp-tls-wrapper]
+accept = 11125
+client = yes
+connect = smtp.gmail.com:465
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Lanzando en inicio de sistema stunnel&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/rc.local
+# Agregamos siguiente linea Stunnel
+/usr/bin/stunnel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Probando stunnel (Intentar una conexión local y revisar que pase por nuestro túnel)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ stunnel
+$ telnet localhost 11125
+Trying 127.0.0.1…
+Connected to localhost.
+Escape character is ‘^]’.
+220 mx.google.com ESMTP y66sm40234408yhi.10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Mas configuraciones&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/hosts.allow
+smtp-tls-wrapper: 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuracion de credenciales&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/postfix/relay_passwd
+[127.0.0.1]:11125    user@gmail.com:miPassWord 
+$ postmap hash:/etc/postfix/relay_passwd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Crear los certificados de gmail (copy, paste)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim Thawte_Premium_Server_CA.pem
+——-BEGIN CERTIFICATE——-
+MIIDJzCCApCgAwIBAgIBATANBgkqhkiG9w0BAQQFADCBzjELMAkGA1UEBhMCWkExFTATBgNVBAgT
+DFdlc3Rlcm4gQ2FwZTESMBAGA1UEBxMJQ2FwZSBUb3duMR0wGwYDVQQKExRUaGF3dGUgQ29uc3Vs
+dGluZyBjYzEoMCYGA1UECxMfQ2VydGlmaWNhdGlvbiBTZXJ2aWNlcyBEaXZpc2lvbjEhMB8GA1UE
+AxMYVGhhd3RlIFByZW1pdW0gU2VydmVyIENBMSgwJgYJKoZIhvcNAQkBFhlwcmVtaXVtLXNlcnZl
+ckB0aGF3dGUuY29tMB4XDTk2MDgwMTAwMDAwMFoXDTIwMTIzMTIzNTk1OVowgc4xCzAJBgNVBAYT
+AlpBMRUwEwYDVQQIEwxXZXN0ZXJuIENhcGUxEjAQBgNVBAcTCUNhcGUgVG93bjEdMBsGA1UEChMU
+VGhhd3RlIENvbnN1bHRpbmcgY2MxKDAmBgNVBAsTH0NlcnRpZmljYXRpb24gU2VydmljZXMgRGl2
+aXNpb24xITAfBgNVBAMTGFRoYXd0ZSBQcmVtaXVtIFNlcnZlciBDQTEoMCYGCSqGSIb3DQEJARYZ
+cHJlbWl1bS1zZXJ2ZXJAdGhhd3RlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA0jY2
+aovXwlue2oFBYo847kkEVdbQ7xwblRZH7xhINTpS9CtqBo87L+pW46+GjZ4X9560ZXUCTe/LCaIh
+Udib0GfQug2SBhRz1JPLlyoAnFxODLz6FVL88kRu2hFKbgifLy3j+ao6hnO2RlNYyIkFvYMRuHM/
+qgeN9EJN50CdHDcCAwEAAaMTMBEwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQQFAAOBgQAm
+SCwWwlj66BZ0DKqqX1Q/8tfJeGBeXm43YyJ3Nn6yF8Q0ufUIhfzJATj/Tb7yFkJD57taRvvBxhEf
+8UqwKEbJw8RCfbz6q1lu1bdRiBHjpIUZa4JMpAwSremkrj/xw0llmozFyD4lt5SZu5IycQfwhl7t
+UCemDaYj+bvLpgcUQg==
+——-END CERTIFICATE——-
+$ vim Equifax_Secure_CA.pem
+——-BEGIN CERTIFICATE——-
+MIIDIDCCAomgAwIBAgIENd70zzANBgkqhkiG9w0BAQUFADBOMQswCQYDVQQGEwJVUzEQMA4GA1UE
+ChMHRXF1aWZheDEtMCsGA1UECxMkRXF1aWZheCBTZWN1cmUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5
+MB4XDTk4MDgyMjE2NDE1MVoXDTE4MDgyMjE2NDE1MVowTjELMAkGA1UEBhMCVVMxEDAOBgNVBAoT
+B0VxdWlmYXgxLTArBgNVBAsTJEVxdWlmYXggU2VjdXJlIENlcnRpZmljYXRlIEF1dGhvcml0eTCB
+nzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAwV2xWGcIYu6gmi0fCG2RFGiYCh7+2gRvE4RiIcPR
+fM6fBeC4AfBONOziipUEZKzxa1NfBbPLZ4C/QgKO/t0BCezhABRP/PvwDN1Dulsr4R+AcJkVV5MW
+8Q+XarfCaCMczE1ZMKxRHjuvK9buY0V7xdlfUNLjUA86iOe/FP3gx7kCAwEAAaOCAQkwggEFMHAG
+A1UdHwRpMGcwZaBjoGGkXzBdMQswCQYDVQQGEwJVUzEQMA4GA1UEChMHRXF1aWZheDEtMCsGA1UE
+CxMkRXF1aWZheCBTZWN1cmUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5MQ0wCwYDVQQDEwRDUkwxMBoG
+A1UdEAQTMBGBDzIwMTgwODIyMTY0MTUxWjALBgNVHQ8EBAMCAQYwHwYDVR0jBBgwFoAUSOZo+SvS
+spXXR9gjIBBPM5iQn9QwHQYDVR0OBBYEFEjmaPkr0rKV10fYIyAQTzOYkJ/UMAwGA1UdEwQFMAMB
+Af8wGgYJKoZIhvZ9B0EABA0wCxsFVjMuMGMDAgbAMA0GCSqGSIb3DQEBBQUAA4GBAFjOKer89961
+zgK5F7WF0bnj4JXMJTENAKaSbn+2kmOeUJXRmm/kEd5jhW6Y7qj/WsjTVbJmcVfewCHrPSqnI0kB
+BIZCe/zuf6IWUrVnZ9NA2zsmWLIodz2uFHdh1voqZiegDfqnc1zqcPGUIWVEX/r87yloqaKHee95
+70+sB3c4
+——-END CERTIFICATE——-
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Importando los certificados&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir /etc/postfix/ssl
+$ touch /etc/postfix/ssl/cacert.pem
+$ cat Equifax_Secure_CA.pem &amp;gt; /etc/postfix/ssl/cacert.pem
+$ cat Thawte_Premium_Server_CA.pem &amp;gt; /etc/postfix/ssl/cacert.pem
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configurando postfix&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ vim /etc/postfix/main.cf
+inet_protocols = ipv4
+relayhost = [127.0.0.1]:11125
+### SASL
+smtp_sasl_password_maps = hash:/etc/postfix/relay_passwd
+smtp_sasl_auth_enable = yes
+smtp_sasl_security_options = noanonymous
+### TLS
+smtp_use_tls = yes
+smtp_sasl_mechanism_filter = plain, login
+smtp_tls_CAfile = /etc/postfix/ssl/cacert.pem
+smtp_tls_CApath = /etc/postfix/ssl
+smtp_sasl_tls_security_options = noanonymous
+smtp_tls_session_cache_timeout = 3600s
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configurando los servicios:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ systemctl stop sendmail.service
+$ systemctl disable sendmail.service
+$ alternatives --config mta
+There are 2 programs which provide ‘mta’.
+      Selection    Command
+    ———————————————————————-
+    *+ 1           /usr/sbin/sendmail.sendmail
+       2           /usr/sbin/sendmail.postfix
+       Enter to keep the current selection[+], or type selection number: 2 
+$ systemctl start postfix.service
+$ chkconfig postfix on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Probando todo&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mail -s test prueba@correo.com.mx &amp;lt; /dev/null
+Null message body; hope that’s ok
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Esta configuración también la he probado en CentOS 6.2, solo que la configuración de servicios lo hacemos por medio de chkconfig&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Añadir mas de una IP a una interfaz de red en linux</title>
+   <link href="jahrmando.github.com/2012/10/10/anadir-mas-de-una-ip-una-interfaz-de/"/>
+   <updated>2012-10-10T15:03:00-05:00</updated>
+   <id>jahrmando.github.com/2012/10/10/anadir-mas-de-una-ip-una-interfaz-de</id>
+   <content type="html">&lt;p&gt;Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.&lt;/p&gt;
+
+&lt;p&gt;Copiamos la configuracion de la nic a la que le asignaremos la interfaz virtual en este caso &lt;code class=&quot;highlighter-rouge&quot;&gt;eth0&lt;/code&gt;, a la virtual le asignamos el mismo nombre pero con el sufijo &lt;code class=&quot;highlighter-rouge&quot;&gt;:0&lt;/code&gt;. El numero cero es consecutivo, podemos seguir agregando mas nic virtuales.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /etc/sysconfig/network-scripts/
+$ sudo cp ifcfg-eth0 ifcfg-eth0:0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Configuramos la nic virtual&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;DEVICE=eth0:0 # Nombre de la interfaz
+BOOTPROTO=static
+BROADCAST=10.255.255.255
+HWADDR=00:1E:0B:BC:BE:56 # MAC de la nic eth0
+IPADDR=10.0.0.55 # IP nueva
+NETMASK=255.0.0.0
+NETWORK=10.0.0.0
+ONBOOT=yes
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reiniciamos el servicio&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Establecer vigencia y reglas sobre contraseñas a usuarios Linux</title>
+   <link href="jahrmando.github.com/2012/05/22/establecer-vigencia-y-reglas-sobre/"/>
+   <updated>2012-05-22T20:47:00-05:00</updated>
+   <id>jahrmando.github.com/2012/05/22/establecer-vigencia-y-reglas-sobre</id>
+   <content type="html">&lt;p&gt;Lo que haremos en este post es el establecer una política de seguridad para la renovación de contraseñas de los usuarios en el servidor y también sobre reglas para la creación de las mismas.&lt;/p&gt;
+
+&lt;p&gt;RHEL/Fedora/CentOS&lt;/p&gt;
+
+&lt;p&gt;Abrimos y editamos el siguiente archivo:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~]# vi /etc/login.defs
+# Controles de vigencia de contraseñas: 
+#
+# PASS_MAX_DAYS Máximo numero de días que una contraseña debe usarse
+# PASS_MIN_DAYS Número mínimo de días permitidos entre los cambios de contraseña. 
+# PASS_MIN_LEN Longitud mínima de la contraseña aceptable. 
+# PASS_WARN_AGE Número de días de aviso antes de dar una contraseña expire. 
+#
+PASS_MAX_DAYS 60 
+PASS_MIN_DAYS 0 
+PASS_MIN_LEN 10
+PASS_WARN_AGE 7 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Esta configuración sólo afectara cuando se creen nuevos usuarios, y no a los a los usuarios ya existente, si deseamos aplicar una vigencia de contraseñas a usuarios que ya existan entonces ejecutamos el comando: chage -M [días] [usuario]&lt;/p&gt;
+
+&lt;p&gt;Se edita el archivo de configuración:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~]# vi /etc/pam.d/system-auth
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Establecer una contraseña según políticas establecidas.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Establecer una mínima de longitud de la contraseña (minlen = N)&lt;/li&gt;
+  &lt;li&gt;Forzar el uso mínimo de N números en la contraseña (dcredit=-N)&lt;/li&gt;
+  &lt;li&gt;Forzar el uso mínimo de N letras mayúsculas ( ucredit=-N )&lt;/li&gt;
+  &lt;li&gt;Forzar el uso mínimo de N letras minúsculas ( lcredit=-N )&lt;/li&gt;
+  &lt;li&gt;Forzar el uso mínimo de N símbolos ( ocredit=-N )&lt;/li&gt;
+  &lt;li&gt;Forzar un mínimo de N caracteres diferentes de la contraseña actual ( difok=N )&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Y la configuracion queda de la siguiente forma:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;password requisite pam_cracklib.so try_first_pass retry=3 type= difok=3 
+                                  minlen=10 dcredit=-2 ucredit=-2 lcredit=-2 ocredit=0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ahora establecemos que se recuerden las ultimas 5 contraseña.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;password sufficient pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+                                  remember=5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;con la opcion &lt;strong&gt;remember&lt;/strong&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Manejo de permisos sobre directorios o archivos en linux</title>
+   <link href="jahrmando.github.com/2012/04/08/nomenclatura-basica-acerca-de-permisos/"/>
+   <updated>2012-04-08T14:36:00-05:00</updated>
+   <id>jahrmando.github.com/2012/04/08/nomenclatura-basica-acerca-de-permisos</id>
+   <content type="html">&lt;p&gt;Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:
+Propietario - Grupo - Otros&lt;/p&gt;
+
+&lt;p&gt;A cada nivel de permiso se le tiene asignado un valor numerico.&lt;/p&gt;
+
+&lt;p&gt;Lectura (r) = 4
+Escritura (w) = 2
+Ejecución (x) = 1&lt;/p&gt;
+
+&lt;p&gt;Ahora bien para asignar permisos se usa el comando chmod, solo tenemos realmente 
+que sumar los valores de los permisos que queremos darle a cada nivel:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#chmod 755 suarchivo.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;En el comando anterior vemos que tiene a nivel propietario los permisos de lectura, 
+escritura y ejecución (4+2+1), a nivel Grupo y Otros tiene permisos lectura y 
+ejecución (4+1).&lt;/p&gt;
+
+&lt;p&gt;Si ejecutamos el siguiente comando que es para listar el directorio con detalles 
+prodremos ver los privilegios asignados al archivo en el sistema:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# ls -l suarchivo.txt
+-rwxr-xr-x ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Otra forma de asignación de privilegios:&lt;/p&gt;
+
+&lt;p&gt;Tomando en cuenta con explicado anteriormente, retomamos que tenemos los privilegios
+de lectura (r), escritura (w) y ejecución (x); y que los niveles de propietarios
+son usuario (u), grupo (g) y otros (o). De esta manera nosotros podemos asignar
+(+) o des asignar (-) privilegios.&lt;/p&gt;
+
+&lt;p&gt;Sintaxis:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;chmod ( u - g - o )( + / - )( w - r - x )&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Siguiendo con el ejemplo anterior, aplicando esta sintaxis quedaría de esta forma:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# chmod u+rwx suarchivo.txt 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asignamos privilegios de lectura, escritura y ejecucion al usuario&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# chmod go+rx suarchivo.txt 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Asignamos privilegios de lectura y ejecución al grupo y a otros&lt;/p&gt;
+
+&lt;p&gt;Entender este concepto es muy importante para no tener el terrible fallo de 
+siempre estarle asignando a todos los archivos y directorios de tu linux permisos
+que no deben tener y con ello comprometer la seguridad de tu sistema.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Montar particiones NTFS automáticamente en Linux</title>
+   <link href="jahrmando.github.com/2011/03/25/montar-particiones-ntfs-automaticamente/"/>
+   <updated>2011-03-25T18:06:00-06:00</updated>
+   <id>jahrmando.github.com/2011/03/25/montar-particiones-ntfs-automaticamente</id>
+   <content type="html">&lt;p&gt;Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS. Lo primero que haremos es buscar nuestra partición NTFS y encontrar la información que nos servirá.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo blkid
+/dev/sda1: UUID=&quot;926c754a-0678-414f-9820-7fcb6a62239c&quot; TYPE=&quot;ext4&quot;
+/dev/sda2: UUID=&quot;d55e3ab6-46fd-45f4-9755-e5b47a33c45a&quot; TYPE=&quot;swap&quot;
+/dev/sda3: LABEL=&quot;Documentos&quot; UUID=&quot;7C121D59121D19AA&quot; TYPE=&quot;ntfs&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Dos datos nos interesa en esta información que nos arroja, la primera es el LABEL que es el nombre o etiqueta de la partición y la otra es el UUID que es el identificador único de las partición para el sistema.&lt;/p&gt;
+
+&lt;p&gt;Ahora lo que realmente se hace es modificar el archivo FSTAB que contiene todas las particiones que se montan en el sistema. Nosotros vamos a agregar nuestra partición en este archivo de configuración &lt;strong&gt;/etc/fstab&lt;/strong&gt; y agregamos la siguiente linea al final del archivo:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;UUID=IDENTIFICADOR /media/ETIQUETA ntfs-3g rw,nosuid,nodev,uid=1000,exec,utf8 0 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Realice lo siguiente:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mkdir /media/Documentos
+$ sudo vim /etc/fstab
+# /etc/fstab: static file system information.
+# 
+proc /proc proc nodev,noexec,nosuid 0 0
+# / was on /dev/sda1 during installation
+UUID=926c754a-0678-414f-9820-7fcb6a62239c / ext4 errors=remount-ro 0 1
+# swap was on /dev/sda2 during installation
+UUID=d55e3ab6-46fd-45f4-9755-e5b47a33c45a none swap sw 0 0
+#Mi particion NTFS
+UUID=7C121D59121D19AA /media/Documentos ntfs-3g rw,nosuid,nodev,uid=1000,exec,utf8 0 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Volvemos a montar los discos del sistema&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mount -a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+
+</feed>

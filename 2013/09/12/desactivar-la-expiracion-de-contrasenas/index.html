@@ -11,7 +11,7 @@
 
   <title>
     
-      Acerca de &middot; Tech Monkey
+      Desactivar la expiración de contraseñas &middot; Tech Monkey
     
   </title>
 
@@ -57,7 +57,7 @@
       
         
           
-            <a class="sidebar-nav-item active" href="/about/">Acerca de</a>
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
           
         
       
@@ -110,18 +110,77 @@
 
 
     <div class="content container">
-      <div class="page">
-  <h1 class="page-title">Acerca de</h1>
-  <p><strong><em>Greetings human!</em></strong></p>
+      <div class="post">
+  <h1 class="post-title">Desactivar la expiración de contraseñas</h1>
+  <span class="post-date">12 Sep 2013</span>
+  <p>Con la utilidad chage podemos reasignar los valores de expiración.</p>
 
-<p>Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y una breve explicación de lo que aquí encontraras y lo que no encontraras (Windows)..</p>
+<p>Verificamos las fechas de expiracion de los passwords</p>
 
-<p>Entusiasta en temas de Linux y Python, pero en general me entusiasma aprender cosas nuevas sobre tecnología.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ chage -l usuario
 
-<p>He creado este blog con el único fin de plasmar en alguna parte mis ideas, apuntes, tips y de mas cosas que me parezcan interesantes para compartir con ustedes.</p>
+Last password change                                    : Jul 23, 2012
+Password expires     : Sep 21, 2012
+Password inactive     : Sep 28, 2012
+Account expires      : never
+Minimum number of days between password change  : 1
+Maximum number of days between password change  : 60
+Number of days of warning before password expires : 7
+</code></pre>
+</div>
 
-<p>Por ahora esto es todo para este ‘about’, vuelve pronto!</p>
+<p>Tenemos dos modos para poder modificar la expiración:</p>
 
+<ul>
+  <li>Modo interactivo. En prompt iras escribiendo los valores que se te solicitan</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ chage usuario
+</code></pre>
+</div>
+
+<ul>
+  <li>Modo comando. Restablecer valores por defecto.</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ chage -I -1 -m 0 -M 99999 -E -1 usuario
+</code></pre>
+</div>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
 </div>
 
     </div>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Informacion de conexion desde la terminal &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Informacion de conexion desde la terminal</h1>
+  <span class="post-date">17 Oct 2012</span>
+  <p>Usando CURL y el sitio ifconfig.me podemos obtener información acerca  de nuestra conexión, como ip publica, nombre del host, datos sobre el  agente del usuario, etc. desde nuestra terminal.</p>
+
+<p>Algunos ejemplos:</p>
+
+<p>IP Publica</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[user@host ~]$ curl ifconfig.me/ip 
+189.212.XXX.XXX 
+</code></pre>
+</div>
+
+<p>Nombre del host remoto</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[user@host ~]$ curl ifconfig.me/host 
+133-312-XXX-XXX.static.isp.net 
+</code></pre>
+</div>
+
+<p>User agent</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[user@host ~]$ curl ifconfig.me/ua
+curl/7.21.7 (i386-redhat-linux-gnu) libcurl/7.21.7 NSS/3.13.3.0 zlib/1.2.5 libidn/1.22 libssh2/1.2.7 
+</code></pre>
+</div>
+
+<p>Puerto</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[user@host ~]$ curl ifconfig.me/port 51861 
+</code></pre>
+</div>
+
+<p>IP privada</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[user@host ~]$ curl ifconfig.me/forwarded 192.168.4.20 
+</code></pre>
+</div>
+
+<p>O también toda la información</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[user@host ~]$ curl ifconfig.me/all 
+ip_addr: 189.212.XXX.XXX 
+remote_host: 133-312-XXX-XXX.static.isp.net 
+user_agent: curl/7.21.7 (i386-redhat-linux-gnu) libcurl/7.21.7 NSS/3.13.3.0 zlib/1.2.5 libidn/1.22 libssh2/1.2.7 
+port: 51861 
+lang:  
+connection: keep-alive 
+keep_alive:  
+encoding:  
+mime: */* 
+charset:  
+via: 1.1 xxx.xxx.com:3128 (squid/2.6.STABLE21) 
+forwarded: 192.168.4.20 
+</code></pre>
+</div>
+
+<p>Algo curioso de CURL es que acepta conexiones de tipo proxy (cosa que  no me había fijado), así que también podemos navegar de forma anónima  si usamos el TOR u otro servicio similar. Un ejemplo de como se  reflejaría los una petición a ifconfig.me bajo conexión TOR.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[user@host ~]$ curl --proxy1.0 127.0.0.1:8118 ifconfig.me/all 
+ip_addr: 77.247.181.165 
+remote_host: politkovskaja.torservers.net 
+user_agent: curl/7.21.7 (i386-redhat-linux-gnu) libcurl/7.21.7 NSS/3.13.3.0 zlib/1.2.5 libidn/1.22 libssh2/1.2.7 
+port: 64556 
+lang:
+connection:
+keep_alive:
+encoding:
+mime: */* 
+charset:
+via:
+forwarded:
+</code></pre>
+</div>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

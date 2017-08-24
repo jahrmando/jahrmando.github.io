@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Permitir adjuntos .exe comprimidos en Amavisd-new &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Permitir adjuntos .exe comprimidos en Amavisd-new</h1>
+  <span class="post-date">22 Apr 2014</span>
+  <p>La configuración por defecto del servicio Amavisd-new es un poco restrictiva y para mi gusto buena para el manejo de detección de <strong>SPAM</strong> y contenido Malware.</p>
+
+<p>Sin embargo, a veces es necesario adecuarlos, el envió de ejecutables a través de correos electrónicos puede ser “necesario” para el día a día de los usuarios (aka Luser), suponiendo que eres un administrador muy ágil y haz configurado algún tipo de Antivirus (ClamAV por ejemplo) para detectar ejecutables infectados y no permitir la llegada de estos binarios a la bandeja de algún luser, que por naturaleza son confiados con cualquier contenido que les llegue, puedes continuar con este <strong>protip</strong> de configuración para <strong>Amavisd-new</strong>.</p>
+
+<p>Localicemos nuestro archivo de configuración de Amavisd-new, esta nombrada como <strong>amavisd.conf</strong>, puedes hacer uso de <code class="highlighter-rouge">locate</code> o <code class="highlighter-rouge">find</code> para encontrarlo. En <strong>CentOS</strong> lo puedes encontrar en <strong>/etc/amavisd.conf</strong>.</p>
+
+<p>En el archivo de configuración nos enfocaremos en la variable ‘<strong>$banned_filename_re</strong>’, este contiene las reglas de tipo Regex para el manejo de las politicas de acceso de los archivos adjuntos.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ /etc/amavisd.conf
+.
+.
+$banned_filename_re = new_RE(
+    ### BLOCKED ANYWHERE
+    qr'^\.(exe-ms|dll)$',                   # banned file(1) types, rudimentary
+.
+.
+    ### BLOCK THE FOLLOWING, EXCEPT WITHIN UNIX ARCHIVES:
+    [ qr'^\.(rpm|cpio|tar)$'       =&gt; 0 ],  # allow any in Unix-type archives
+.
+.
+    qr'.\.(exe|vbs|pif|scr|cpl)$'i,         # banned extension - basic
+.
+.
+</code></pre>
+</div>
+
+<p>Arriba esta la configuración por default de esa variable, en la sección <strong>BLOCKED ANYWHERE</strong> donde se lista <strong>exe-ms</strong> ó <strong>exe</strong>, debemos comentar esa linea, siendo un poco mas restrictivos retirar solo esas palabras.</p>
+
+<p>Después en la sección de las excepciones de empaquetado, que podemos ver debajo del comentario <strong>BLOCK THE FOLLOWING, EXCEPT WITHIN UNIX ARCHIVES</strong> se listan los tipos de archivos empaquetadores que tienen permitido contener cualquier tipo de archivos, allí es donde agregamos las nuestras, en este ejemplo agrego rar y zip. La configuración queda de la siguiente forma:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ /etc/amavisd.conf
+.
+.
+$banned_filename_re = new_RE(
+    ### BLOCKED ANYWHERE
+    #qr'^\.(exe-ms|dll)$',                   # banned file(1) types, rudimentary
+.
+.
+    ### BLOCK THE FOLLOWING, EXCEPT WITHIN UNIX ARCHIVES:
+    [ qr'^\.(rpm|cpio|tar)$'       =&gt; 0 ],  # allow any in Unix-type archives
+    [ qr'^\.(rar|zip)$'       =&gt; 0 ],       # allow any in RAR and ZIP archives
+.
+.
+    qr'.\.(exe|vbs|pif|scr|cpl)$'i,         # banned extension - basic
+.
+.
+</code></pre>
+</div>
+
+<p>Si nos damos cuenta al final aun listo como regla bloquear la extension <strong>exe</strong>, esto solo si se adjunta este tipo de archivo fuera de mis empaquetadores permitidos.</p>
+
+<p>Solo nos queda reiniciar ó recargar el servicio <strong>Amavisd-new</strong> en nuestro servidor para aplicar los cambios.</p>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

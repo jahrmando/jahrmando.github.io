@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Montar particiones NTFS automáticamente en Linux &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Montar particiones NTFS automáticamente en Linux</h1>
+  <span class="post-date">25 Mar 2011</span>
+  <p>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS. Lo primero que haremos es buscar nuestra partición NTFS y encontrar la información que nos servirá.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo blkid
+/dev/sda1: UUID="926c754a-0678-414f-9820-7fcb6a62239c" TYPE="ext4"
+/dev/sda2: UUID="d55e3ab6-46fd-45f4-9755-e5b47a33c45a" TYPE="swap"
+/dev/sda3: LABEL="Documentos" UUID="7C121D59121D19AA" TYPE="ntfs"
+</code></pre>
+</div>
+
+<p>Dos datos nos interesa en esta información que nos arroja, la primera es el LABEL que es el nombre o etiqueta de la partición y la otra es el UUID que es el identificador único de las partición para el sistema.</p>
+
+<p>Ahora lo que realmente se hace es modificar el archivo FSTAB que contiene todas las particiones que se montan en el sistema. Nosotros vamos a agregar nuestra partición en este archivo de configuración <strong>/etc/fstab</strong> y agregamos la siguiente linea al final del archivo:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>UUID=IDENTIFICADOR /media/ETIQUETA ntfs-3g rw,nosuid,nodev,uid=1000,exec,utf8 0 0
+</code></pre>
+</div>
+
+<p>Realice lo siguiente:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo mkdir /media/Documentos
+$ sudo vim /etc/fstab
+# /etc/fstab: static file system information.
+# 
+proc /proc proc nodev,noexec,nosuid 0 0
+# / was on /dev/sda1 during installation
+UUID=926c754a-0678-414f-9820-7fcb6a62239c / ext4 errors=remount-ro 0 1
+# swap was on /dev/sda2 during installation
+UUID=d55e3ab6-46fd-45f4-9755-e5b47a33c45a none swap sw 0 0
+#Mi particion NTFS
+UUID=7C121D59121D19AA /media/Documentos ntfs-3g rw,nosuid,nodev,uid=1000,exec,utf8 0 0
+</code></pre>
+</div>
+
+<p>Volvemos a montar los discos del sistema</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ sudo mount -a
+</code></pre>
+</div>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

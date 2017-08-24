@@ -11,7 +11,7 @@
 
   <title>
     
-      Acerca de &middot; Tech Monkey
+      Top 10 IPs mas visitados en Apache / Nginx &middot; Tech Monkey
     
   </title>
 
@@ -57,7 +57,7 @@
       
         
           
-            <a class="sidebar-nav-item active" href="/about/">Acerca de</a>
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
           
         
       
@@ -110,18 +110,59 @@
 
 
     <div class="content container">
-      <div class="page">
-  <h1 class="page-title">Acerca de</h1>
-  <p><strong><em>Greetings human!</em></strong></p>
+      <div class="post">
+  <h1 class="post-title">Top 10 IPs mas visitados en Apache / Nginx</h1>
+  <span class="post-date">16 Aug 2014</span>
+  <p>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de <strong>Apache</strong> ó <strong>NGINX</strong>, ademas de listar el numero de accesos encontrados para cada IP.</p>
 
-<p>Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y una breve explicación de lo que aquí encontraras y lo que no encontraras (Windows)..</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cat site.access.log | awk '{print $1}' | sort | uniq -c | sort -nr | head -n 10
+78320 187.xxx.xxx.74
+75052 187.xxx.xxx.76
+74229 187.xxx.xxx.206
+72214 187.xxx.xxx.79
+70507 192.168.xxx.200
+68457 187.xxx.xxx.123
+67956 187.xxx.xxx.207
+66438 187.xxx.xxx.78
+64883 187.xxx.xxx.201
+64874 187.xxx.xxx.202
+</code></pre>
+</div>
 
-<p>Entusiasta en temas de Linux y Python, pero en general me entusiasma aprender cosas nuevas sobre tecnología.</p>
+</div>
 
-<p>He creado este blog con el único fin de plasmar en alguna parte mis ideas, apuntes, tips y de mas cosas que me parezcan interesantes para compartir con ustedes.</p>
-
-<p>Por ahora esto es todo para este ‘about’, vuelve pronto!</p>
-
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
 </div>
 
     </div>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      OSSEC HIDS Detección de intrusos en CentOS &middot; Tech Monkey
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/blackdoc.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=EB+Garamond">
+  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Coustard" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Tech Monkey
+        </a>
+      </h1>
+      <p class="lead">An Accidental Engineer • #Linux #DevOps #Programmer #Infosec</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">Acerca de</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+
+      <hr>
+      <a class="sidebar-nav-item" href="https://github.com/jahrmando/blackdoc">Repositorios</a>
+    </nav>
+
+    <p>&copy; 2017. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">OSSEC HIDS Detección de intrusos en CentOS</h1>
+  <span class="post-date">12 Oct 2012</span>
+  <p>OSSEC es un sistema para detección de intrusos basado en Host muy intuitivo y configurable blabla bla blabla bla.. configuremos :)</p>
+
+<p>AGENTE SERVIDOR</p>
+
+<p>Según el manual oficial de OSSEC lo define como la pieza central de la implantación de OSSEC. Almacena las bases de datos, la comprobación de integridad de archivos y registros, eventos y el sistema de auditoría. Todas las reglas, decodificadores y las opciones principales de configuración se almacenan de forma centralizada en el agente servidor, por lo que es fácil de administrar, incluso un gran número de agentes clientes.</p>
+
+<p>Descargamos y descomprimimos</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# wget http://www.ossec.net/files/ossec-hids-latest.tar.gz
+[ ~]# tar -zxvf ossec-hids-*.tar.gz
+</code></pre>
+</div>
+
+<p>Instalación</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# cd  ossec-hids-2.6/
+[ ossec-hids-2.6]# ./install.sh  
+
+1- What kind of installation do you want? (server, agent, local) [Default: server]: server
+2- Setting up the configuration environment.
+3- Configuring the OSSEC HIDS.
+  3.1- Do you want e-mail notification? (y/n) [Default: y]: y
+   - What’s your e-mail address? micorreo@miproveedor.com                                    
+   - What’s your SMTP server ip/host? mail.miproveedor.com
+  3.2- Do you want to run the integrity check daemon? (y/n) [y]: y
+  3.3- Do you want to run the rootkit detection engine? (y/n) [y]: y
+  3.4- Active response allows you to execute a specific
+       command based on the events received. For example,
+       you can block an IP address or disable access for
+       a specific user. 
+       More information at:
+       http://www.ossec.net/en/manual.html#active-response
+   - Do you want to enable active response? (y/n) [y]: y
+     - Active response enabled.
+   - By default, we can enable the host-deny and the
+     firewall-drop responses. The first one will add
+     a host to the /etc/hosts.deny and the second one
+     will block the host on iptables (if linux) or on
+     ipfilter (if Solaris, FreeBSD or NetBSD).
+   - They can be used to stop SSHD brute force scans,
+     portscans and some other forms of attacks. You can
+     also add them to block on snort events, for example.
+   - Do you want to enable the firewall-drop response? (y/n) [y]: y
+   - Do you want to add more IPs to the white list? (y/n)? [n]: n
+  3.5- Do you want to enable remote syslog (port 514 udp)? (y/n) [y]: n
+    — /var/log/messages (syslog)
+    — /var/log/secure (syslog)
+    — /var/log/maillog (syslog)
+Configuration complete. 
+</code></pre>
+</div>
+
+<p>Ajustes en el firewall, necesitamos abrir el puerto 1514 UDP, en iptables la regla constaría de la siguiente forma.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# vi /etc/sysconfig/iptables
+-A INPUT -m state —state NEW -m udp -p udp —dport 1514 -j ACCEPT  
+[ ~]# service iptables restart
+</code></pre>
+</div>
+
+<p>Para que entendamos un poco los archivos de instalación de OSSEC que se alojan en /var/ossec/, donde podemos ver el siguiente despliegue de archivos importantes:</p>
+
+<ul>
+  <li><strong>/var/ossec/etc/ossec.conf</strong> Archivo de configuración principal.</li>
+  <li><strong>/var/ossec/bin/</strong> Directorio de binarios del servicio OSSEC.</li>
+  <li><strong>/var/ossec/logs/</strong> Directorio de logs.</li>
+  <li><strong>/var/ossec/logs/alerts/alerts.log</strong> Log donde se guardan las alertas generadas.</li>
+  <li><strong>/var/ossec/rules/</strong> Directorio que contiene las reglas de alarmas.</li>
+  <li><strong>/var/ossec/active-response/bin/</strong> Directorio de binarios que ejecuta el active-response.</li>
+  <li><strong>/var/ossec/logs/active-responses.log</strong> Log del active-response, se guarda los ejecutados.</li>
+  <li><strong>/var/ossec/etc/decoder.xml</strong> Decodificadores de logs de sistema.</li>
+</ul>
+
+<p>Ejemplo de archivo de configuración principal /var/ossec/etc/ossec.conf</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;ossec_config&gt;</span>
+  <span class="nt">&lt;global&gt;</span>
+    <span class="nt">&lt;email_notification&gt;</span>yes<span class="nt">&lt;/email_notification&gt;</span>
+    <span class="nt">&lt;email_to&gt;</span>sysadmin@correo.com<span class="nt">&lt;/email_to&gt;</span>
+    <span class="nt">&lt;smtp_server&gt;</span>mail.correo.com<span class="nt">&lt;/smtp_server&gt;</span>
+    <span class="nt">&lt;email_from&gt;</span>noreply@correo.com<span class="nt">&lt;/email_from&gt;</span>
+  <span class="nt">&lt;/global&gt;</span>
+
+  <span class="nt">&lt;alerts&gt;</span>
+    <span class="nt">&lt;log_alert_level&gt;</span>1<span class="nt">&lt;/log_alert_level&gt;</span>  <span class="c">&lt;!-- Nivel de alerta que sera notificado. Default 1 --&gt;</span>
+    <span class="nt">&lt;email_alert_level&gt;</span>7<span class="nt">&lt;/email_alert_level&gt;</span>  <span class="c">&lt;!-- Nivel de alerta que sera notificado. Default 1 --&gt;</span>
+  <span class="nt">&lt;/alerts&gt;</span>
+
+    <span class="c">&lt;!-- Enviar notificaciones de correo a otro personal --&gt;</span>
+
+<span class="nt">&lt;email_alerts&gt;</span>
+      <span class="nt">&lt;email_to&gt;</span>personal_01@correo.com<span class="nt">&lt;/email_to&gt;</span> <span class="c">&lt;!-- Destinatario --&gt;</span>
+      <span class="nt">&lt;level&gt;</span>11<span class="nt">&lt;/level&gt;</span> <span class="c">&lt;!-- Nivel mínima de alerta a notificar --&gt;</span>
+       <span class="nt">&lt;format&gt;</span>sms<span class="nt">&lt;/format&gt;</span> <span class="c">&lt;!-- Formato de correo --&gt;</span>
+  <span class="nt">&lt;/email_alerts&gt;</span> 
+
+<span class="c">&lt;!-- Enviar resúmenes de login diarios de eventos --&gt;</span>
+
+<span class="nt">&lt;reports&gt;</span>
+        <span class="nt">&lt;category&gt;</span>authentication_success<span class="nt">&lt;/category&gt;</span> <span class="c">&lt;!-- Categoría de resumen --&gt;</span>
+        <span class="nt">&lt;title&gt;</span>Reporte diario: Successful logins<span class="nt">&lt;/title&gt;</span> <span class="c">&lt;!-- Asunto del e-mail --&gt;</span>
+        <span class="nt">&lt;email_to&gt;</span>personal@correo.com<span class="nt">&lt;/email_to&gt;</span> <span class="c">&lt;!-- Destinatario --&gt;</span>
+  <span class="nt">&lt;/reports&gt;</span> 
+
+<span class="c">&lt;!-- Configuraciones de verificación de archivos. Syscheck --&gt;</span>
+
+<span class="nt">&lt;syscheck&gt;</span>
+    <span class="nt">&lt;frequency&gt;</span>21600<span class="nt">&lt;/frequency&gt;</span> <span class="cp">&lt;!— Frecuencia de ejecuacion del syscheck en segundos —&gt;</span>
+    <span class="nt">&lt;alert_new_files&gt;</span>yes<span class="nt">&lt;/alert_new_files&gt;</span> <span class="cp">&lt;!— Alerta la creación de nuevos archivos —&gt;</span>
+    <span class="cp">&lt;!— Directorios a revisar  (todas las verificaciones activadas) —&gt;</span>
+    <span class="nt">&lt;directories</span> <span class="na">check_all=</span><span class="s">”yes”</span><span class="nt">&gt;</span>/etc,/usr/bin,/usr/sbin<span class="nt">&lt;/directories&gt;</span>
+    <span class="nt">&lt;directories</span> <span class="na">check_all=</span><span class="s">”yes”</span><span class="nt">&gt;</span>/bin,/sbin<span class="nt">&lt;/directories&gt;</span> 
+
+<span class="c">&lt;!-- Archivos o directorios a ignorar --&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/mtab<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/mnttab<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/hosts.deny<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/mail/statistics<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/random-seed<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/adjtime<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/httpd/logs<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/utmpx<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/wtmpx<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/cups/certs<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/dumpdates<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/svc/volatile<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>/etc/openvpn/servers/VPN-SERVER/logs/<span class="nt">&lt;/ignore&gt;</span> <span class="c">&lt;!-- Ejemplo -Ignorar logs de OpenVPN --&gt;</span>
+
+<span class="cp">&lt;!— Archivos MS Windows  a ignorar —&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/System32/LogFiles<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/Debug<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/WindowsUpdate.log<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/iis6.log<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/system32/wbem/Logs<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/system32/wbem/Repository<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/Prefetch<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/PCHEALTH/HELPCTR/DataColl<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/SoftwareDistribution<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/Temp<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/system32/config<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/system32/spool<span class="nt">&lt;/ignore&gt;</span>
+    <span class="nt">&lt;ignore&gt;</span>C:\WINDOWS/system32/CatRoot<span class="nt">&lt;/ignore&gt;</span>
+<span class="nt">&lt;/syscheck&gt;</span>
+
+<span class="c">&lt;!-- Configuraciones de Rootkit --&gt;</span>
+
+<span class="nt">&lt;rootcheck&gt;</span>
+    <span class="nt">&lt;rootkit_files&gt;</span>/var/ossec/etc/shared/rootkit_files.txt<span class="nt">&lt;/rootkit_files&gt;</span>
+    <span class="nt">&lt;rootkit_trojans&gt;</span>/var/ossec/etc/shared/rootkit_trojans.txt<span class="nt">&lt;/rootkit_trojans&gt;</span>
+    <span class="nt">&lt;system_audit&gt;</span>/var/ossec/etc/shared/system_audit_rcl.txt<span class="nt">&lt;/system_audit&gt;</span>
+    <span class="nt">&lt;system_audit&gt;</span>/var/ossec/etc/shared/cis_rhel_linux_rcl.txt<span class="nt">&lt;/system_audit&gt;</span>
+    <span class="nt">&lt;system_audit&gt;</span>/var/ossec/etc/shared/cis_rhel5_linux_rcl.txt<span class="nt">&lt;/system_audit&gt;</span>
+<span class="nt">&lt;/rootcheck&gt;</span>
+
+<span class="c">&lt;!-- Lista blanca, ips que active-response debe ignorar --&gt;</span>
+
+<span class="nt">&lt;global&gt;</span>
+    <span class="nt">&lt;white_list&gt;</span>127.0.0.1<span class="nt">&lt;/white_list&gt;</span>
+    <span class="nt">&lt;white_list&gt;</span>^localhost.localdomain$<span class="nt">&lt;/white_list&gt;</span> 
+    <span class="nt">&lt;white_list&gt;</span>192.168.0.30<span class="nt">&lt;/white_list&gt;</span> <span class="cp">&lt;!— IP de personal de confianza 01 —&gt;</span>
+    <span class="nt">&lt;white_list&gt;</span>192.168.0.21<span class="nt">&lt;/white_list&gt;</span> <span class="cp">&lt;!— IP de personal de confianza 02 —&gt;</span>
+<span class="nt">&lt;/global&gt;</span>
+
+<span class="c">&lt;!-- Respuesta activa a alertas. Active-response. http://www.ossec.net/doc/manual/ar/ar-unix.html. Que en realidad es la acción que se desencadena al presentarse una determinada alerta de nuestro HIDS. --&gt;</span>
+
+<span class="nt">&lt;active-response&gt;</span>
+        <span class="nt">&lt;command&gt;</span>host-deny<span class="nt">&lt;/command&gt;</span> <span class="cp">&lt;!— Nombre de el comando a usar —&gt;</span>
+        <span class="nt">&lt;location&gt;</span>local<span class="nt">&lt;/location&gt;</span> <span class="cp">&lt;!— Donde se ejecutara el comando (local/server/defined-agent/all) —&gt;</span>
+        <span class="nt">&lt;rules_id&gt;</span>11451,11452<span class="nt">&lt;/rules_id&gt;</span> <span class="cp">&lt;!— Lista de reglas (Separados por comas) (0-9) —&gt;</span>
+        <span class="nt">&lt;timeout&gt;</span>6000<span class="nt">&lt;/timeout&gt;</span> <span class="cp">&lt;!— Tiempo de bloqueo —&gt;</span>
+  <span class="nt">&lt;/active-response&gt;</span>
+
+<span class="c">&lt;!-- Otras opciones
+&lt;disabled&gt;Desactiva el active-response si esta como “yes”&lt;/disabled&gt;
+&lt;agent_id&gt;ID del agente (cuando se usa defined agent)&lt;/agent_id&gt;
+&lt;level&gt;Nivel mínimo de alarma que crea el evento (0-9)&lt;/level&gt;
+&lt;rules_group&gt;Lista de grupos de reglas (Separados por comas) (A-Za-z0-9)&lt;/rules_group&gt; 
+
+--&gt;</span>
+
+<span class="c">&lt;!-- Logs de sistema del servidor que serán monitoreados, formato del log que sera leído (syslog/snort-full/snort-fast/squid/iis/eventlog/mysql_log/postgresql_log/nmapg/apache/djb-multilog/syslog-pipe
+/multi-line/command/full_command) --&gt;</span>
+
+<span class="cp">&lt;!— Generados en la instalación, pero son personalizables.—&gt;</span>
+<span class="nt">&lt;localfile&gt;</span>
+<span class="nt">&lt;log_format&gt;</span>syslog<span class="nt">&lt;/log_format&gt;</span>
+<span class="nt">&lt;location&gt;</span>/var/log/messages<span class="nt">&lt;/location&gt;</span> <span class="cp">&lt;!— PATH del log —&gt;</span>
+<span class="nt">&lt;/localfile&gt;</span> 
+</code></pre>
+</div>
+
+<p>Iniciamos el servicio ossec.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# /var/ossec/bin/ossec-control start
+</code></pre>
+</div>
+
+<p>Dar de alta a clientes</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# /var/ossec/bin/manage_agents
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: A
+
+- Adding a new agent (use ‘\q’ to return to the main menu).
+  Please provide the following:
+   * A name for the new agent: cliente01
+   * The IP Address of the new agent: &lt;IP&gt;
+   * An ID for the new agent[001]: (ENTER)
+Agent information:
+   ID:001 
+   Name:cliente01
+   IP Address:&lt;IP&gt;
+
+Confirm adding it?(y/n): y
+Agent added.
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: L
+
+Available agents:
+   ID: 001, Name: cliente01, IP: &lt;IP&gt;
+
+** Press ENTER to return to the main menu.
+
+(ENTER)
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: q
+
+** You must restart the server for your changes to have effect.
+
+manage_agents: Exiting .. 
+</code></pre>
+</div>
+
+<p>Base de datos para logs y alertas</p>
+
+<p>Las alertas por default son notificadas por e-mail como medio de salida y estas son guardadas como logs en el directorio /var/ossec/logs/alerts/ y los logs enviados por los agentes cliente en el directorio /var/ossec/logs/archives/. De forma alternativa también podemos ir los guardando en una base de datos.</p>
+
+<p>Configuración de base de datos (mysql)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># mysql -u root -p
+mysql&gt; create database ossec;
+mysql&gt; grant INSERT,SELECT,UPDATE,CREATE,DELETE,EXECUTE on ossec.* to ossecuser@&lt;ip_ossec_servidor&gt;;
+Query OK, 0 rows affected (0.00 sec)
+mysql&gt; set password for ossecuser@&lt;ip_ossec_servidor&gt;=PASSWORD(‘ossecpassword’);
+Query OK, 0 rows affected (0.00 sec)
+mysql&gt; flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+mysql&gt; quit
+</code></pre>
+</div>
+
+<p>Importamos el esquema de base de datos</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># mysql -u root -p ossec &lt; /var/ossec/etc/mysql/mysql.schema
+</code></pre>
+</div>
+
+<p>Abrimos /var/ossec/etc/ossec.conf y configuramos el archivo principal con los siguiente:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;database_output&gt;
+    &lt;hostname&gt;IP&lt;/hostname&gt; &lt;!-- IP del servidor de BD --&gt;
+    &lt;username&gt;ossecuser&lt;/username&gt; &lt;!-- usuario BD --&gt;
+    &lt;password&gt;ossecpassword&lt;/password&gt; &lt;!-- contraseña de usuario BD --&gt;
+    &lt;database&gt;ossecdb&lt;/database&gt; &lt;!--  Nombre de la BD --&gt;
+    &lt;type&gt;mysql&lt;/type&gt; &lt;!-- Tipo de base de datos (mysql/postgresql) --&gt;
+&lt;/database_output&gt;
+</code></pre>
+</div>
+
+<p>Habilitamos el soporte de base de datos y reiniciamos el servicio ossec</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># /var/ossec/bin/ossec-control enable database 
+# /var/ossec/bin/ossec-control restart
+</code></pre>
+</div>
+
+<p>AGENTE CLIENTE</p>
+
+<p>El agente cliente es aquel computador que pretende ser monitoreado, los clientes mandan información al servidor que procesara este y generara las alarmas o eventos pertinentes.</p>
+
+<p>Descargamos y descomprimimos</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# wget http://www.ossec.net/files/ossec-hids-latest.tar.gz 
+[ ~]# tar -zxvf ossec-hids-*.tar.gz
+</code></pre>
+</div>
+
+<p>Instalación y configuración del cliente</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# cd ossec-hids-*
+[ossec-hids-2.6]# ./install.sh
+
+  ** Para instalação em português, escolha [br].
+  ** 要使用中文进行安装, 请选择 [cn].
+  ** Fur eine deutsche Installation wohlen Sie [de].
+  ** Για εγκατάσταση στα Ελληνικά, επιλέξτε [el].
+  ** For installation in English, choose [en].
+  ** Para instalar en Español , eliga [es].
+  ** Pour une installation en français, choisissez [fr]
+  ** Per l’installazione in Italiano, scegli [it].
+  ** 日本語でインストールします．選択して下さい．[jp].
+  ** Voor installatie in het Nederlands, kies [nl].
+  ** Aby instalować w języku Polskim, wybierz [pl].
+  ** Для инструкций по установке на русском ,введите [ru].
+  ** Za instalaciju na srpskom, izaberi [sr].
+  ** Türkçe kurulum için seçin [tr].
+  (en/br/cn/de/el/es/fr/it/jp/nl/pl/ru/sr/tr) [en]: es
+
+ OSSEC HIDS v2.6 Guión de instalación - http://www.ossec.net
+ Usted esta por comenzar el proceso de instalación del OSSEC HIDS.
+ Usted debe tener un compilador de C previamente instalado en el sistema.
+ Si usted tiene alguna pregunta o comentario, por favor envie un correo
+ electrónico a dcid@ossec.net &lt;mailto:dcid@ossec.net&gt;  (daniel.cid@gmail.com
+ &lt;mailto:daniel.cid@gmail.com&gt; )
+  - Sistema: Linux xxx.xxx.com
+  - Usuario: root
+  - servidor: xxx.xxx.com
+
+  — Presione ENTER para continuar ó Ctrl-C para abortar. —
+
+1- Que tipo de instalación Usted desea (servidor, agente, local ó ayuda)? agente
+  - Usted eligió instalación de Agente(cliente).
+
+2- Configurando las variables de entorno de la instalación.
+ - Eliga donde instalar OSSEC HIDS [/var/ossec]: (ENTER)
+    - La instalación se realizará en  /var/ossec .
+
+3- Configurando el sistema OSSEC HIDS.
+  3.1- Cuál es la direccion del servidor OSSEC HIDS?: &lt;IP SERVIDOR&gt;
+   - Agregando el IP del servidor &lt;IP SERVIDOR&gt;
+
+  3.2- Desea Usted agregar el servidor de integridad del sistema? (s/n) [s]: s
+   - Ejecutando syscheck (servidor de integridad del sistema).
+
+  3.3- Desea Usted agregar el sistema de detección de rootkit? (s/n) [s]: s
+   - Ejecutando rootcheck (sistema de detección de rootkit).
+
+  3.4 - Desea Usted habilitar respuesta activa? (s/n) [s]: s
+   - Respuesta activa habilitada.
+
+  3.5- Estableciendo la configuración para analizar los siguientes registros:
+    — /var/log/messages # Estos logs pueden variar, ossec escanea y busca logs alojados en el sistema para escanear
+    — /var/log/secure
+    — /var/log/xferlog
+    — /var/log/maillog
+    — /var/log/httpd/error_log (apache log)
+    — /var/log/httpd/access_log (apache log)
+ - Si Usted deseara monitoriar algún otro registro, solo
+   tendrá que editar el archivo ossec.conf y agregar una
+   nueva entrada de tipo localfile.
+   Cualquier otra pregunta de configuración podra ser
+   respondida visitandonos en linea en http://www.ossec.net .
+   —- Presione ENTER para continuar —-
+                            (ENTER)
+
+5- Instalando el sistema
+ - Ejecutando el Makefile
+ - El sistema es Redhat Linux.
+ - Init script modificado para empezar OSSEC HIDS durante el arranque.
+ - Configuración finalizada correctamente.
+ - Para comenzar OSSEC HIDS:
+        /var/ossec/bin/ossec-control start
+ - Para detener OSSEC HIDS:
+        /var/ossec/bin/ossec-control stop
+ - La configuración puede ser leída ó mofificada en /var/ossec/etc/ossec.conf
+
+    Gracias por usar OSSEC HIDS.
+    Si tuviera Usted alguna duda, sugerencia ó haya encontrado
+    algun desperfecto, contactese con nosotros a contact@ossec.net
+    ó usando nuestrs lista pública de correo en ossec-list@ossec.net
+    Más información puede ser encontrada en http://www.ossec.net
+           —-  Presione ENTER para finalizar. —-
+                            (ENTER)
+       (Tal vez encuentre más información a continuación).
+ - Usted debe de añadir este agente en el servidor así podran
+   comunicarse el úno con el ótro. Una vez culminada la tarea
+   podra ejecutar la herramienta ‘manage_agents’ para importar
+   la autentificación de llaves extraidas del servidor.
+   /var/ossec/bin/manage_agents
+
+   Más información en:
+   http://www.ossec.net/en/manual.html#ma
+</code></pre>
+</div>
+
+<p>Activar agente cliente</p>
+
+<p>Extraer la llave correspondiente al agente cliente desde el agente servidor.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# /var/ossec/bin/manage_agents  
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: E
+Available agents:
+   ID: 001, Name: cliente01, IP: &lt;IP CLIENTE&gt;
+Provide the ID of the agent to extract the key (or ‘\q’ to quit): 001
+
+Agent key information for ‘001’ is:
+MDE0IHZwbi1mdy5yZWQtYWxmLmNvbSAxMC4wLjAuMjU0IGZhZjhhZWE4MDY1ZmVlMTUwMGIyN2ViNTk4M2FjODAzZTQwMzA5MzQ3ZjYzNzgzNWFhZDM2OTY5YmFkZDc5OTM=
+
+** Press ENTER to return to the main menu. (ENTER)
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q: q
+manage_agents: Exiting ..  
+</code></pre>
+</div>
+
+<p>Ingresar la llave extraída al agente cliente.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# /var/ossec/bin/manage_client  
+
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (I)mport key from the server (I).
+   (Q)uit.
+Choose your action: I or Q: I
+* Provide the Key generated by the server.
+* The best approach is to cut and paste it.
+*** OBS: Do not include spaces or new lines.
+
+Paste it here (or ‘\q’ to quit): MDE0IHZwbi1mdy5yZWQtYWxmLmNvbSAxMC4wLjAuMjU0IGZhZjhhZWE4MDY1ZmVlMTUwMGIyN2ViNTk4M2FjODAzZTQwMzA5MzQ3ZjYzNzgzNWFhZDM2OTY5YmFkZDc5OTM=
+Agent information:
+   ID:001
+   Name:cliente01
+   IP Address: IP CLIENTE
+
+Confirm adding it?(y/n): y
+Added.
+** Press ENTER to return to the main menu.
+****************************************
+* OSSEC HIDS v2.6 Agent manager.     *
+* The following options are available: *
+****************************************
+   (I)mport key from the server (I).
+   (Q)uit.
+Choose your action: I or Q: q
+** You must restart the server for your changes to have effect.
+manage_agents: Exiting ..
+</code></pre>
+</div>
+
+<p>Iniciamos el agente cliente</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ ~]# /var/ossec/bin/ossec-control start
+</code></pre>
+</div>
+
+<p>Cabe mencionar que esta instalacion es basica, como dije anteriormente este HIDS 
+es muy configurable, como crear reglas personalizadas de alarmas, crear tus 
+propios scripts de active-response, etc.</p>
+
+<p>PD: Si encuentran errores de edición son bienvenidas :) <em>se toma la ultima chela</em></p>
+
+</div>
+
+<div class="related">
+  <h2>Quizas te interese</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/12/04/the-netflix-tech-blog-an%C3%A1lisis-del-rendimiento/">
+            Análisis del rendimiento de Linux en 60 Segundos
+            <small>04 Dec 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/27/sitio-en-mantenimiento-con-nginx/">
+            Manejar un estado de Mantemiento WebSite con NGINX
+            <small>27 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/03/13/excelente-cheat-sheet-para-principiantes-de-vim/">
+            Excelente cheat sheet de VIM
+            <small>13 Mar 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>
