@@ -1,3 +1,3 @@
-#BLOG JAHRMANDO.COM
+#BLOG blog.knull.mx
 
 My BLOG
