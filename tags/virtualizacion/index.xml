@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>virtualizacion on Not a Blog - Armando Uch</title>
-    <link>https://jahrmando.github.io/tags/virtualizacion/</link>
+    <link>https://armanroot.com/tags/virtualizacion/</link>
     <description>Recent content in virtualizacion on Not a Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright notice</copyright>
     <lastBuildDate>Wed, 09 Dec 2015 10:54:38 -0500</lastBuildDate>
     
-	<atom:link href="https://jahrmando.github.io/tags/virtualizacion/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://armanroot.com/tags/virtualizacion/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Migración en tiempo real de instancias en Qemu/KVM</title>
-      <link>https://jahrmando.github.io/posts/quemu_hotmigrations/</link>
+      <link>https://armanroot.com/posts/quemu_hotmigrations/</link>
       <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/quemu_hotmigrations/</guid>
+      <guid>https://armanroot.com/posts/quemu_hotmigrations/</guid>
       <description>Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone.</description>
     </item>
     

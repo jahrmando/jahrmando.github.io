@@ -2,177 +2,177 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Not a Blog - Armando Uch</title>
-    <link>https://jahrmando.github.io/posts/</link>
+    <link>https://armanroot.com/posts/</link>
     <description>Recent content in Posts on Not a Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright notice</copyright>
     <lastBuildDate>Thu, 06 Sep 2018 10:54:38 -0500</lastBuildDate>
     
-	<atom:link href="https://jahrmando.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://armanroot.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Restringir acceso a una URL en NGINX</title>
-      <link>https://jahrmando.github.io/posts/autenticacion_xpath_nginx/</link>
+      <link>https://armanroot.com/posts/autenticacion_xpath_nginx/</link>
       <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/autenticacion_xpath_nginx/</guid>
+      <guid>https://armanroot.com/posts/autenticacion_xpath_nginx/</guid>
       <description>Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.</description>
     </item>
     
     <item>
       <title>Aplicar un update a VMware ESXi 5</title>
-      <link>https://jahrmando.github.io/posts/vmware_aplicar_patch/</link>
+      <link>https://armanroot.com/posts/vmware_aplicar_patch/</link>
       <pubDate>Mon, 20 Feb 2017 10:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/vmware_aplicar_patch/</guid>
+      <guid>https://armanroot.com/posts/vmware_aplicar_patch/</guid>
       <description>Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.</description>
     </item>
     
     <item>
       <title>Migración en tiempo real de instancias en Qemu/KVM</title>
-      <link>https://jahrmando.github.io/posts/quemu_hotmigrations/</link>
+      <link>https://armanroot.com/posts/quemu_hotmigrations/</link>
       <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/quemu_hotmigrations/</guid>
+      <guid>https://armanroot.com/posts/quemu_hotmigrations/</guid>
       <description>Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone.</description>
     </item>
     
     <item>
       <title>Sitio Web en Mantenimiento con NGINX</title>
-      <link>https://jahrmando.github.io/posts/nginx_maintenance_site/</link>
+      <link>https://armanroot.com/posts/nginx_maintenance_site/</link>
       <pubDate>Fri, 27 Mar 2015 10:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/nginx_maintenance_site/</guid>
+      <guid>https://armanroot.com/posts/nginx_maintenance_site/</guid>
       <description>Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline.</description>
     </item>
     
     <item>
       <title>Configurar NGINX y PHP-FPM en CentOS 7</title>
-      <link>https://jahrmando.github.io/posts/nginx_centos7_php/</link>
+      <link>https://armanroot.com/posts/nginx_centos7_php/</link>
       <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/nginx_centos7_php/</guid>
+      <guid>https://armanroot.com/posts/nginx_centos7_php/</guid>
       <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.</description>
     </item>
     
     <item>
       <title>PostgreSQL replicar en maestro-esclavo</title>
-      <link>https://jahrmando.github.io/posts/postgresql_multiserver/</link>
+      <link>https://armanroot.com/posts/postgresql_multiserver/</link>
       <pubDate>Sat, 31 Jan 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/postgresql_multiserver/</guid>
+      <guid>https://armanroot.com/posts/postgresql_multiserver/</guid>
       <description>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.</description>
     </item>
     
     <item>
       <title>Instalacion de Bacula en CentOS 7</title>
-      <link>https://jahrmando.github.io/posts/bacula_centos6/</link>
+      <link>https://armanroot.com/posts/bacula_centos6/</link>
       <pubDate>Fri, 16 Jan 2015 10:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/bacula_centos6/</guid>
+      <guid>https://armanroot.com/posts/bacula_centos6/</guid>
       <description>Bacula es un conjunto de programas Open Source, listos para la empresa, que permiten administrar los backups, restauración y verificación de datos en una red heterogénea.</description>
     </item>
     
     <item>
       <title>Referencia Rápida: systemctl</title>
-      <link>https://jahrmando.github.io/posts/systemctl_reference/</link>
+      <link>https://armanroot.com/posts/systemctl_reference/</link>
       <pubDate>Wed, 07 Jan 2015 16:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/systemctl_reference/</guid>
+      <guid>https://armanroot.com/posts/systemctl_reference/</guid>
       <description>Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd.</description>
     </item>
     
     <item>
       <title>Cambiar cifrado de contraseñas en CentOS</title>
-      <link>https://jahrmando.github.io/posts/cifrado_contrasenia_centos/</link>
+      <link>https://armanroot.com/posts/cifrado_contrasenia_centos/</link>
       <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/cifrado_contrasenia_centos/</guid>
+      <guid>https://armanroot.com/posts/cifrado_contrasenia_centos/</guid>
       <description>Podemos cambiar el algoritmo de cifrado que va usar el PAM en el archivo /etc/passwd.</description>
     </item>
     
     <item>
       <title>Redireccionar el trafico HTTP hacia HTTPS con NGINX</title>
-      <link>https://jahrmando.github.io/posts/redireccionar_trafico_https/</link>
+      <link>https://armanroot.com/posts/redireccionar_trafico_https/</link>
       <pubDate>Mon, 24 Nov 2014 10:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/redireccionar_trafico_https/</guid>
+      <guid>https://armanroot.com/posts/redireccionar_trafico_https/</guid>
       <description>Cuando tengamos que mudar un sitio web completamente a protocolo seguro HTTPS necesitamos que toda petición que venga como HTTP y redirigir hacia el protocolo seguro.</description>
     </item>
     
     <item>
       <title>Top 10 IPs mas visitados en Apache / Nginx</title>
-      <link>https://jahrmando.github.io/posts/top_ips_hits_apache/</link>
+      <link>https://armanroot.com/posts/top_ips_hits_apache/</link>
       <pubDate>Sat, 16 Aug 2014 10:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/top_ips_hits_apache/</guid>
+      <guid>https://armanroot.com/posts/top_ips_hits_apache/</guid>
       <description>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.</description>
     </item>
     
     <item>
       <title>Crear usuario de lectura (read-only) en PostgreSQL</title>
-      <link>https://jahrmando.github.io/posts/readonly_user_postgresql/</link>
+      <link>https://armanroot.com/posts/readonly_user_postgresql/</link>
       <pubDate>Fri, 27 Jun 2014 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/readonly_user_postgresql/</guid>
+      <guid>https://armanroot.com/posts/readonly_user_postgresql/</guid>
       <description>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.</description>
     </item>
     
     <item>
       <title>Configuracion y administracion de PostgreSQL 9.x</title>
-      <link>https://jahrmando.github.io/posts/postgresql_config_administration/</link>
+      <link>https://armanroot.com/posts/postgresql_config_administration/</link>
       <pubDate>Thu, 26 Jun 2014 10:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/postgresql_config_administration/</guid>
+      <guid>https://armanroot.com/posts/postgresql_config_administration/</guid>
       <description>En este howto configuraremos la version de PostgreSQL 9.3 la mas reciente hasta ahora.
 Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.</description>
     </item>
     
     <item>
       <title>Instalación de Pure-FTP sobre TLS con antivirus ClamAV</title>
-      <link>https://jahrmando.github.io/posts/pureftp_ssl_clamv/</link>
+      <link>https://armanroot.com/posts/pureftp_ssl_clamv/</link>
       <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/pureftp_ssl_clamv/</guid>
+      <guid>https://armanroot.com/posts/pureftp_ssl_clamv/</guid>
       <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV</description>
     </item>
     
     <item>
       <title>Post-instalacion de CentOS 7 (minimal)</title>
-      <link>https://jahrmando.github.io/posts/poststalacion_centos7/</link>
+      <link>https://armanroot.com/posts/poststalacion_centos7/</link>
       <pubDate>Fri, 25 Apr 2014 16:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/poststalacion_centos7/</guid>
+      <guid>https://armanroot.com/posts/poststalacion_centos7/</guid>
       <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.</description>
     </item>
     
     <item>
       <title>Bloquear conexiones HTTPS usando DNS</title>
-      <link>https://jahrmando.github.io/posts/block_https_dns_shorewall/</link>
+      <link>https://armanroot.com/posts/block_https_dns_shorewall/</link>
       <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/block_https_dns_shorewall/</guid>
+      <guid>https://armanroot.com/posts/block_https_dns_shorewall/</guid>
       <description>En este caso ejemplificaremos el bloqueo del sitio facebook.com. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.</description>
     </item>
     
     <item>
       <title>Configurando DJANGO stack en CentOS6</title>
-      <link>https://jahrmando.github.io/posts/python_django_nginx/</link>
+      <link>https://armanroot.com/posts/python_django_nginx/</link>
       <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/python_django_nginx/</guid>
+      <guid>https://armanroot.com/posts/python_django_nginx/</guid>
       <description>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
 preinstalacion Instalamos los siguientes paquetes para compilaciones.</description>
     </item>
     
     <item>
       <title>Bloquear intentos de sesión fallidas en CentOS</title>
-      <link>https://jahrmando.github.io/posts/block_users_on_faild_login/</link>
+      <link>https://armanroot.com/posts/block_users_on_faild_login/</link>
       <pubDate>Fri, 13 Sep 2013 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/block_users_on_faild_login/</guid>
+      <guid>https://armanroot.com/posts/block_users_on_faild_login/</guid>
       <description>Bloquear usuarios tras intentos de sesión fallidas CentOS 6.
 Parámetros de configuración:
  deny. Numero de intentos even_deny_root.</description>
@@ -180,65 +180,65 @@ Parámetros de configuración:
     
     <item>
       <title>Desactivar la expiración de contraseñas en CentOS</title>
-      <link>https://jahrmando.github.io/posts/disable_expire_password_centos/</link>
+      <link>https://armanroot.com/posts/disable_expire_password_centos/</link>
       <pubDate>Thu, 12 Sep 2013 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/disable_expire_password_centos/</guid>
+      <guid>https://armanroot.com/posts/disable_expire_password_centos/</guid>
       <description>Con la utilidad chage podemos reasignar los valores de expiración.
 Verificamos las fechas de expiración de los passwords</description>
     </item>
     
     <item>
       <title>Limitar acceso al commando SU en CentOS</title>
-      <link>https://jahrmando.github.io/posts/block_use_su_command/</link>
+      <link>https://armanroot.com/posts/block_use_su_command/</link>
       <pubDate>Thu, 11 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/block_use_su_command/</guid>
+      <guid>https://armanroot.com/posts/block_use_su_command/</guid>
       <description>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.</description>
     </item>
     
     <item>
       <title>Interfaz virtual de red en Centos</title>
-      <link>https://jahrmando.github.io/posts/add_virtual_interface/</link>
+      <link>https://armanroot.com/posts/add_virtual_interface/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/add_virtual_interface/</guid>
+      <guid>https://armanroot.com/posts/add_virtual_interface/</guid>
       <description>Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.</description>
     </item>
     
     <item>
       <title>Postfix como smarthost, reenvio de emails via CLI</title>
-      <link>https://jahrmando.github.io/posts/postfix_as_smarthost/</link>
+      <link>https://armanroot.com/posts/postfix_as_smarthost/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/postfix_as_smarthost/</guid>
+      <guid>https://armanroot.com/posts/postfix_as_smarthost/</guid>
       <description>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.</description>
     </item>
     
     <item>
       <title>Establecer vigencia y reglas sobre contraseñas a usuarios Linux</title>
-      <link>https://jahrmando.github.io/posts/expire_password_users_centos/</link>
+      <link>https://armanroot.com/posts/expire_password_users_centos/</link>
       <pubDate>Tue, 22 May 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/expire_password_users_centos/</guid>
+      <guid>https://armanroot.com/posts/expire_password_users_centos/</guid>
       <description>Lo que haremos en este post es el establecer una política de seguridad para la renovación de contraseñas de los usuarios en el servidor y también sobre reglas para la creación de las mismas.</description>
     </item>
     
     <item>
       <title>Asignación de permisos en linux</title>
-      <link>https://jahrmando.github.io/posts/permissions_on_files_linux/</link>
+      <link>https://armanroot.com/posts/permissions_on_files_linux/</link>
       <pubDate>Sun, 08 Apr 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/permissions_on_files_linux/</guid>
+      <guid>https://armanroot.com/posts/permissions_on_files_linux/</guid>
       <description>Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:</description>
     </item>
     
     <item>
       <title>Montar particiones NTFS automáticamente en Linux</title>
-      <link>https://jahrmando.github.io/posts/mount_nfs/</link>
+      <link>https://armanroot.com/posts/mount_nfs/</link>
       <pubDate>Fri, 25 Mar 2011 10:00:00 -0500</pubDate>
       
-      <guid>https://jahrmando.github.io/posts/mount_nfs/</guid>
+      <guid>https://armanroot.com/posts/mount_nfs/</guid>
       <description>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS.</description>
     </item>
     
