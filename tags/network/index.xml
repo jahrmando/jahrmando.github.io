@@ -14,10 +14,10 @@
     
     <item>
       <title>Interfaz virtual de red en Centos</title>
-      <link>https://armanroot.com/posts/add_virtual_interface/</link>
+      <link>https://armanroot.com/2012/10/interfaz-virtual-de-red-en-centos/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/add_virtual_interface/</guid>
+      <guid>https://armanroot.com/2012/10/interfaz-virtual-de-red-en-centos/</guid>
       <description>Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.</description>
     </item>
     

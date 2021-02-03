@@ -14,10 +14,10 @@
     
     <item>
       <title>Bloquear conexiones HTTPS usando DNS</title>
-      <link>https://armanroot.com/posts/block_https_dns_shorewall/</link>
+      <link>https://armanroot.com/2014/01/bloquear-conexiones-https-usando-dns/</link>
       <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/block_https_dns_shorewall/</guid>
+      <guid>https://armanroot.com/2014/01/bloquear-conexiones-https-usando-dns/</guid>
       <description>En este caso ejemplificaremos el bloqueo del sitio facebook.com. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.</description>
     </item>
     

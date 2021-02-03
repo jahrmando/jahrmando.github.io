@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Aplicar un update a VMware ESXi 5 - Not a Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/myicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Aplicar un update a VMware ESXi 5" />
+<meta property="og:description" content="Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://armanroot.com/2017/02/aplicar-un-update-a-vmware-esxi-5/" />
+<meta property="article:published_time" content="2017-02-20T10:00:00-05:00" />
+<meta property="article:modified_time" content="2017-02-20T10:00:00-05:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Aplicar un update a VMware ESXi 5"/>
+<meta name="twitter:description" content="Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://armanroot.com/js/main.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<base href="https://armanroot.com/">
+	<h1 class="site-title"><a href="https://armanroot.com/">Not a Blog - Armando Uch</a></h1>
+	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Aplicar un update a VMware ESXi 5</h1>
+			<div class="meta">Posted at &mdash; Feb 20, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<p>Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.</p>
+<p>Este proceso se hace por medio de SSH. Se tiene que activar desde el VMware vShepere Client:</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">Server&gt;Configuration&gt;SecurityProfiles&gt;Services&gt;Properties
+
+</code></pre></div><h2 id="apagar-todas-las-maquinas-virtuales">Apagar todas las maquinas virtuales</h2>
+<p>Antes de entrar a modo de mantenimiento es necesario apagar todas las maquinas virtuales o migrarlos si es posible.</p>
+<p>Descargar el parche y subirlo a un storage del servidor</p>
+<p>Antes ya debemos haber descargado el parche (archivo .zip) en el sitio web de VMWare. Descarga</p>
+<p>Entramos por SSH al servidor y nos vamos al directorio <code>/vmfs/volumes</code> donde se encuentran los <strong>DATASTOREs</strong>, en ese directorio subiremos el parche.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ <span style="color:#b58900">cd</span> /vmfs/volumes
+/vmfs/volumes $ ls -l
+lrwxr-xr-x    <span style="color:#2aa198">1</span> root     root            <span style="color:#2aa198">35</span> Dec <span style="color:#2aa198">12</span> 16:44 datastore2 -&gt; 56d31905-1dc9ed10-1632-549f35076b4a
+lrwxr-xr-x    <span style="color:#2aa198">1</span> root     root            <span style="color:#2aa198">35</span> Dec <span style="color:#2aa198">12</span> 16:44 datastore1 -&gt; 56d196bb-3ae3f27e-44c3-549f35076b4a
+/vmfs/volumes $ <span style="color:#b58900">cd</span> datastore1/
+/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a $
+</code></pre></div><p>Creamos un directorio llamado UPDATE para subir el patch en ese directorio</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a $ mkdir UPDATE
+</code></pre></div><p>Ahora desde nuestro equipo subimos el patch por medio de SCP:</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ scp update-patch.zip root@10.0.0.X:/vmfs/volumes/56d196bb-3ae3f27e-44c3-549f35076b4a/UPDATE/
+</code></pre></div><p>##Entrar en modo de mantenimiento</p>
+<p>Entramos por SSH a nuestro VMware y lo ponemos en modo de mantenimiento</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">~ $ vim-cmd hostsvc/maintenance_mode_enter
+<span style="color:#2aa198">&#39;vim.Task:haTask-ha-host-vim.HostSystem.enterMaintenanceMode-306994658&#39;</span>
+</code></pre></div><p>##Actualizar el servidor</p>
+<p>Procedemos a instalar el parche anteriormente subido al VMware</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">~ $ esxcli software vib install -d /vmfs/volumes/datastore1/UPDATE/update-patch.zip
+</code></pre></div><p>Importante revisar que nuestro resultado de la ejecución haya sido <em><strong>The update completed successfully</strong></em> como se muestra en la salida siguiente:</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">Installation Result
+   Message: The update completed successfully, but the system needs to be rebooted <span style="color:#719e07">for</span> the changes to be effective.
+   Reboot Required: <span style="color:#b58900">true</span>
+   VIBs Installed: VMware_bootbank_esx-base...
+</code></pre></div><p>Es necesario reiniciar el servidor correr los cambios aplicados.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">~ $ reboot
+</code></pre></div><p>Esto nos sacara de nuestra sesion SSH y tendremos que volver a iniciar una sesion cuando el servidor termine de reiniciar para continuar.</p>
+<p>Estando por SSH salimos del modo de mantenimiento</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">~ $ vim-cmd hostsvc/maintenance_mode_exit
+<span style="color:#2aa198">&#39;vim.Task:haTask-ha-host-vim.HostSystem.exitMaintenanceMode-499940104&#39;</span>
+</code></pre></div><p>Y ahora nos toca iniciar las maquinas virtuales o volverlas a migrar.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+					<nav class="nav tags">
+							<ul class="flat">
+								
+								<li><a href="/tags/sysadmin">sysadmin</a></li>
+								
+								<li><a href="/tags/vmware">vmware</a></li>
+								
+							</ul>
+					</nav>
+				
+			
+		</div>
+		</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> © Copyright notice |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>

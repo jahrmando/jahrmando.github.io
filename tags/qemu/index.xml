@@ -14,10 +14,10 @@
     
     <item>
       <title>Migración en tiempo real de instancias en Qemu/KVM</title>
-      <link>https://armanroot.com/posts/quemu_hotmigrations/</link>
+      <link>https://armanroot.com/2015/12/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemu/kvm/</link>
       <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/quemu_hotmigrations/</guid>
+      <guid>https://armanroot.com/2015/12/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemu/kvm/</guid>
       <description>Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone.</description>
     </item>
     

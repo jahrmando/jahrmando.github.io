@@ -14,10 +14,10 @@
     
     <item>
       <title>Postfix como smarthost, reenvio de emails via CLI</title>
-      <link>https://armanroot.com/posts/postfix_as_smarthost/</link>
+      <link>https://armanroot.com/2012/10/postfix-como-smarthost-reenvio-de-emails-via-cli/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/postfix_as_smarthost/</guid>
+      <guid>https://armanroot.com/2012/10/postfix-como-smarthost-reenvio-de-emails-via-cli/</guid>
       <description>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.</description>
     </item>
     

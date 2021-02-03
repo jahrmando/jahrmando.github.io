@@ -14,10 +14,10 @@
     
     <item>
       <title>Configurando DJANGO stack en CentOS6</title>
-      <link>https://armanroot.com/posts/python_django_nginx/</link>
+      <link>https://armanroot.com/2013/10/configurando-django-stack-en-centos6/</link>
       <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/python_django_nginx/</guid>
+      <guid>https://armanroot.com/2013/10/configurando-django-stack-en-centos6/</guid>
       <description>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
 preinstalacion Instalamos los siguientes paquetes para compilaciones.</description>
     </item>

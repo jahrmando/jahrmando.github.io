@@ -14,10 +14,10 @@
     
     <item>
       <title>Configurar NGINX y PHP-FPM en CentOS 7</title>
-      <link>https://armanroot.com/posts/nginx_centos7_php/</link>
+      <link>https://armanroot.com/2015/02/configurar-nginx-y-php-fpm-en-centos-7/</link>
       <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/nginx_centos7_php/</guid>
+      <guid>https://armanroot.com/2015/02/configurar-nginx-y-php-fpm-en-centos-7/</guid>
       <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.</description>
     </item>
     

@@ -14,28 +14,28 @@
     
     <item>
       <title>Cambiar cifrado de contraseñas en CentOS</title>
-      <link>https://armanroot.com/posts/cifrado_contrasenia_centos/</link>
+      <link>https://armanroot.com/2014/12/cambiar-cifrado-de-contrase%C3%B1as-en-centos/</link>
       <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/cifrado_contrasenia_centos/</guid>
+      <guid>https://armanroot.com/2014/12/cambiar-cifrado-de-contrase%C3%B1as-en-centos/</guid>
       <description>Podemos cambiar el algoritmo de cifrado que va usar el PAM en el archivo /etc/passwd.</description>
     </item>
     
     <item>
       <title>Post-instalacion de CentOS 7 (minimal)</title>
-      <link>https://armanroot.com/posts/poststalacion_centos7/</link>
+      <link>https://armanroot.com/2014/04/post-instalacion-de-centos-7-minimal/</link>
       <pubDate>Fri, 25 Apr 2014 16:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/poststalacion_centos7/</guid>
+      <guid>https://armanroot.com/2014/04/post-instalacion-de-centos-7-minimal/</guid>
       <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.</description>
     </item>
     
     <item>
       <title>Bloquear intentos de sesión fallidas en CentOS</title>
-      <link>https://armanroot.com/posts/block_users_on_faild_login/</link>
+      <link>https://armanroot.com/2013/09/bloquear-intentos-de-sesi%C3%B3n-fallidas-en-centos/</link>
       <pubDate>Fri, 13 Sep 2013 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/block_users_on_faild_login/</guid>
+      <guid>https://armanroot.com/2013/09/bloquear-intentos-de-sesi%C3%B3n-fallidas-en-centos/</guid>
       <description>Bloquear usuarios tras intentos de sesión fallidas CentOS 6.
 Parámetros de configuración:
  deny. Numero de intentos even_deny_root.</description>
@@ -43,19 +43,19 @@ Parámetros de configuración:
     
     <item>
       <title>Limitar acceso al commando SU en CentOS</title>
-      <link>https://armanroot.com/posts/block_use_su_command/</link>
+      <link>https://armanroot.com/2012/10/limitar-acceso-al-commando-su-en-centos/</link>
       <pubDate>Thu, 11 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/block_use_su_command/</guid>
+      <guid>https://armanroot.com/2012/10/limitar-acceso-al-commando-su-en-centos/</guid>
       <description>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.</description>
     </item>
     
     <item>
       <title>Asignación de permisos en linux</title>
-      <link>https://armanroot.com/posts/permissions_on_files_linux/</link>
+      <link>https://armanroot.com/2012/04/asignaci%C3%B3n-de-permisos-en-linux/</link>
       <pubDate>Sun, 08 Apr 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/permissions_on_files_linux/</guid>
+      <guid>https://armanroot.com/2012/04/asignaci%C3%B3n-de-permisos-en-linux/</guid>
       <description>Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:</description>
     </item>
     

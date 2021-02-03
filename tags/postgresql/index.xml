@@ -14,28 +14,28 @@
     
     <item>
       <title>PostgreSQL replicar en maestro-esclavo</title>
-      <link>https://armanroot.com/posts/postgresql_multiserver/</link>
+      <link>https://armanroot.com/2015/01/postgresql-replicar-en-maestro-esclavo/</link>
       <pubDate>Sat, 31 Jan 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/postgresql_multiserver/</guid>
+      <guid>https://armanroot.com/2015/01/postgresql-replicar-en-maestro-esclavo/</guid>
       <description>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.</description>
     </item>
     
     <item>
       <title>Crear usuario de lectura (read-only) en PostgreSQL</title>
-      <link>https://armanroot.com/posts/readonly_user_postgresql/</link>
+      <link>https://armanroot.com/2014/06/crear-usuario-de-lectura-read-only-en-postgresql/</link>
       <pubDate>Fri, 27 Jun 2014 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/readonly_user_postgresql/</guid>
+      <guid>https://armanroot.com/2014/06/crear-usuario-de-lectura-read-only-en-postgresql/</guid>
       <description>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.</description>
     </item>
     
     <item>
       <title>Configuracion y administracion de PostgreSQL 9.x</title>
-      <link>https://armanroot.com/posts/postgresql_config_administration/</link>
+      <link>https://armanroot.com/2014/06/configuracion-y-administracion-de-postgresql-9.x/</link>
       <pubDate>Thu, 26 Jun 2014 10:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/postgresql_config_administration/</guid>
+      <guid>https://armanroot.com/2014/06/configuracion-y-administracion-de-postgresql-9.x/</guid>
       <description>En este howto configuraremos la version de PostgreSQL 9.3 la mas reciente hasta ahora.
 Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.</description>
     </item>

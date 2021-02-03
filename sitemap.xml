@@ -28,7 +28,7 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/autenticacion_xpath_nginx/</loc>
+    <loc>https://armanroot.com/2018/09/restringir-acceso-a-una-url-en-nginx/</loc>
     <lastmod>2018-09-06T10:54:38-05:00</lastmod>
   </url>
   
@@ -38,7 +38,7 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/vmware_aplicar_patch/</loc>
+    <loc>https://armanroot.com/2017/02/aplicar-un-update-a-vmware-esxi-5/</loc>
     <lastmod>2017-02-20T10:00:00-05:00</lastmod>
   </url>
   
@@ -58,7 +58,7 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/quemu_hotmigrations/</loc>
+    <loc>https://armanroot.com/2015/12/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemu/kvm/</loc>
     <lastmod>2015-12-09T10:54:38-05:00</lastmod>
   </url>
   
@@ -73,12 +73,12 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/nginx_maintenance_site/</loc>
+    <loc>https://armanroot.com/2015/03/sitio-web-en-mantenimiento-con-nginx/</loc>
     <lastmod>2015-03-27T10:00:00-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/nginx_centos7_php/</loc>
+    <loc>https://armanroot.com/2015/02/configurar-nginx-y-php-fpm-en-centos-7/</loc>
     <lastmod>2015-02-07T10:54:38-05:00</lastmod>
   </url>
   
@@ -93,7 +93,7 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/postgresql_multiserver/</loc>
+    <loc>https://armanroot.com/2015/01/postgresql-replicar-en-maestro-esclavo/</loc>
     <lastmod>2015-01-31T10:54:38-05:00</lastmod>
   </url>
   
@@ -103,17 +103,17 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/bacula_centos6/</loc>
+    <loc>https://armanroot.com/2015/01/instalacion-de-bacula-en-centos-7/</loc>
     <lastmod>2015-01-16T10:00:00-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/systemctl_reference/</loc>
+    <loc>https://armanroot.com/2015/01/referencia-r%C3%A1pida-systemctl/</loc>
     <lastmod>2015-01-07T16:00:00-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/cifrado_contrasenia_centos/</loc>
+    <loc>https://armanroot.com/2014/12/cambiar-cifrado-de-contrase%C3%B1as-en-centos/</loc>
     <lastmod>2014-12-04T10:54:38-05:00</lastmod>
   </url>
   
@@ -128,7 +128,7 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/redireccionar_trafico_https/</loc>
+    <loc>https://armanroot.com/2014/11/redireccionar-el-trafico-http-hacia-https-con-nginx/</loc>
     <lastmod>2014-11-24T10:00:00-05:00</lastmod>
   </url>
   
@@ -138,22 +138,22 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/top_ips_hits_apache/</loc>
+    <loc>https://armanroot.com/2014/08/top-10-ips-mas-visitados-en-apache-/-nginx/</loc>
     <lastmod>2014-08-16T10:00:00-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/readonly_user_postgresql/</loc>
+    <loc>https://armanroot.com/2014/06/crear-usuario-de-lectura-read-only-en-postgresql/</loc>
     <lastmod>2014-06-27T10:54:38-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/postgresql_config_administration/</loc>
+    <loc>https://armanroot.com/2014/06/configuracion-y-administracion-de-postgresql-9.x/</loc>
     <lastmod>2014-06-26T10:00:00-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/pureftp_ssl_clamv/</loc>
+    <loc>https://armanroot.com/2014/04/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/</loc>
     <lastmod>2014-04-28T16:00:00-05:00</lastmod>
   </url>
   
@@ -163,7 +163,7 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/poststalacion_centos7/</loc>
+    <loc>https://armanroot.com/2014/04/post-instalacion-de-centos-7-minimal/</loc>
     <lastmod>2014-04-25T16:00:00-05:00</lastmod>
   </url>
   
@@ -173,7 +173,7 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/block_https_dns_shorewall/</loc>
+    <loc>https://armanroot.com/2014/01/bloquear-conexiones-https-usando-dns/</loc>
     <lastmod>2014-01-28T10:00:38-05:00</lastmod>
   </url>
   
@@ -183,7 +183,7 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/python_django_nginx/</loc>
+    <loc>https://armanroot.com/2013/10/configurando-django-stack-en-centos6/</loc>
     <lastmod>2013-10-15T10:00:00-05:00</lastmod>
   </url>
   
@@ -198,22 +198,22 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/block_users_on_faild_login/</loc>
+    <loc>https://armanroot.com/2013/09/bloquear-intentos-de-sesi%C3%B3n-fallidas-en-centos/</loc>
     <lastmod>2013-09-13T10:54:38-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/disable_expire_password_centos/</loc>
+    <loc>https://armanroot.com/2013/09/desactivar-la-expiraci%C3%B3n-de-contrase%C3%B1as-en-centos/</loc>
     <lastmod>2013-09-12T10:54:38-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/block_use_su_command/</loc>
+    <loc>https://armanroot.com/2012/10/limitar-acceso-al-commando-su-en-centos/</loc>
     <lastmod>2012-10-11T10:54:38-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/add_virtual_interface/</loc>
+    <loc>https://armanroot.com/2012/10/interfaz-virtual-de-red-en-centos/</loc>
     <lastmod>2012-10-10T10:54:38-05:00</lastmod>
   </url>
   
@@ -228,22 +228,22 @@
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/postfix_as_smarthost/</loc>
+    <loc>https://armanroot.com/2012/10/postfix-como-smarthost-reenvio-de-emails-via-cli/</loc>
     <lastmod>2012-10-10T10:54:38-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/expire_password_users_centos/</loc>
+    <loc>https://armanroot.com/2012/05/establecer-vigencia-y-reglas-sobre-contrase%C3%B1as-a-usuarios-linux/</loc>
     <lastmod>2012-05-22T10:54:38-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/permissions_on_files_linux/</loc>
+    <loc>https://armanroot.com/2012/04/asignaci%C3%B3n-de-permisos-en-linux/</loc>
     <lastmod>2012-04-08T10:54:38-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://armanroot.com/posts/mount_nfs/</loc>
+    <loc>https://armanroot.com/2011/03/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/</loc>
     <lastmod>2011-03-25T10:00:00-05:00</lastmod>
   </url>
   

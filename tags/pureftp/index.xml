@@ -14,10 +14,10 @@
     
     <item>
       <title>Instalación de Pure-FTP sobre TLS con antivirus ClamAV</title>
-      <link>https://armanroot.com/posts/pureftp_ssl_clamv/</link>
+      <link>https://armanroot.com/2014/04/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/</link>
       <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/pureftp_ssl_clamv/</guid>
+      <guid>https://armanroot.com/2014/04/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/</guid>
       <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV</description>
     </item>
     
