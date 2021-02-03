@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>security on Not a Blog - Armando Uch</title>
+    <link>http://jahrmando.github.io/tags/security/</link>
+    <description>Recent content in security on Not a Blog - Armando Uch</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>es-mx</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Thu, 04 Dec 2014 10:54:38 -0500</lastBuildDate>
+    
+	<atom:link href="http://jahrmando.github.io/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Cambiar cifrado de contraseñas en CentOS</title>
+      <link>http://jahrmando.github.io/posts/cifrado_contrasenia_centos/</link>
+      <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/cifrado_contrasenia_centos/</guid>
+      <description>Podemos cambiar el algoritmo de cifrado que va usar el PAM en el archivo /etc/passwd.</description>
+    </item>
+    
+    <item>
+      <title>Bloquear conexiones HTTPS usando DNS</title>
+      <link>http://jahrmando.github.io/posts/block_https_dns_shorewall/</link>
+      <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/block_https_dns_shorewall/</guid>
+      <description>En este caso ejemplificaremos el bloqueo del sitio facebook.com. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.</description>
+    </item>
+    
+    <item>
+      <title>Bloquear intentos de sesión fallidas en CentOS</title>
+      <link>http://jahrmando.github.io/posts/block_users_on_faild_login/</link>
+      <pubDate>Fri, 13 Sep 2013 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/block_users_on_faild_login/</guid>
+      <description>Bloquear usuarios tras intentos de sesión fallidas CentOS 6.
+Parámetros de configuración:
+ deny. Numero de intentos even_deny_root.</description>
+    </item>
+    
+    <item>
+      <title>Limitar acceso al commando SU en CentOS</title>
+      <link>http://jahrmando.github.io/posts/block_use_su_command/</link>
+      <pubDate>Thu, 11 Oct 2012 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/block_use_su_command/</guid>
+      <description>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.</description>
+    </item>
+    
+  </channel>
+</rss>

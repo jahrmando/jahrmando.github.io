@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Not a Blog - Armando Uch</title>
+    <link>http://jahrmando.github.io/tags/</link>
+    <description>Recent content in Tags on Not a Blog - Armando Uch</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>es-mx</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Thu, 06 Sep 2018 10:54:38 -0500</lastBuildDate>
+    
+	<atom:link href="http://jahrmando.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>centos</title>
+      <link>http://jahrmando.github.io/tags/centos/</link>
+      <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/centos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nginx</title>
+      <link>http://jahrmando.github.io/tags/nginx/</link>
+      <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/nginx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sysadmin</title>
+      <link>http://jahrmando.github.io/tags/sysadmin/</link>
+      <pubDate>Mon, 20 Feb 2017 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/sysadmin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vmware</title>
+      <link>http://jahrmando.github.io/tags/vmware/</link>
+      <pubDate>Mon, 20 Feb 2017 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/vmware/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kvm</title>
+      <link>http://jahrmando.github.io/tags/kvm/</link>
+      <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/kvm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Qemu</title>
+      <link>http://jahrmando.github.io/tags/qemu/</link>
+      <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/qemu/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>virtualizacion</title>
+      <link>http://jahrmando.github.io/tags/virtualizacion/</link>
+      <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/virtualizacion/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>php</title>
+      <link>http://jahrmando.github.io/tags/php/</link>
+      <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/php/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PostgreSQL</title>
+      <link>http://jahrmando.github.io/tags/postgresql/</link>
+      <pubDate>Sat, 31 Jan 2015 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/postgresql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bacula</title>
+      <link>http://jahrmando.github.io/tags/bacula/</link>
+      <pubDate>Fri, 16 Jan 2015 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/bacula/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hardening</title>
+      <link>http://jahrmando.github.io/tags/hardening/</link>
+      <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/hardening/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>security</title>
+      <link>http://jahrmando.github.io/tags/security/</link>
+      <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>apache</title>
+      <link>http://jahrmando.github.io/tags/apache/</link>
+      <pubDate>Sat, 16 Aug 2014 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/apache/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pureftp</title>
+      <link>http://jahrmando.github.io/tags/pureftp/</link>
+      <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/pureftp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bind</title>
+      <link>http://jahrmando.github.io/tags/bind/</link>
+      <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/bind/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shorewall</title>
+      <link>http://jahrmando.github.io/tags/shorewall/</link>
+      <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/shorewall/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>django</title>
+      <link>http://jahrmando.github.io/tags/django/</link>
+      <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/django/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>http://jahrmando.github.io/tags/python/</link>
+      <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>network</title>
+      <link>http://jahrmando.github.io/tags/network/</link>
+      <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>postfix</title>
+      <link>http://jahrmando.github.io/tags/postfix/</link>
+      <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/tags/postfix/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>apache on Not a Blog - Armando Uch</title>
+    <link>http://jahrmando.github.io/tags/apache/</link>
+    <description>Recent content in apache on Not a Blog - Armando Uch</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>es-mx</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Sat, 16 Aug 2014 10:00:00 -0500</lastBuildDate>
+    
+	<atom:link href="http://jahrmando.github.io/tags/apache/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Top 10 IPs mas visitados en Apache / Nginx</title>
+      <link>http://jahrmando.github.io/posts/top_ips_hits_apache/</link>
+      <pubDate>Sat, 16 Aug 2014 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/top_ips_hits_apache/</guid>
+      <description>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.</description>
+    </item>
+    
+    <item>
+      <title>Montar particiones NTFS automáticamente en Linux</title>
+      <link>http://jahrmando.github.io/posts/mount_nfs/</link>
+      <pubDate>Fri, 25 Mar 2011 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/mount_nfs/</guid>
+      <description>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS.</description>
+    </item>
+    
+  </channel>
+</rss>

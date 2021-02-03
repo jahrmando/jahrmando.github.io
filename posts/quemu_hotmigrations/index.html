@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Migración en tiempo real de instancias en Qemu/KVM - Not a Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/myicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Migración en tiempo real de instancias en Qemu/KVM" />
+<meta property="og:description" content="Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jahrmando.github.io/posts/quemu_hotmigrations/" />
+<meta property="article:published_time" content="2015-12-09T10:54:38-05:00" />
+<meta property="article:modified_time" content="2015-12-09T10:54:38-05:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Migración en tiempo real de instancias en Qemu/KVM"/>
+<meta name="twitter:description" content="Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="http://jahrmando.github.iocss/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="http://jahrmando.github.iocss/main.css" />
+	<link rel="stylesheet" type="text/css" href="http://jahrmando.github.iocss/custom.css" />
+	<link rel="stylesheet" type="text/css" href="http://jahrmando.github.iocss/dark.css"  />
+	<link rel="stylesheet" type="text/css" href="http://jahrmando.github.iocss/custom-dark.css"  />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="http://jahrmando.github.iojs/main.js"></script>
+	<script src="http://jahrmando.github.iojs/abc.js"></script>
+	<script src="http://jahrmando.github.iojs/xyz.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<base href="http://jahrmando.github.io">
+	<h1 class="site-title"><a href="http://jahrmando.github.io">Not a Blog - Armando Uch</a></h1>
+	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/jahrmando" title="Twitter"><i data-feather="twitter"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Migración en tiempo real de instancias en Qemu/KVM</h1>
+			<div class="meta">Posted at &mdash; Dec 9, 2015</div>
+		</div>
+
+		<div class="markdown">
+			<p>Hacer una copia del cliente <strong>VM1</strong> teniendo como resultado un cliente con el nombre de <strong>VM1_clone</strong>.</p>
+<p>Es necesario suspender ó apagar al cliente para poder clonarlo.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh <span style="color:#b58900">suspend</span> VM1
+Dominio VM1 suspendido
+</code></pre></div><p>Para clonar una instancia virtual lo hacemos con el comando <code>virt-clone</code>. Explicando un poco las opciones básicas seleccionadas acontinuación:</p>
+<ul>
+<li>-o, nombramos el cliente que vamos a clonar</li>
+<li>-n, es el nombre del nuevo cliente clonado</li>
+<li>-f, es la dirección absoluta de la nueva imagen de almacenamiento</li>
+</ul>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.img
+Asignando <span style="color:#2aa198">&#39;VM1_clone.img&#39;</span> | <span style="color:#2aa198">40</span> GB 04:52
+Clone <span style="color:#2aa198">&#39;VM1_clone&#39;</span> created successfully.
+</code></pre></div><p>Al terminar la ejecucion del comando anterior con <code>virsh resume</code> reanudamos nuestro cliente que esta pausado.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh resume VM1
+Migración de cliente en vivo <span style="color:#719e07">(</span>Live<span style="color:#719e07">)</span>
+</code></pre></div><p>La migración en vivo nos es de utilidad cuando requerimos mover el cliente de su “servidor virtual” hacia otro sin necesidad de apagar el cliente, esto es completamente transparente.</p>
+<p>Requisitos previos:</p>
+<p>El medio de almacenamiento del cliente debe estar corriendo sobre un sistema de almacenamiento en red como:</p>
+<ul>
+<li>iSCSI</li>
+<li>NFS</li>
+<li>GFS2</li>
+</ul>
+<p>Ambos servicios <em>Qemu/KVM</em> deben ser tener la misma versión y las mismas actualizaciones.</p>
+<p>Primero debemos tener una configuración para la resolución de host. En este ejemplo nuestros servidores <em>Qemu/KVM</em> tienen la siguiente información asignada:</p>
+<ul>
+<li>virt1 tiene asignado la IP 10.0.0.1</li>
+<li>virt2 tiene asignado la IP 10.0.0.2</li>
+</ul>
+<p>En ambos servidores tendremos configurado el archivo host para que resuelva sus nombres de dominio locales asignados.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/hosts
+127.0.0.1   localhost localhost.localdomain
+::1         localhost localhost.localdomain
+10.0.0.1   virt1
+10.0.0.2   virt2
+</code></pre></div><p>En este ejemplo usaremos un servicio <strong>NFS</strong> como storage pool, este contiene nuestras imagenes de discos de nuestras instancias virtuales.</p>
+<p>Ambos servidores <em>Qemu/KVM</em> deben tener montado en el mismo directorio el recurso NFS.</p>
+<p>La sintaxis del comando de migración <code>virsh migrate</code> es la siguiente:</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh migrate --live --persistent Guest URLConnection
+</code></pre></div><p>Donde <em><strong>Guest</strong></em>, es el nombre del cliente a migrar.</p>
+<p><em><strong>URLConnection</strong></em> es la URL de conexión hacia el servidor destino, ejemplo: <code>qemu+ssh://hostname/system</code>.</p>
+<p>La opcion <code>--persistent</code> nos hara el movimiento permanente. De lo contrario si esta opcion no es puesta al apagar el cliente en el servidor destino se eliminara las configuraciones.</p>
+<p>Listamos las instancias virtuales que se esta ejecutando en <em>virt1</em></p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh list
+ Id    Nombre                         Estado
+----------------------------------------------------
+ <span style="color:#2aa198">1</span>     VM1                            ejecutando
+</code></pre></div><p>Ahora migramos VM1 del servidor virt1 al servidor virt2.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh migrate --live --persistent VM1 qemu+ssh://virt2/system
+</code></pre></div><p>Notese que el comando anterior usa el servicio SSH y de manera implicita conecta usando el usuario root. Si quisieramos usar otro usuario ante ponemos al nombre del hostname el usuario.
+Por ejemplo: <code>qemu+ssh://admin@virt2/system</code></p>
+<p>Listamos las instancias virtuales y observamos que <strong>VM1</strong> esta apagado en <strong>virt1</strong></p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh list --all
+ Id    Nombre                         Estado
+----------------------------------------------------
+ -     VM1                            apagado
+</code></pre></div><p>Y ahora listamos las instancias virtuales y vemos a <strong>VM1</strong> que ya se encuentra ejecutandose en <strong>virt2</strong>.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt2<span style="color:#719e07">)</span>$ virsh list --all
+ Id    Nombre                         Estado
+----------------------------------------------------
+ <span style="color:#2aa198">1</span>     VM1                            ejecutando
+</code></pre></div><p>Ahora nos queda una instancia de <strong>VM1</strong> en <strong>virt1</strong> que podemos eliminar si deseamos, siempre y cuando <em><strong>NO borremos</strong></em> la imagen del medio de almacenamiento ya que se tiene asociado en la instancia alojada en <em>virt2</em>.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+					<nav class="nav tags">
+							<ul class="flat">
+								
+								<li><a href="/tags/qemu">Qemu</a></li>
+								
+								<li><a href="/tags/kvm">kvm</a></li>
+								
+								<li><a href="/tags/virtualizacion">virtualizacion</a></li>
+								
+							</ul>
+					</nav>
+				
+			
+		</div>
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = 'localhost';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> © Copyright notice |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-123-45', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+<script>feather.replace()</script>
+</body>
+</html>

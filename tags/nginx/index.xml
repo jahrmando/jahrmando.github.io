@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nginx on Not a Blog - Armando Uch</title>
+    <link>http://jahrmando.github.io/tags/nginx/</link>
+    <description>Recent content in nginx on Not a Blog - Armando Uch</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>es-mx</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Thu, 06 Sep 2018 10:54:38 -0500</lastBuildDate>
+    
+	<atom:link href="http://jahrmando.github.io/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Restringir acceso a una URL en NGINX</title>
+      <link>http://jahrmando.github.io/posts/autenticacion_xpath_nginx/</link>
+      <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/autenticacion_xpath_nginx/</guid>
+      <description>Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.</description>
+    </item>
+    
+    <item>
+      <title>Sitio Web en Mantenimiento con NGINX</title>
+      <link>http://jahrmando.github.io/posts/nginx_maintenance_site/</link>
+      <pubDate>Fri, 27 Mar 2015 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/nginx_maintenance_site/</guid>
+      <description>Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline.</description>
+    </item>
+    
+    <item>
+      <title>Configurar NGINX y PHP-FPM en CentOS 7</title>
+      <link>http://jahrmando.github.io/posts/nginx_centos7_php/</link>
+      <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/nginx_centos7_php/</guid>
+      <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.</description>
+    </item>
+    
+    <item>
+      <title>Redireccionar el trafico HTTP hacia HTTPS con NGINX</title>
+      <link>http://jahrmando.github.io/posts/redireccionar_trafico_https/</link>
+      <pubDate>Mon, 24 Nov 2014 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/redireccionar_trafico_https/</guid>
+      <description>Cuando tengamos que mudar un sitio web completamente a protocolo seguro HTTPS necesitamos que toda petición que venga como HTTP y redirigir hacia el protocolo seguro.</description>
+    </item>
+    
+    <item>
+      <title>Top 10 IPs mas visitados en Apache / Nginx</title>
+      <link>http://jahrmando.github.io/posts/top_ips_hits_apache/</link>
+      <pubDate>Sat, 16 Aug 2014 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/top_ips_hits_apache/</guid>
+      <description>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.</description>
+    </item>
+    
+    <item>
+      <title>Configurando DJANGO stack en CentOS6</title>
+      <link>http://jahrmando.github.io/posts/python_django_nginx/</link>
+      <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/python_django_nginx/</guid>
+      <description>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
+preinstalacion Instalamos los siguientes paquetes para compilaciones.</description>
+    </item>
+    
+    <item>
+      <title>Montar particiones NTFS automáticamente en Linux</title>
+      <link>http://jahrmando.github.io/posts/mount_nfs/</link>
+      <pubDate>Fri, 25 Mar 2011 10:00:00 -0500</pubDate>
+      
+      <guid>http://jahrmando.github.io/posts/mount_nfs/</guid>
+      <description>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS.</description>
+    </item>
+    
+  </channel>
+</rss>
