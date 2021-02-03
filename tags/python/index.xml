@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>python on Not a Blog - Armando Uch</title>
-    <link>http://armanroot.com/tags/python/</link>
+    <link>https://armanroot.com/tags/python/</link>
     <description>Recent content in python on Not a Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright notice</copyright>
     <lastBuildDate>Tue, 15 Oct 2013 10:00:00 -0500</lastBuildDate>
     
-	<atom:link href="http://armanroot.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://armanroot.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Configurando DJANGO stack en CentOS6</title>
-      <link>http://armanroot.com/posts/python_django_nginx/</link>
+      <link>https://armanroot.com/posts/python_django_nginx/</link>
       <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
       
-      <guid>http://armanroot.com/posts/python_django_nginx/</guid>
+      <guid>https://armanroot.com/posts/python_django_nginx/</guid>
       <description>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
 preinstalacion Instalamos los siguientes paquetes para compilaciones.</description>
     </item>
