@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>network on Not a Blog - Armando Uch</title>
+    <title>network on Blog - Armando Uch</title>
     <link>https://armanroot.com/tags/network/</link>
-    <description>Recent content in network on Not a Blog - Armando Uch</description>
+    <description>Recent content in network on Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright notice</copyright>
+    <copyright>© Copyright All Rights Reserved</copyright>
     <lastBuildDate>Wed, 10 Oct 2012 10:54:38 -0500</lastBuildDate>
     
 	<atom:link href="https://armanroot.com/tags/network/index.xml" rel="self" type="application/rss+xml" />
@@ -14,10 +14,10 @@
     
     <item>
       <title>Interfaz virtual de red en Centos</title>
-      <link>https://armanroot.com/2012/10/interfaz-virtual-de-red-en-centos/</link>
+      <link>https://armanroot.com/posts/2012/interfaz-virtual-de-red-en-centos/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/2012/10/interfaz-virtual-de-red-en-centos/</guid>
+      <guid>https://armanroot.com/posts/2012/interfaz-virtual-de-red-en-centos/</guid>
       <description>Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.</description>
     </item>
     

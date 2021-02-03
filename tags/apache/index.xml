@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>apache on Not a Blog - Armando Uch</title>
+    <title>apache on Blog - Armando Uch</title>
     <link>https://armanroot.com/tags/apache/</link>
-    <description>Recent content in apache on Not a Blog - Armando Uch</description>
+    <description>Recent content in apache on Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright notice</copyright>
+    <copyright>© Copyright All Rights Reserved</copyright>
     <lastBuildDate>Sat, 16 Aug 2014 10:00:00 -0500</lastBuildDate>
     
 	<atom:link href="https://armanroot.com/tags/apache/index.xml" rel="self" type="application/rss+xml" />
@@ -14,19 +14,19 @@
     
     <item>
       <title>Top 10 IPs mas visitados en Apache / Nginx</title>
-      <link>https://armanroot.com/2014/08/top-10-ips-mas-visitados-en-apache-/-nginx/</link>
+      <link>https://armanroot.com/posts/2014/top-10-ips-mas-visitados-en-apache-/-nginx/</link>
       <pubDate>Sat, 16 Aug 2014 10:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/2014/08/top-10-ips-mas-visitados-en-apache-/-nginx/</guid>
+      <guid>https://armanroot.com/posts/2014/top-10-ips-mas-visitados-en-apache-/-nginx/</guid>
       <description>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.</description>
     </item>
     
     <item>
       <title>Montar particiones NTFS automáticamente en Linux</title>
-      <link>https://armanroot.com/2011/03/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/</link>
+      <link>https://armanroot.com/posts/2011/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/</link>
       <pubDate>Fri, 25 Mar 2011 10:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/2011/03/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/</guid>
+      <guid>https://armanroot.com/posts/2011/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/</guid>
       <description>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS.</description>
     </item>
     

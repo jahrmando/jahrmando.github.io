@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Configurar NGINX y PHP-FPM en CentOS 7 - Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/favicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Configurar NGINX y PHP-FPM en CentOS 7" />
+<meta property="og:description" content="Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/" />
+<meta property="article:published_time" content="2015-02-07T10:54:38-05:00" />
+<meta property="article:modified_time" content="2015-02-07T10:54:38-05:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Configurar NGINX y PHP-FPM en CentOS 7"/>
+<meta name="twitter:description" content="Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://armanroot.com/js/main.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<base href="https://armanroot.com/">
+	<h1 class="site-title"><a href="https://armanroot.com/">Blog - Armando Uch</a></h1>
+	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Inicio</a>
+			</li>
+			
+			<li>
+				<a href="/posts">Bitacora</a>
+			</li>
+			
+			<li>
+				<a href="/opinion">Opinion</a>
+			</li>
+			
+			<li>
+				<a href="/about">Acerca de</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Topics</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Configurar NGINX y PHP-FPM en CentOS 7</h1>
+			<div class="meta">Posted at &mdash; Feb 7, 2015</div>
+		</div>
+
+		<div class="markdown">
+			<p>Este manual nos permitira configurar un servicio <strong>HTTP</strong> usando <em>NGINX</em> y con soporte <strong>PHP</strong> usando <em>PHP-FPM</em>.</p>
+<blockquote>
+<p>Las configuraciones presentadas funcionan bajo el esquema de seguridad <strong>SELINUX</strong>.</p>
+</blockquote>
+<p>Instalemos el servicio <em>NGINX</em> desde los reposotorios <em>EPEL</em>.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo yum install nginx --enablerepo epel
+</code></pre></div><blockquote>
+<p>Si no tiene el repositorio <em>EPEL</em> configurado hagalo desde <a href="http://www.cyberciti.biz/faq/installing-rhel-epel-repo-on-centos-redhat-7-x/">aquí</a></p>
+</blockquote>
+<p>Ahora vamos a habilitar el servicio en el inicio de sistema con el comando <code>enable</code> y despues iniciamos el servicio (<code>start</code>).</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo systemctl <span style="color:#b58900">enable</span> nginx.service
+$ sudo systemctl start nginx.service
+</code></pre></div><p>Por defecto <em>CentOS 7</em> trae el servicio <em>firewalld</em> como servicio de muro de fuego, <em>firewalld</em> maneja perfiles de servicio para habilitar puertos por lo cual vamos ha habilitar el perfil <em><strong>http</strong></em> que nos abre el puerto <em>80/TCP</em>.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo firewall-cmd --zone<span style="color:#719e07">=</span>public --add-service<span style="color:#719e07">=</span>http --permanent
+$ sudo firewall-cmd --reload
+</code></pre></div><p>Podemos ver el estatus del firewall usando el comando <code>firewall-cmd --list-all</code>.</p>
+<h3 id="configuración-de-nginx">Configuración de NGINX</h3>
+<p>Ahora vamos a configurar el <em>NGINX</em>, primero creamos una carpeta llamada <em>sites-enabled</em> que sera el directorio donde <em>NGINX</em> cargará configuraciones.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo mkdir /etc/nginx/sites-enabled
+</code></pre></div><p>El esquema como buena practica, es que nosotros crearemos los archivos desde el directorio <em><strong>/etc/nginx/conf.d</strong></em> y &ldquo;<em>activaremos</em>&rdquo; la configuracion creando un acceso directo de la configuracion apuntando a <em><strong>/etc/nginx/sites-enabled</strong></em>.</p>
+<p><em>Ejemplo</em>:</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ln -s /etc/nginx/conf.d/misitio.conf /etc/nginx/sites-enabled/misitio.conf
+</code></pre></div><blockquote>
+<p>De esta manera nos es mas facil desactivar sitios sin borrar sus archivos de configuracion.</p>
+</blockquote>
+<p>Antes de iniciar la edicion del archivo principal de configuracion de <em>NGINX</em> respaldamos la configuracion inicial.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+</code></pre></div><p>Configuramos de la siguiente manera, siga las instruccion de los comentarios del archivo.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo vim /etc/nginx/nginx.conf
+user  nginx;
+worker_processes  4;						<span style="color:#586e75"># Ajuste de acuerdo al numero de CPUs</span>
+
+<span style="color:#586e75">#error_log  /var/log/nginx/error.log;</span>
+<span style="color:#586e75">#error_log  /var/log/nginx/error.log  notice;</span>
+<span style="color:#586e75">#error_log  /var/log/nginx/error.log  info;</span>
+error_log  /var/log/nginx/error.log  warn;	<span style="color:#586e75"># Logs a nivel de advertencia</span>
+
+pid        /run/nginx.pid;
+
+events <span style="color:#719e07">{</span>
+	worker_connections  1024;
+<span style="color:#719e07">}</span>
+
+http <span style="color:#719e07">{</span>
+	include       /etc/nginx/mime.types;
+	default_type  application/octet-stream;
+
+	log_format  main  <span style="color:#2aa198">&#39;$remote_addr - $remote_user [$time_local] &#34;$request&#34; &#39;</span>
+					  <span style="color:#2aa198">&#39;$status $body_bytes_sent &#34;$http_referer&#34; &#39;</span>
+					  <span style="color:#2aa198">&#39;&#34;$http_user_agent&#34; &#34;$http_x_forwarded_for&#34;&#39;</span>;
+
+	access_log  /var/log/nginx/access.log  main;
+
+	sendfile	on;
+	tcp_nopush	on;							<span style="color:#586e75"># Optimiza el rendimiento de sendfile</span>
+	keepalive_timeout  65;						<span style="color:#586e75"># Ajuste de tiempo de espera</span>
+	gzip  on;									<span style="color:#586e75"># Reduce la cantidad de datos a transferir</span>
+
+	include /etc/nginx/sites-enabled/*.conf;	<span style="color:#586e75"># Directorio de configuraciones</span>
+<span style="color:#719e07">}</span>
+</code></pre></div><h3 id="configuracion-de-php-fpm-soporte-fastcgi-para-php">Configuracion de php-fpm (Soporte FastCGI para PHP)</h3>
+<p>El servicio <a href="http://php-fpm.org">php-fpm</a> nos da el sorporte para sitios web hechos en <em>PHP</em>. Procedamos a instalar php-fpm y los modulos PHP necesarios para su funcion.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo yum install php-fpm php-common php-cli php-pear php-pdo php-gd php-mbstring php-xml php-pecl-apc --enablerepo epel
+</code></pre></div><p>Ahora editamos el archivo de configuracion de <em>php-fpm</em>. Configuraciones importantes en la variable <code>listen</code> donde declaramos el socket del servicio y las variables <code>user</code> y <code>group</code>.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/php-fpm.d/www.conf
+;<span style="color:#268bd2">listen</span> <span style="color:#719e07">=</span> 127.0.0.1:9000
+<span style="color:#268bd2">listen</span> <span style="color:#719e07">=</span> /var/run/php5-fpm.sock
+
+;<span style="color:#268bd2">user</span> <span style="color:#719e07">=</span> apache
+;<span style="color:#268bd2">group</span> <span style="color:#719e07">=</span> apache
+<span style="color:#268bd2">user</span> <span style="color:#719e07">=</span> nginx
+<span style="color:#268bd2">group</span> <span style="color:#719e07">=</span> nginx
+
+<span style="color:#268bd2">request_terminate_timeout</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">65</span>
+
+security.limit_extensions <span style="color:#719e07">=</span> .php .php3 .php4 .php5
+</code></pre></div><p>Creamos directorios indispensables para el servicio y le asignamos los permisos correspondientes.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir -p /var/lib/php/<span style="color:#719e07">{</span>session,tmp<span style="color:#719e07">}</span>
+$ chmod <span style="color:#2aa198">750</span> -R /var/lib/php/
+$ chown nginx:nginx -R /var/lib/php/
+</code></pre></div><p>Ahora agregamos el siguiente archivo, este contiene configuraciones de seguridad que he recopilado y que nos permite agregarle un extra de seguridad.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/php.d/security.ini
+; Ocultar version de PHP
+<span style="color:#268bd2">expose_php</span><span style="color:#719e07">=</span>Off
+; Ocultar errores
+<span style="color:#268bd2">display_errors</span><span style="color:#719e07">=</span>Off
+; Bloquear subidas de archivos
+;<span style="color:#268bd2">file_uploads</span><span style="color:#719e07">=</span>Off
+; ó limitar los archivos a subir
+<span style="color:#268bd2">file_uploads</span><span style="color:#719e07">=</span>On
+<span style="color:#268bd2">upload_max_filesize</span><span style="color:#719e07">=</span>1M
+; Bloquear ejecucion remota via ftp,http
+<span style="color:#268bd2">allow_url_fopen</span><span style="color:#719e07">=</span>Off
+<span style="color:#268bd2">allow_url_include</span><span style="color:#719e07">=</span>Off
+; Desactivar <span style="color:#719e07">(</span>Obsoleto a partir de PHP 5.4.0<span style="color:#719e07">)</span>
+<span style="color:#268bd2">magic_quotes_gpc</span><span style="color:#719e07">=</span>Off
+; Limita los paquetes POST, <span style="color:#719e07">(</span>Default 8M<span style="color:#719e07">)</span>
+<span style="color:#268bd2">post_max_size</span><span style="color:#719e07">=</span>1M
+; Control de recursos
+<span style="color:#268bd2">max_execution_time</span> <span style="color:#719e07">=</span>  <span style="color:#2aa198">30</span>
+<span style="color:#268bd2">max_input_time</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">30</span>
+<span style="color:#268bd2">memory_limit</span> <span style="color:#719e07">=</span> 8M
+; Desactivar funciones que podrían ser explotadas
+<span style="color:#268bd2">disable_functions</span> <span style="color:#719e07">=</span> exec,passthru,shell_exec,system,proc_open,popen,curl_multi_exec,parse_ini_file,show_source
+; Directorio temporal
+<span style="color:#268bd2">upload_tmp_dir</span> <span style="color:#719e07">=</span> /var/lib/php/tmp/
+; Limitar la ejecución a php en directorio
+<span style="color:#268bd2">open_basedir</span> <span style="color:#719e07">=</span> /home/www/
+</code></pre></div><blockquote>
+<p>Para esta prueba no desabilitamos <strong>phpinfo</strong> en la variable <strong>disable_functions</strong> para poder realizar la prueba, recomiendo agregarlo una vez terminada las pruebas.
+Estas opciones las puede ajustar a su criterio.</p>
+</blockquote>
+<p>Habilitamos el servicio en el inicio de sistema e iniciamos el servicio.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl <span style="color:#b58900">enable</span> php-fpm.service
+$ systemctl start php-fpm.service
+</code></pre></div><h3 id="configuracion-de-un-sitio-de-prueba">Configuracion de un sitio de prueba</h3>
+<p>Lo primero que haremos es crear el archivo de configuracion de nuestro sitio en <em>NGINX</em> (recuerde que estas van en el directorio <em>/etc/nginx/conf.d</em>).</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/nginx/conf.d/test.conf
+server <span style="color:#719e07">{</span>
+	listen       <span style="color:#2aa198">80</span> default;
+	server_name  localhost;
+
+	<span style="color:#586e75">## Deshabilitamos que imprima la version de NGINX ##</span>
+	server_tokens off;
+
+	<span style="color:#586e75">## Registros del virtualhost ##</span>
+	access_log  /var/log/nginx/test.access.log;
+	error_log  /var/log/nginx/test.error.log;
+
+	<span style="color:#586e75">## Metodos validos ##</span>
+	<span style="color:#719e07">if</span> <span style="color:#719e07">(</span><span style="color:#268bd2">$request_method</span> !~ ^<span style="color:#719e07">(</span>GET|HEAD|POST<span style="color:#719e07">)</span>$ <span style="color:#719e07">)</span> <span style="color:#719e07">{</span>
+		 <span style="color:#719e07">return</span> 444;
+	<span style="color:#719e07">}</span>
+
+	location / <span style="color:#719e07">{</span>
+	 	<span style="color:#586e75">## Los index validos, entre ellos el .php</span>
+		index  index.html index.htm index.php;
+
+		<span style="color:#586e75">## Directorio del sitio</span>
+		root  /home/www/test/public_html;
+
+		<span style="color:#586e75">## Soporte PHP ##</span>
+		location ~ <span style="color:#cb4b16">\.</span>php$ <span style="color:#719e07">{</span>
+				root            public_html;
+				fastcgi_pass    unix:/var/run/php5-fpm.sock;	<span style="color:#586e75">#Socket de php-fpm</span>
+				fastcgi_index   index.php;
+				fastcgi_param   SCRIPT_FILENAME  /home/www/test/public_html<span style="color:#268bd2">$fastcgi_script_name</span>;
+				include         /etc/nginx/fastcgi_params;
+		<span style="color:#719e07">}</span>
+
+		<span style="color:#586e75">## Denegar accesos a archivos ocultos ##</span>
+		location ~ /<span style="color:#cb4b16">\.</span> <span style="color:#719e07">{</span> deny  all; <span style="color:#719e07">}</span>
+
+		<span style="color:#586e75">## Bloquear logs de archivos estaticos ###</span>
+		location ~* <span style="color:#cb4b16">\.</span><span style="color:#719e07">(</span>jpg|jpeg|gif|png|css|js|ico|xml<span style="color:#719e07">)</span>$ <span style="color:#719e07">{</span>
+				access_log        off;
+				log_not_found     off;
+				expires           360d;
+		<span style="color:#719e07">}</span>
+	<span style="color:#719e07">}</span>
+<span style="color:#719e07">}</span>
+</code></pre></div><p>Usted puede ver que estamos declarando que los archivos de nuestro sitio estaran alojados en <em><strong>/home/www</strong></em>.</p>
+<p>Ahora lo que haremos es activar nuestra configuracion nginx de prueba, para esto creamos un enlace directo hacia <em>/etc/nginx/sites-enabled</em> que es donde se <em>NGINX</em> carga los archivos de configuracion (como lo declaramos anteriormente).</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ln -s /etc/nginx/conf.d/test.conf /etc/nginx/sites-enabled/test.conf
+</code></pre></div><p>Creamos el directorio donde alojaremos nuestros sitio</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir -p /home/www/test/public_html
+</code></pre></div><p>Creamos un archivo <em>php</em> donde ejecutaremos la funcion <code>phpinfo()</code> para compobrar que este funcionando correctamente.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">	$ vim /home/www/test/public_html/index.php
+	&lt;?php
+			phpinfo<span style="color:#719e07">()</span>;
+	?&gt;
+</code></pre></div><p>Asignamos permisos adecuados.</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">750</span> -R /home/www
+$ chown nginx:nginx -R /home/www
+</code></pre></div><p>Permisos necesarios para <strong>SELinux</strong></p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">	$ semanage fcontext -a -t httpd_sys_content_t <span style="color:#2aa198">&#34;/home/www(.*)&#34;</span>
+	$ restorecon -R -v /home/www/
+</code></pre></div><blockquote>
+<p>No olvide asignar los permisos que se mencionan anteriormente para cada proyecto <em>PHP</em> que configure.</p>
+</blockquote>
+<p>Reiniciamos el servicio para cargar todo</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl restart nginx.service
+</code></pre></div>
+		</div>
+
+		<div class="post-tags">
+			
+				
+					<nav class="nav tags">
+							<ul class="flat">
+								
+								<li><a href="/tags/nginx">nginx</a></li>
+								
+								<li><a href="/tags/centos">centos</a></li>
+								
+								<li><a href="/tags/php">php</a></li>
+								
+							</ul>
+					</nav>
+				
+			
+		</div>
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = 'armanroot-com';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> © Copyright All Rights Reserved |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>

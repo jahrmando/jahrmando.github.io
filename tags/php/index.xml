@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>php on Not a Blog - Armando Uch</title>
+    <title>php on Blog - Armando Uch</title>
     <link>https://armanroot.com/tags/php/</link>
-    <description>Recent content in php on Not a Blog - Armando Uch</description>
+    <description>Recent content in php on Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright notice</copyright>
+    <copyright>© Copyright All Rights Reserved</copyright>
     <lastBuildDate>Sat, 07 Feb 2015 10:54:38 -0500</lastBuildDate>
     
 	<atom:link href="https://armanroot.com/tags/php/index.xml" rel="self" type="application/rss+xml" />
@@ -14,10 +14,10 @@
     
     <item>
       <title>Configurar NGINX y PHP-FPM en CentOS 7</title>
-      <link>https://armanroot.com/2015/02/configurar-nginx-y-php-fpm-en-centos-7/</link>
+      <link>https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/</link>
       <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/2015/02/configurar-nginx-y-php-fpm-en-centos-7/</guid>
+      <guid>https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/</guid>
       <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.</description>
     </item>
     
