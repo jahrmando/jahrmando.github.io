@@ -2,40 +2,40 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>hardening on Not a Blog - Armando Uch</title>
-    <link>https://armanroot.com/tags/hardening/</link>
+    <link>http://armanroot.com/tags/hardening/</link>
     <description>Recent content in hardening on Not a Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright notice</copyright>
     <lastBuildDate>Thu, 04 Dec 2014 10:54:38 -0500</lastBuildDate>
     
-	<atom:link href="https://armanroot.com/tags/hardening/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://armanroot.com/tags/hardening/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Cambiar cifrado de contraseñas en CentOS</title>
-      <link>https://armanroot.com/posts/cifrado_contrasenia_centos/</link>
+      <link>http://armanroot.com/posts/cifrado_contrasenia_centos/</link>
       <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/cifrado_contrasenia_centos/</guid>
+      <guid>http://armanroot.com/posts/cifrado_contrasenia_centos/</guid>
       <description>Podemos cambiar el algoritmo de cifrado que va usar el PAM en el archivo /etc/passwd.</description>
     </item>
     
     <item>
       <title>Post-instalacion de CentOS 7 (minimal)</title>
-      <link>https://armanroot.com/posts/poststalacion_centos7/</link>
+      <link>http://armanroot.com/posts/poststalacion_centos7/</link>
       <pubDate>Fri, 25 Apr 2014 16:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/poststalacion_centos7/</guid>
+      <guid>http://armanroot.com/posts/poststalacion_centos7/</guid>
       <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.</description>
     </item>
     
     <item>
       <title>Bloquear intentos de sesión fallidas en CentOS</title>
-      <link>https://armanroot.com/posts/block_users_on_faild_login/</link>
+      <link>http://armanroot.com/posts/block_users_on_faild_login/</link>
       <pubDate>Fri, 13 Sep 2013 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/block_users_on_faild_login/</guid>
+      <guid>http://armanroot.com/posts/block_users_on_faild_login/</guid>
       <description>Bloquear usuarios tras intentos de sesión fallidas CentOS 6.
 Parámetros de configuración:
  deny. Numero de intentos even_deny_root.</description>
@@ -43,19 +43,19 @@ Parámetros de configuración:
     
     <item>
       <title>Limitar acceso al commando SU en CentOS</title>
-      <link>https://armanroot.com/posts/block_use_su_command/</link>
+      <link>http://armanroot.com/posts/block_use_su_command/</link>
       <pubDate>Thu, 11 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/block_use_su_command/</guid>
+      <guid>http://armanroot.com/posts/block_use_su_command/</guid>
       <description>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.</description>
     </item>
     
     <item>
       <title>Asignación de permisos en linux</title>
-      <link>https://armanroot.com/posts/permissions_on_files_linux/</link>
+      <link>http://armanroot.com/posts/permissions_on_files_linux/</link>
       <pubDate>Sun, 08 Apr 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/permissions_on_files_linux/</guid>
+      <guid>http://armanroot.com/posts/permissions_on_files_linux/</guid>
       <description>Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:</description>
     </item>
     

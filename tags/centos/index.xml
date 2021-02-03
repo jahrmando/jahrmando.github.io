@@ -2,114 +2,114 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>centos on Not a Blog - Armando Uch</title>
-    <link>https://armanroot.com/tags/centos/</link>
+    <link>http://armanroot.com/tags/centos/</link>
     <description>Recent content in centos on Not a Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright notice</copyright>
     <lastBuildDate>Thu, 06 Sep 2018 10:54:38 -0500</lastBuildDate>
     
-	<atom:link href="https://armanroot.com/tags/centos/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://armanroot.com/tags/centos/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Restringir acceso a una URL en NGINX</title>
-      <link>https://armanroot.com/posts/autenticacion_xpath_nginx/</link>
+      <link>http://armanroot.com/posts/autenticacion_xpath_nginx/</link>
       <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/autenticacion_xpath_nginx/</guid>
+      <guid>http://armanroot.com/posts/autenticacion_xpath_nginx/</guid>
       <description>Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.</description>
     </item>
     
     <item>
       <title>Configurar NGINX y PHP-FPM en CentOS 7</title>
-      <link>https://armanroot.com/posts/nginx_centos7_php/</link>
+      <link>http://armanroot.com/posts/nginx_centos7_php/</link>
       <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/nginx_centos7_php/</guid>
+      <guid>http://armanroot.com/posts/nginx_centos7_php/</guid>
       <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.</description>
     </item>
     
     <item>
       <title>PostgreSQL replicar en maestro-esclavo</title>
-      <link>https://armanroot.com/posts/postgresql_multiserver/</link>
+      <link>http://armanroot.com/posts/postgresql_multiserver/</link>
       <pubDate>Sat, 31 Jan 2015 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/postgresql_multiserver/</guid>
+      <guid>http://armanroot.com/posts/postgresql_multiserver/</guid>
       <description>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.</description>
     </item>
     
     <item>
       <title>Instalacion de Bacula en CentOS 7</title>
-      <link>https://armanroot.com/posts/bacula_centos6/</link>
+      <link>http://armanroot.com/posts/bacula_centos6/</link>
       <pubDate>Fri, 16 Jan 2015 10:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/bacula_centos6/</guid>
+      <guid>http://armanroot.com/posts/bacula_centos6/</guid>
       <description>Bacula es un conjunto de programas Open Source, listos para la empresa, que permiten administrar los backups, restauración y verificación de datos en una red heterogénea.</description>
     </item>
     
     <item>
       <title>Referencia Rápida: systemctl</title>
-      <link>https://armanroot.com/posts/systemctl_reference/</link>
+      <link>http://armanroot.com/posts/systemctl_reference/</link>
       <pubDate>Wed, 07 Jan 2015 16:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/systemctl_reference/</guid>
+      <guid>http://armanroot.com/posts/systemctl_reference/</guid>
       <description>Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd.</description>
     </item>
     
     <item>
       <title>Crear usuario de lectura (read-only) en PostgreSQL</title>
-      <link>https://armanroot.com/posts/readonly_user_postgresql/</link>
+      <link>http://armanroot.com/posts/readonly_user_postgresql/</link>
       <pubDate>Fri, 27 Jun 2014 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/readonly_user_postgresql/</guid>
+      <guid>http://armanroot.com/posts/readonly_user_postgresql/</guid>
       <description>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.</description>
     </item>
     
     <item>
       <title>Configuracion y administracion de PostgreSQL 9.x</title>
-      <link>https://armanroot.com/posts/postgresql_config_administration/</link>
+      <link>http://armanroot.com/posts/postgresql_config_administration/</link>
       <pubDate>Thu, 26 Jun 2014 10:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/postgresql_config_administration/</guid>
+      <guid>http://armanroot.com/posts/postgresql_config_administration/</guid>
       <description>En este howto configuraremos la version de PostgreSQL 9.3 la mas reciente hasta ahora.
 Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.</description>
     </item>
     
     <item>
       <title>Instalación de Pure-FTP sobre TLS con antivirus ClamAV</title>
-      <link>https://armanroot.com/posts/pureftp_ssl_clamv/</link>
+      <link>http://armanroot.com/posts/pureftp_ssl_clamv/</link>
       <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/pureftp_ssl_clamv/</guid>
+      <guid>http://armanroot.com/posts/pureftp_ssl_clamv/</guid>
       <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV</description>
     </item>
     
     <item>
       <title>Post-instalacion de CentOS 7 (minimal)</title>
-      <link>https://armanroot.com/posts/poststalacion_centos7/</link>
+      <link>http://armanroot.com/posts/poststalacion_centos7/</link>
       <pubDate>Fri, 25 Apr 2014 16:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/poststalacion_centos7/</guid>
+      <guid>http://armanroot.com/posts/poststalacion_centos7/</guid>
       <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.</description>
     </item>
     
     <item>
       <title>Desactivar la expiración de contraseñas en CentOS</title>
-      <link>https://armanroot.com/posts/disable_expire_password_centos/</link>
+      <link>http://armanroot.com/posts/disable_expire_password_centos/</link>
       <pubDate>Thu, 12 Sep 2013 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/disable_expire_password_centos/</guid>
+      <guid>http://armanroot.com/posts/disable_expire_password_centos/</guid>
       <description>Con la utilidad chage podemos reasignar los valores de expiración.
 Verificamos las fechas de expiración de los passwords</description>
     </item>
     
     <item>
       <title>Establecer vigencia y reglas sobre contraseñas a usuarios Linux</title>
-      <link>https://armanroot.com/posts/expire_password_users_centos/</link>
+      <link>http://armanroot.com/posts/expire_password_users_centos/</link>
       <pubDate>Tue, 22 May 2012 10:54:38 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/expire_password_users_centos/</guid>
+      <guid>http://armanroot.com/posts/expire_password_users_centos/</guid>
       <description>Lo que haremos en este post es el establecer una política de seguridad para la renovación de contraseñas de los usuarios en el servidor y también sobre reglas para la creación de las mismas.</description>
     </item>
     

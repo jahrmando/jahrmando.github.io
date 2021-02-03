@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>bacula on Not a Blog - Armando Uch</title>
-    <link>https://armanroot.com/tags/bacula/</link>
+    <link>http://armanroot.com/tags/bacula/</link>
     <description>Recent content in bacula on Not a Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright notice</copyright>
     <lastBuildDate>Fri, 16 Jan 2015 10:00:00 -0500</lastBuildDate>
     
-	<atom:link href="https://armanroot.com/tags/bacula/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://armanroot.com/tags/bacula/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Instalacion de Bacula en CentOS 7</title>
-      <link>https://armanroot.com/posts/bacula_centos6/</link>
+      <link>http://armanroot.com/posts/bacula_centos6/</link>
       <pubDate>Fri, 16 Jan 2015 10:00:00 -0500</pubDate>
       
-      <guid>https://armanroot.com/posts/bacula_centos6/</guid>
+      <guid>http://armanroot.com/posts/bacula_centos6/</guid>
       <description>Bacula es un conjunto de programas Open Source, listos para la empresa, que permiten administrar los backups, restauración y verificación de datos en una red heterogénea.</description>
     </item>
     
