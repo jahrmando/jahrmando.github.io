@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>postfix on Not a Blog - Armando Uch</title>
-    <link>http://jahrmando.github.io/tags/postfix/</link>
+    <link>https://jahrmando.github.io/tags/postfix/</link>
     <description>Recent content in postfix on Not a Blog - Armando Uch</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright notice</copyright>
     <lastBuildDate>Wed, 10 Oct 2012 10:54:38 -0500</lastBuildDate>
     
-	<atom:link href="http://jahrmando.github.io/tags/postfix/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://jahrmando.github.io/tags/postfix/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Postfix como smarthost, reenvio de emails via CLI</title>
-      <link>http://jahrmando.github.io/posts/postfix_as_smarthost/</link>
+      <link>https://jahrmando.github.io/posts/postfix_as_smarthost/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
-      <guid>http://jahrmando.github.io/posts/postfix_as_smarthost/</guid>
+      <guid>https://jahrmando.github.io/posts/postfix_as_smarthost/</guid>
       <description>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.</description>
     </item>
     
