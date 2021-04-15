@@ -13,6 +13,15 @@
     
     
     <item>
+      <title>Agregar Mimetype WEBP Centos7 a comando File</title>
+      <link>https://armanroot.com/posts/2021/agregar-mimetype-webp-centos7-a-comando-file/</link>
+      <pubDate>Thu, 15 Apr 2021 16:08:59 -0500</pubDate>
+      
+      <guid>https://armanroot.com/posts/2021/agregar-mimetype-webp-centos7-a-comando-file/</guid>
+      <description>Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia.</description>
+    </item>
+    
+    <item>
       <title>Acerca de</title>
       <link>https://armanroot.com/about/</link>
       <pubDate>Fri, 19 Apr 2019 21:37:58 +0530</pubDate>

@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Thu, 06 Sep 2018 10:54:38 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 15 Apr 2021 16:08:59 -0500</lastBuildDate>
     
 	<atom:link href="https://armanroot.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,18 @@
     <item>
       <title>centos</title>
       <link>https://armanroot.com/tags/centos/</link>
-      <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
+      <pubDate>Thu, 15 Apr 2021 16:08:59 -0500</pubDate>
       
       <guid>https://armanroot.com/tags/centos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sysadmin</title>
+      <link>https://armanroot.com/tags/sysadmin/</link>
+      <pubDate>Thu, 15 Apr 2021 16:08:59 -0500</pubDate>
+      
+      <guid>https://armanroot.com/tags/sysadmin/</guid>
       <description></description>
     </item>
     
@@ -27,15 +36,6 @@
       <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/tags/nginx/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>sysadmin</title>
-      <link>https://armanroot.com/tags/sysadmin/</link>
-      <pubDate>Mon, 20 Feb 2017 10:00:00 -0500</pubDate>
-      
-      <guid>https://armanroot.com/tags/sysadmin/</guid>
       <description></description>
     </item>
     
