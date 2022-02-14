@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Limitar acceso al commando SU en CentOS" />
 <meta property="og:description" content="Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2012/limitar-acceso-al-commando-su-en-centos/" />
+<meta property="og:url" content="https://armanroot.com/posts/2012/limitar-acceso-al-commando-su-en-centos/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2012-10-11T10:54:38-05:00" />
 <meta property="article:modified_time" content="2012-10-11T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Limitar acceso al commando SU en CentOS"/>
 <meta name="twitter:description" content="Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel."/>
@@ -71,16 +72,16 @@
 		<div class="markdown">
 			<p>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.</p>
 <p>Quitamos el simbolo de comentario de la linea <code>auth required pam_wheel.so use_uid</code>:</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/pam.d/su
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/pam.d/su
 <span style="color:#586e75">#%PAM-1.0</span>
 auth sufficient pam_rootok.so
 <span style="color:#586e75"># Uncomment the following line to require a user to be in the “wheel” group.</span>
 auth required pam_wheel.so use_uid
 ...
 </code></pre></div><p>Agregar a usuarios a grupo wheel para tener acceso a su</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gpasswd -a miuser wheel
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gpasswd -a miuser wheel
 </code></pre></div><p>Comprobamos que pertenesca nuestro usuario al grupo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ grep miuser /etc/group
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ grep miuser /etc/group
 wheel:x:10:root,miuser
 miuser:x:500:
 </code></pre></div>

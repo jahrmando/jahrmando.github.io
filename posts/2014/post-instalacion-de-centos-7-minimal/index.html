@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Post-instalacion de CentOS 7 (minimal)" />
 <meta property="og:description" content="Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2014/post-instalacion-de-centos-7-minimal/" />
+<meta property="og:url" content="https://armanroot.com/posts/2014/post-instalacion-de-centos-7-minimal/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2014-04-25T16:00:00-05:00" />
 <meta property="article:modified_time" content="2014-04-25T16:00:00-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Post-instalacion de CentOS 7 (minimal)"/>
 <meta name="twitter:description" content="Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion."/>
@@ -70,28 +71,28 @@
 
 		<div class="markdown">
 			<p>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum update -y
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum update -y
 $ reboot
 </code></pre></div><p>Instalacion de repositorios extras</p>
 <p>Los repositorios oficiales o bases del sistema no siempre traen servicios o utilidades que podamos necesitar, por ello es necerario agregar algunos repositorios extras (de los ya muy conocidos)</p>
 <p>Antes instalamos utilidades que nos serviran para las siguientes tareas.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install wget vim
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install wget vim
 </code></pre></div><p>Repositorio RPMforge</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
 $ rpm -Uvh rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
 </code></pre></div><p>Desabilitamos el repositorio, para solo usarlo solo cuando se necesite un paquete de ese repositorio, cada que deseemos hacer uso del repo agregue la opcion <code>--enablerepo rpmforge</code> en la utilidad <code>yum</code></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/yum.repos.d/rpmforge.repo
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/yum.repos.d/rpmforge.repo
 <span style="color:#719e07">[</span>rpmforge<span style="color:#719e07">]</span>
 ..
 <span style="color:#268bd2">enabled</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">0</span>
 </code></pre></div><p>Instalamos un paquete de esta repo para pobrar la configuracion, en este caso &ldquo;htop&rdquo;</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install htop lshw --enablerepo rpmforge -y
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install htop lshw --enablerepo rpmforge -y
 </code></pre></div><p>Repositorio EPEL</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
 $ rpm -Uvh epel-release-7*.rpm
 </code></pre></div><p>En esta ocacion estamos instalando la version 7.5 de EPEL, el paquete se va actualizando puede que tenga que revisar desde sitio (<a href="http://dl.fedoraproject.org/pub/epel/7/x86_64/e/">http://dl.fedoraproject.org/pub/epel/7/x86_64/e/</a>) para encontrar la version reciente.</p>
 <p>Mantenemos desactivado por defecto el repositorio EPEL y activarlo cuando se requiera.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/yum.repos.d/epel.repo
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/yum.repos.d/epel.repo
 ..
 <span style="color:#719e07">[</span>epel<span style="color:#719e07">]</span>
 <span style="color:#268bd2">enabled</span><span style="color:#719e07">=</span><span style="color:#2aa198">0</span>
@@ -100,13 +101,13 @@ $ yum check-update --enablerepo epel
 </code></pre></div><p>Cambiar el nombre del servidor (hostname)</p>
 <p>Si en el momento de la instalacion no nos decidimos por algun nombre para el servidor (porque suele pasar), acontinuacion los dos metodos para cambiarle el nombre al servidor:</p>
 <p>Desde archivo de configuracion</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/sysconfig/network
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/sysconfig/network
 <span style="color:#268bd2">HOSTNAME</span><span style="color:#719e07">=</span>nombrehost
 </code></pre></div><p>Usando la utilidad <code>hostnamectl</code></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ hostnamectl set-hostname <span style="color:#719e07">[</span>nombrehost<span style="color:#719e07">]</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ hostnamectl set-hostname <span style="color:#719e07">[</span>nombrehost<span style="color:#719e07">]</span>
 </code></pre></div><p>Deshabilitar SELINUX (?)</p>
 <p>Aunque a mi parecer no lo recomiendo es posible poder desactivar este anillo de seguridad que trae el sistema, preferentemente dejarlo en modo permisivo para poder tener los registros para poder usarlo como medio de informacion.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/selinux/config
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/selinux/config
 <span style="color:#586e75"># This file controls the state of SELinux on the system.</span>
 <span style="color:#586e75"># SELINUX= can take one of these three values:</span>
 <span style="color:#586e75">#     enforcing - SELinux security policy is enforced.</span>
@@ -118,28 +119,28 @@ $ yum check-update --enablerepo epel
 <span style="color:#586e75">#     mls - Multi Level Security protection.</span>
 <span style="color:#268bd2">SELINUXTYPE</span><span style="color:#719e07">=</span>targeted
 </code></pre></div><p>Es neseario reiniciar el sistema para aplicar los cambios.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ reboot
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ reboot
 </code></pre></div><p>Utilidades de sistema</p>
 <p>Estos paquetes contiene ciertas utilidades que no vienen instaladas en la version minimal (locate, nslookup, host, etc.).</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install pciutils usbutils bind-utils nc lsof mlocate dmidecode sysstat
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install pciutils usbutils bind-utils nc lsof mlocate dmidecode sysstat
 </code></pre></div><p>Si estamos usando <em>Qemu/KVM</em> para virtualizar <em>CentOS</em> es necesario instalar el daemon para eventos ACPI para poder enviarle eventos de apagado o de reinicio por ejemplo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install acpid
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install acpid
 </code></pre></div><p>Deshabilitar IPv6 (Opcional)</p>
 <p>Si no requerimos en nuestros segmentos de red usar IPv6 podemos deshabilitarlo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/sysctl.d/40-ipv6.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/sysctl.d/40-ipv6.conf
 net.ipv6.conf.all.disable_ipv6 <span style="color:#719e07">=</span> <span style="color:#2aa198">1</span>
 net.ipv6.conf.default.disable_ipv6 <span style="color:#719e07">=</span> <span style="color:#2aa198">1</span>
 </code></pre></div><blockquote>
 <p>Si solo queremos desactivarlo en una NIC especifica podemo usar la configuracion <em><strong>net.ipv6.conf.MYNIC.disable_ipv6 = 1</strong></em></p>
 </blockquote>
 <p>Si lo desactivamos de manera general es necesario quitar/comentar la linea para la IPv6 de localhost del archivo <strong>hosts</strong></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/hosts
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 <span style="color:#586e75">#::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span>
 </code></pre></div><p>Aplicamos nuestros cambios reiniciando el servicio <em>network</em></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ sudo systemctl restart network.service
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ sudo systemctl restart network.service
 </code></pre></div><p>Desactivar la gestion de red por <em>NetworkManager</em> para usar solo <em>network</em></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/sysconfig/network-scripts/ifcfg-<span style="color:#719e07">[</span>NIC NAME<span style="color:#719e07">]</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/sysconfig/network-scripts/ifcfg-<span style="color:#719e07">[</span>NIC NAME<span style="color:#719e07">]</span>
 <span style="color:#268bd2">NM_CONTROLLED</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;no&#34;</span>
 </code></pre></div>
 		</div>

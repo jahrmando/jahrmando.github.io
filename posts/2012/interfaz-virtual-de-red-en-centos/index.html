@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Interfaz virtual de red en Centos" />
 <meta property="og:description" content="Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2012/interfaz-virtual-de-red-en-centos/" />
+<meta property="og:url" content="https://armanroot.com/posts/2012/interfaz-virtual-de-red-en-centos/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2012-10-10T10:54:38-05:00" />
 <meta property="article:modified_time" content="2012-10-10T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Interfaz virtual de red en Centos"/>
 <meta name="twitter:description" content="Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual."/>
@@ -72,10 +73,10 @@
 			<p>Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.</p>
 <p>Copiamos la configuración de la nic a la que le asignaremos la interfaz virtual en este caso <code>eth0</code>, a la virtual le asignamos el mismo nombre pero con el sufijo <code>:0</code>.</p>
 <p>El numero cero es consecutivo, podemos seguir agregando mas nic virtuales.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ <span style="color:#b58900">cd</span> /etc/sysconfig/network-scripts/
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ <span style="color:#b58900">cd</span> /etc/sysconfig/network-scripts/
 $ cp ifcfg-eth0 ifcfg-eth0:0
 </code></pre></div><p>Configuramos la nic virtual</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">DEVICE</span><span style="color:#719e07">=</span>eth0:0 <span style="color:#586e75"># Nombre de la interfaz</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">DEVICE</span><span style="color:#719e07">=</span>eth0:0 <span style="color:#586e75"># Nombre de la interfaz</span>
 <span style="color:#268bd2">BOOTPROTO</span><span style="color:#719e07">=</span>static
 <span style="color:#268bd2">BROADCAST</span><span style="color:#719e07">=</span>10.255.255.255
 <span style="color:#268bd2">HWADDR</span><span style="color:#719e07">=</span>00:1E:0B:BC:BE:56 <span style="color:#586e75"># MAC de la nic eth0</span>

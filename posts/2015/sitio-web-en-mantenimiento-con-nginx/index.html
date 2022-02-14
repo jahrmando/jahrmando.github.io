@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Sitio Web en Mantenimiento con NGINX" />
 <meta property="og:description" content="Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2015/sitio-web-en-mantenimiento-con-nginx/" />
+<meta property="og:url" content="https://armanroot.com/posts/2015/sitio-web-en-mantenimiento-con-nginx/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2015-03-27T10:00:00-05:00" />
 <meta property="article:modified_time" content="2015-03-27T10:00:00-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Sitio Web en Mantenimiento con NGINX"/>
 <meta name="twitter:description" content="Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline."/>
@@ -73,14 +74,14 @@
 <p>La idea es poder intercambiar rápidamente a un <em>“estado de mantenimiento”</em> de sitio controlado por una sentencia IF.</p>
 <p>Todas las configuraciones se hacen dentro de la directiva de configuración server.</p>
 <p>Definimos una variable llamada $maintenance que nos servirá para poder controlar el estatus de nuestro sitio.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#b58900">set</span> <span style="color:#268bd2">$maintenance</span> TRUE;
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#b58900">set</span> <span style="color:#268bd2">$maintenance</span> TRUE;
 </code></pre></div><p>Ahora en todas nuestras directivas location de nuestra configuración de sitio pondremos en la parte inicial una sentencia condicional IF que en caso de ser igual a TRUE retornaremos un error 503 (usado para manejar el estatus de servicio temporalmente inhabilitado o en mantenimiento), caso contrario continuara con el flujo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">location / <span style="color:#719e07">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">location / <span style="color:#719e07">{</span>
     <span style="color:#586e75"># Mantenimiento</span>
     <span style="color:#719e07">if</span> <span style="color:#719e07">(</span><span style="color:#268bd2">$maintenance</span> <span style="color:#719e07">=</span> TRUE<span style="color:#719e07">){</span> <span style="color:#719e07">return</span> 503; <span style="color:#719e07">}</span>
 <span style="color:#719e07">}</span>
 </code></pre></div><p>Toca definir como manejaremos el estatus <strong>503</strong> esto con la variable de configuración <code>error_page</code> (info) que nos permite manipular la respuesta que se dará cuando un código de error ocurra.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">error_page <span style="color:#2aa198">503</span> /503.html;
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">error_page <span style="color:#2aa198">503</span> /503.html;
 <span style="color:#268bd2">location</span> <span style="color:#719e07">=</span> /503.html <span style="color:#719e07">{</span>
     root /path/to/error/templates/;
 <span style="color:#719e07">}</span>

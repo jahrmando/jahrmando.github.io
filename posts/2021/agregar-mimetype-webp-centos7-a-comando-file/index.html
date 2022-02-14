@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Agregar Mimetype WEBP Centos7 a comando File" />
 <meta property="og:description" content="Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2021/agregar-mimetype-webp-centos7-a-comando-file/" />
+<meta property="og:url" content="https://armanroot.com/posts/2021/agregar-mimetype-webp-centos7-a-comando-file/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2021-04-15T16:08:59-05:00" />
 <meta property="article:modified_time" content="2021-04-15T16:08:59-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Agregar Mimetype WEBP Centos7 a comando File"/>
 <meta name="twitter:description" content="Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia."/>
@@ -82,7 +83,7 @@ que podemos agregar nuestros propias reglas para identificar archivos, esto esto
 de mimetypes, encontré una coincidencia para WEBP, de este modo pudé determinar como debe
 ir mi regla y con el manual el formato final. Al final el resultado es agregando mi regla
 en el archivo <code>/etc/magic</code></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback"># URL:	http://fileformats.archiveteam.org/wiki/WebP
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback"># URL:	http://fileformats.archiveteam.org/wiki/WebP
 0       string          RIFF            RIFF (little-endian) data
 &gt;8      string          WEBP            \b, Web/P image
 !:mime	image/webp

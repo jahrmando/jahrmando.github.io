@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Sat, 16 Aug 2014 10:00:00 -0500</lastBuildDate>
-    
-	<atom:link href="https://armanroot.com/tags/apache/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 16 Aug 2014 10:00:00 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/apache/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Top 10 IPs mas visitados en Apache / Nginx</title>
       <link>https://armanroot.com/posts/2014/top-10-ips-mas-visitados-en-apache-/-nginx/</link>

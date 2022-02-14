@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Migración en tiempo real de instancias en Qemu,KVM" />
 <meta property="og:description" content="Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2015/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemukvm/" />
+<meta property="og:url" content="https://armanroot.com/posts/2015/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemukvm/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2015-12-09T10:54:38-05:00" />
 <meta property="article:modified_time" content="2015-12-09T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Migración en tiempo real de instancias en Qemu,KVM"/>
 <meta name="twitter:description" content="Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone."/>
@@ -71,7 +72,7 @@
 		<div class="markdown">
 			<p>Hacer una copia del cliente <strong>VM1</strong> teniendo como resultado un cliente con el nombre de <strong>VM1_clone</strong>.</p>
 <p>Es necesario suspender ó apagar al cliente para poder clonarlo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh <span style="color:#b58900">suspend</span> VM1
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh <span style="color:#b58900">suspend</span> VM1
 Dominio VM1 suspendido
 </code></pre></div><p>Para clonar una instancia virtual lo hacemos con el comando <code>virt-clone</code>. Explicando un poco las opciones básicas seleccionadas acontinuación:</p>
 <ul>
@@ -79,11 +80,11 @@ Dominio VM1 suspendido
 <li>-n, es el nombre del nuevo cliente clonado</li>
 <li>-f, es la dirección absoluta de la nueva imagen de almacenamiento</li>
 </ul>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.img
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.img
 Asignando <span style="color:#2aa198">&#39;VM1_clone.img&#39;</span> | <span style="color:#2aa198">40</span> GB 04:52
 Clone <span style="color:#2aa198">&#39;VM1_clone&#39;</span> created successfully.
 </code></pre></div><p>Al terminar la ejecucion del comando anterior con <code>virsh resume</code> reanudamos nuestro cliente que esta pausado.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh resume VM1
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh resume VM1
 Migración de cliente en vivo <span style="color:#719e07">(</span>Live<span style="color:#719e07">)</span>
 </code></pre></div><p>La migración en vivo nos es de utilidad cuando requerimos mover el cliente de su “servidor virtual” hacia otro sin necesidad de apagar el cliente, esto es completamente transparente.</p>
 <p>Requisitos previos:</p>
@@ -100,7 +101,7 @@ Migración de cliente en vivo <span style="color:#719e07">(</span>Live<span styl
 <li>virt2 tiene asignado la IP 10.0.0.2</li>
 </ul>
 <p>En ambos servidores tendremos configurado el archivo host para que resuelva sus nombres de dominio locales asignados.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/hosts
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/hosts
 127.0.0.1   localhost localhost.localdomain
 ::1         localhost localhost.localdomain
 10.0.0.1   virt1
@@ -108,26 +109,26 @@ Migración de cliente en vivo <span style="color:#719e07">(</span>Live<span styl
 </code></pre></div><p>En este ejemplo usaremos un servicio <strong>NFS</strong> como storage pool, este contiene nuestras imagenes de discos de nuestras instancias virtuales.</p>
 <p>Ambos servidores <em>Qemu/KVM</em> deben tener montado en el mismo directorio el recurso NFS.</p>
 <p>La sintaxis del comando de migración <code>virsh migrate</code> es la siguiente:</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh migrate --live --persistent Guest URLConnection
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ virsh migrate --live --persistent Guest URLConnection
 </code></pre></div><p>Donde <em><strong>Guest</strong></em>, es el nombre del cliente a migrar.</p>
 <p><em><strong>URLConnection</strong></em> es la URL de conexión hacia el servidor destino, ejemplo: <code>qemu+ssh://hostname/system</code>.</p>
 <p>La opcion <code>--persistent</code> nos hara el movimiento permanente. De lo contrario si esta opcion no es puesta al apagar el cliente en el servidor destino se eliminara las configuraciones.</p>
 <p>Listamos las instancias virtuales que se esta ejecutando en <em>virt1</em></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh list
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh list
  Id    Nombre                         Estado
 ----------------------------------------------------
  <span style="color:#2aa198">1</span>     VM1                            ejecutando
 </code></pre></div><p>Ahora migramos VM1 del servidor virt1 al servidor virt2.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh migrate --live --persistent VM1 qemu+ssh://virt2/system
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh migrate --live --persistent VM1 qemu+ssh://virt2/system
 </code></pre></div><p>Notese que el comando anterior usa el servicio SSH y de manera implicita conecta usando el usuario root. Si quisieramos usar otro usuario ante ponemos al nombre del hostname el usuario.
 Por ejemplo: <code>qemu+ssh://admin@virt2/system</code></p>
 <p>Listamos las instancias virtuales y observamos que <strong>VM1</strong> esta apagado en <strong>virt1</strong></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh list --all
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt1<span style="color:#719e07">)</span>$ virsh list --all
  Id    Nombre                         Estado
 ----------------------------------------------------
  -     VM1                            apagado
 </code></pre></div><p>Y ahora listamos las instancias virtuales y vemos a <strong>VM1</strong> que ya se encuentra ejecutandose en <strong>virt2</strong>.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt2<span style="color:#719e07">)</span>$ virsh list --all
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>virt2<span style="color:#719e07">)</span>$ virsh list --all
  Id    Nombre                         Estado
 ----------------------------------------------------
  <span style="color:#2aa198">1</span>     VM1                            ejecutando

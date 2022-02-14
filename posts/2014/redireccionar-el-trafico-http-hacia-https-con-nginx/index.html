@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Redireccionar el trafico HTTP hacia HTTPS con NGINX" />
 <meta property="og:description" content="Cuando tengamos que mudar un sitio web completamente a protocolo seguro HTTPS necesitamos que toda petición que venga como HTTP y redirigir hacia el protocolo seguro." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2014/redireccionar-el-trafico-http-hacia-https-con-nginx/" />
+<meta property="og:url" content="https://armanroot.com/posts/2014/redireccionar-el-trafico-http-hacia-https-con-nginx/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2014-11-24T10:00:00-05:00" />
 <meta property="article:modified_time" content="2014-11-24T10:00:00-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Redireccionar el trafico HTTP hacia HTTPS con NGINX"/>
 <meta name="twitter:description" content="Cuando tengamos que mudar un sitio web completamente a protocolo seguro HTTPS necesitamos que toda petición que venga como HTTP y redirigir hacia el protocolo seguro."/>
@@ -72,16 +73,16 @@
 			<p>Cuando tengamos que mudar un sitio web completamente a protocolo seguro HTTPS necesitamos que toda petición que venga como HTTP y redirigir hacia el protocolo seguro.</p>
 <p>Creamos dos instancias server, una para el puerto 80 (http) y otra para el puerto 443 (https).</p>
 <p>Para la instancia server del puerto 443 pondremos toda la configuración del sitio y con los debidos ajustes que SSL requiere.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">server <span style="color:#719e07">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">server <span style="color:#719e07">{</span>
     listen <span style="color:#2aa198">443</span> ssl;
     server_name  example.com;
     server_tokens off;
 
     <span style="color:#586e75"># Toda tu configuracion del sitio acontinuacion</span>
-    #
+    <span style="color:#586e75">#</span>
 <span style="color:#719e07">}</span>
 </code></pre></div><p>Para la instancia server del puerto 80 pondremos los ajustes de redirección, en la linea de configuración que empieza con return especifica que cuando hay una petición este devolverá un estado 301 (Movido permanentemente) y lo va redirigir a la misma URI pero con el ajuste en el protocolo, en este caso el protocolo HTTPS.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">server <span style="color:#719e07">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">server <span style="color:#719e07">{</span>
     listen 80;
     server_name  example.com;
     server_tokens off;

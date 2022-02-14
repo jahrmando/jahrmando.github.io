@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Configurar NGINX y PHP-FPM en CentOS 7" />
 <meta property="og:description" content="Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/" />
+<meta property="og:url" content="https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2015-02-07T10:54:38-05:00" />
 <meta property="article:modified_time" content="2015-02-07T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Configurar NGINX y PHP-FPM en CentOS 7"/>
 <meta name="twitter:description" content="Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM."/>
@@ -74,30 +75,30 @@
 <p>Las configuraciones presentadas funcionan bajo el esquema de seguridad <strong>SELINUX</strong>.</p>
 </blockquote>
 <p>Instalemos el servicio <em>NGINX</em> desde los reposotorios <em>EPEL</em>.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo yum install nginx --enablerepo epel
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo yum install nginx --enablerepo epel
 </code></pre></div><blockquote>
 <p>Si no tiene el repositorio <em>EPEL</em> configurado hagalo desde <a href="http://www.cyberciti.biz/faq/installing-rhel-epel-repo-on-centos-redhat-7-x/">aquí</a></p>
 </blockquote>
 <p>Ahora vamos a habilitar el servicio en el inicio de sistema con el comando <code>enable</code> y despues iniciamos el servicio (<code>start</code>).</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo systemctl <span style="color:#b58900">enable</span> nginx.service
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo systemctl <span style="color:#b58900">enable</span> nginx.service
 $ sudo systemctl start nginx.service
 </code></pre></div><p>Por defecto <em>CentOS 7</em> trae el servicio <em>firewalld</em> como servicio de muro de fuego, <em>firewalld</em> maneja perfiles de servicio para habilitar puertos por lo cual vamos ha habilitar el perfil <em><strong>http</strong></em> que nos abre el puerto <em>80/TCP</em>.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo firewall-cmd --zone<span style="color:#719e07">=</span>public --add-service<span style="color:#719e07">=</span>http --permanent
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo firewall-cmd --zone<span style="color:#719e07">=</span>public --add-service<span style="color:#719e07">=</span>http --permanent
 $ sudo firewall-cmd --reload
 </code></pre></div><p>Podemos ver el estatus del firewall usando el comando <code>firewall-cmd --list-all</code>.</p>
 <h3 id="configuración-de-nginx">Configuración de NGINX</h3>
 <p>Ahora vamos a configurar el <em>NGINX</em>, primero creamos una carpeta llamada <em>sites-enabled</em> que sera el directorio donde <em>NGINX</em> cargará configuraciones.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo mkdir /etc/nginx/sites-enabled
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo mkdir /etc/nginx/sites-enabled
 </code></pre></div><p>El esquema como buena practica, es que nosotros crearemos los archivos desde el directorio <em><strong>/etc/nginx/conf.d</strong></em> y &ldquo;<em>activaremos</em>&rdquo; la configuracion creando un acceso directo de la configuracion apuntando a <em><strong>/etc/nginx/sites-enabled</strong></em>.</p>
 <p><em>Ejemplo</em>:</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ln -s /etc/nginx/conf.d/misitio.conf /etc/nginx/sites-enabled/misitio.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ln -s /etc/nginx/conf.d/misitio.conf /etc/nginx/sites-enabled/misitio.conf
 </code></pre></div><blockquote>
 <p>De esta manera nos es mas facil desactivar sitios sin borrar sus archivos de configuracion.</p>
 </blockquote>
 <p>Antes de iniciar la edicion del archivo principal de configuracion de <em>NGINX</em> respaldamos la configuracion inicial.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
 </code></pre></div><p>Configuramos de la siguiente manera, siga las instruccion de los comentarios del archivo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo vim /etc/nginx/nginx.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo vim /etc/nginx/nginx.conf
 user  nginx;
 worker_processes  4;						<span style="color:#586e75"># Ajuste de acuerdo al numero de CPUs</span>
 
@@ -131,9 +132,9 @@ http <span style="color:#719e07">{</span>
 <span style="color:#719e07">}</span>
 </code></pre></div><h3 id="configuracion-de-php-fpm-soporte-fastcgi-para-php">Configuracion de php-fpm (Soporte FastCGI para PHP)</h3>
 <p>El servicio <a href="http://php-fpm.org">php-fpm</a> nos da el sorporte para sitios web hechos en <em>PHP</em>. Procedamos a instalar php-fpm y los modulos PHP necesarios para su funcion.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo yum install php-fpm php-common php-cli php-pear php-pdo php-gd php-mbstring php-xml php-pecl-apc --enablerepo epel
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo yum install php-fpm php-common php-cli php-pear php-pdo php-gd php-mbstring php-xml php-pecl-apc --enablerepo epel
 </code></pre></div><p>Ahora editamos el archivo de configuracion de <em>php-fpm</em>. Configuraciones importantes en la variable <code>listen</code> donde declaramos el socket del servicio y las variables <code>user</code> y <code>group</code>.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/php-fpm.d/www.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/php-fpm.d/www.conf
 ;<span style="color:#268bd2">listen</span> <span style="color:#719e07">=</span> 127.0.0.1:9000
 <span style="color:#268bd2">listen</span> <span style="color:#719e07">=</span> /var/run/php5-fpm.sock
 
@@ -146,11 +147,11 @@ http <span style="color:#719e07">{</span>
 
 security.limit_extensions <span style="color:#719e07">=</span> .php .php3 .php4 .php5
 </code></pre></div><p>Creamos directorios indispensables para el servicio y le asignamos los permisos correspondientes.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir -p /var/lib/php/<span style="color:#719e07">{</span>session,tmp<span style="color:#719e07">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir -p /var/lib/php/<span style="color:#719e07">{</span>session,tmp<span style="color:#719e07">}</span>
 $ chmod <span style="color:#2aa198">750</span> -R /var/lib/php/
 $ chown nginx:nginx -R /var/lib/php/
 </code></pre></div><p>Ahora agregamos el siguiente archivo, este contiene configuraciones de seguridad que he recopilado y que nos permite agregarle un extra de seguridad.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/php.d/security.ini
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/php.d/security.ini
 ; Ocultar version de PHP
 <span style="color:#268bd2">expose_php</span><span style="color:#719e07">=</span>Off
 ; Ocultar errores
@@ -182,11 +183,11 @@ $ chown nginx:nginx -R /var/lib/php/
 Estas opciones las puede ajustar a su criterio.</p>
 </blockquote>
 <p>Habilitamos el servicio en el inicio de sistema e iniciamos el servicio.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl <span style="color:#b58900">enable</span> php-fpm.service
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl <span style="color:#b58900">enable</span> php-fpm.service
 $ systemctl start php-fpm.service
 </code></pre></div><h3 id="configuracion-de-un-sitio-de-prueba">Configuracion de un sitio de prueba</h3>
 <p>Lo primero que haremos es crear el archivo de configuracion de nuestro sitio en <em>NGINX</em> (recuerde que estas van en el directorio <em>/etc/nginx/conf.d</em>).</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/nginx/conf.d/test.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/nginx/conf.d/test.conf
 server <span style="color:#719e07">{</span>
 	listen       <span style="color:#2aa198">80</span> default;
 	server_name  localhost;
@@ -232,25 +233,25 @@ server <span style="color:#719e07">{</span>
 <span style="color:#719e07">}</span>
 </code></pre></div><p>Usted puede ver que estamos declarando que los archivos de nuestro sitio estaran alojados en <em><strong>/home/www</strong></em>.</p>
 <p>Ahora lo que haremos es activar nuestra configuracion nginx de prueba, para esto creamos un enlace directo hacia <em>/etc/nginx/sites-enabled</em> que es donde se <em>NGINX</em> carga los archivos de configuracion (como lo declaramos anteriormente).</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ln -s /etc/nginx/conf.d/test.conf /etc/nginx/sites-enabled/test.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ln -s /etc/nginx/conf.d/test.conf /etc/nginx/sites-enabled/test.conf
 </code></pre></div><p>Creamos el directorio donde alojaremos nuestros sitio</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir -p /home/www/test/public_html
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir -p /home/www/test/public_html
 </code></pre></div><p>Creamos un archivo <em>php</em> donde ejecutaremos la funcion <code>phpinfo()</code> para compobrar que este funcionando correctamente.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">	$ vim /home/www/test/public_html/index.php
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">	$ vim /home/www/test/public_html/index.php
 	&lt;?php
 			phpinfo<span style="color:#719e07">()</span>;
 	?&gt;
 </code></pre></div><p>Asignamos permisos adecuados.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">750</span> -R /home/www
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">750</span> -R /home/www
 $ chown nginx:nginx -R /home/www
 </code></pre></div><p>Permisos necesarios para <strong>SELinux</strong></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">	$ semanage fcontext -a -t httpd_sys_content_t <span style="color:#2aa198">&#34;/home/www(.*)&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">	$ semanage fcontext -a -t httpd_sys_content_t <span style="color:#2aa198">&#34;/home/www(.*)&#34;</span>
 	$ restorecon -R -v /home/www/
 </code></pre></div><blockquote>
 <p>No olvide asignar los permisos que se mencionan anteriormente para cada proyecto <em>PHP</em> que configure.</p>
 </blockquote>
 <p>Reiniciamos el servicio para cargar todo</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl restart nginx.service
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl restart nginx.service
 </code></pre></div>
 		</div>
 

@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Asignación de permisos en linux" />
 <meta property="og:description" content="Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2012/asignaci%C3%B3n-de-permisos-en-linux/" />
+<meta property="og:url" content="https://armanroot.com/posts/2012/asignaci%C3%B3n-de-permisos-en-linux/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2012-04-08T10:54:38-05:00" />
 <meta property="article:modified_time" content="2012-04-08T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Asignación de permisos en linux"/>
 <meta name="twitter:description" content="Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:"/>
@@ -70,7 +71,7 @@
 
 		<div class="markdown">
 			<p>Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Propietario - Grupo - Otros
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Propietario - Grupo - Otros
 </code></pre></div><p>A cada nivel de permiso se le tiene asignado un valor numérico.</p>
 <ul>
 <li>Lectura (r) = 4</li>
@@ -78,18 +79,18 @@
 <li>Ejecución (x) = 1</li>
 </ul>
 <p>Ahora bien para asignar permisos se usa el comando chmod, solo tenemos realmente que sumar los valores de los permisos que queremos darle a cada nivel:</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">755</span> suarchivo.txt
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">755</span> suarchivo.txt
 </code></pre></div><p>En el comando anterior vemos que tiene a nivel propietario los permisos de lectura, escritura y ejecución (4+2+1), a nivel Grupo y Otros tiene permisos lectura y ejecución (4+1).</p>
 <p>Si ejecutamos el siguiente comando que es para listar el directorio con detalles prodremos ver los privilegios asignados al archivo en el sistema:</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ls -l suarchivo.txt
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ls -l suarchivo.txt
 -rwxr-xr-x ...
 </code></pre></div><p>Otra forma de asignación de privilegios:</p>
 <p>Tomando en cuenta con explicado anteriormente, retomamos que tenemos los privilegios de lectura (r), escritura (w) y ejecución (x); y que los niveles de propietarios son usuario (u), grupo (g) y otros (o). De esta manera nosotros podemos asignar (+) o des asignar (-) privilegios.</p>
 <p>Sintaxis: <code>chmod ( u - g - o )( + / - )( w - r - x )</code></p>
 <p>Siguiendo con el ejemplo anterior, aplicando esta sintaxis quedaría de esta forma:</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod u+rwx suarchivo.txt
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod u+rwx suarchivo.txt
 </code></pre></div><p>Asignamos privilegios de lectura, escritura y ejecucion al usuario</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod go+rx suarchivo.txt
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod go+rx suarchivo.txt
 </code></pre></div><p>Asignamos privilegios de lectura y ejecución al grupo y a otros</p>
 <p>Entender este concepto es muy importante para no tener el terrible fallo de siempre estarle asignando a todos los archivos y directorios de tu linux permisos que no deben tener y con ello comprometer la seguridad de tu sistema.</p>
 

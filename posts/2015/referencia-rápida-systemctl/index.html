@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Referencia Rápida: systemctl" />
 <meta property="og:description" content="Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2015/referencia-r%C3%A1pida-systemctl/" />
+<meta property="og:url" content="https://armanroot.com/posts/2015/referencia-r%C3%A1pida-systemctl/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2015-01-07T16:00:00-05:00" />
 <meta property="article:modified_time" content="2015-01-07T16:00:00-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Referencia Rápida: systemctl"/>
 <meta name="twitter:description" content="Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd."/>
@@ -71,17 +72,17 @@
 		<div class="markdown">
 			<p>Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd.</p>
 <p>Estado del servicio</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl status foo.service
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl status foo.service
 </code></pre></div><p>Iniciar/Detener servicio</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemcl <span style="color:#719e07">[</span>start|stop<span style="color:#719e07">]</span> foo.service
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemcl <span style="color:#719e07">[</span>start|stop<span style="color:#719e07">]</span> foo.service
 </code></pre></div><p>Habilitar/Inhabilitar servicio al inicio del sistema</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl <span style="color:#719e07">[</span>enable|disable<span style="color:#719e07">]</span> foo.service
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl <span style="color:#719e07">[</span>enable|disable<span style="color:#719e07">]</span> foo.service
 </code></pre></div><p>Estado de los servicios que estan ejecutandose</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl -t service list-units
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl -t service list-units
 </code></pre></div><p>Estado de los servicios que estan instalados (<code>chkconfig --list</code>)</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl -t service list-unit-files
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl -t service list-unit-files
 </code></pre></div><p>Servicios actualmente ejecutandose</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl -t service list-units --state running
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl -t service list-units --state running
 </code></pre></div>
 		</div>
 

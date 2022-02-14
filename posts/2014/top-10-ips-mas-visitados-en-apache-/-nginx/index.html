@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Top 10 IPs mas visitados en Apache / Nginx" />
 <meta property="og:description" content="Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2014/top-10-ips-mas-visitados-en-apache-/-nginx/" />
+<meta property="og:url" content="https://armanroot.com/posts/2014/top-10-ips-mas-visitados-en-apache-/-nginx/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2014-08-16T10:00:00-05:00" />
 <meta property="article:modified_time" content="2014-08-16T10:00:00-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Top 10 IPs mas visitados en Apache / Nginx"/>
 <meta name="twitter:description" content="Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP."/>
@@ -70,7 +71,7 @@
 
 		<div class="markdown">
 			<p>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cat site.access.log | awk <span style="color:#2aa198">&#39;{print $1}&#39;</span> | sort | uniq -c | sort -nr | head -n <span style="color:#2aa198">10</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cat site.access.log | awk <span style="color:#2aa198">&#39;{print $1}&#39;</span> | sort | uniq -c | sort -nr | head -n <span style="color:#2aa198">10</span>
 <span style="color:#2aa198">78320</span> 187.xxx.xxx.74
 <span style="color:#2aa198">75052</span> 187.xxx.xxx.76
 <span style="color:#2aa198">74229</span> 187.xxx.xxx.206

@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Crear usuario de lectura (read-only) en PostgreSQL" />
 <meta property="og:description" content="Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2014/crear-usuario-de-lectura-read-only-en-postgresql/" />
+<meta property="og:url" content="https://armanroot.com/posts/2014/crear-usuario-de-lectura-read-only-en-postgresql/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2014-06-27T10:54:38-05:00" />
 <meta property="article:modified_time" content="2014-06-27T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Crear usuario de lectura (read-only) en PostgreSQL"/>
 <meta name="twitter:description" content="Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos."/>
@@ -71,28 +72,28 @@
 		<div class="markdown">
 			<p>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.</p>
 <p>Nos conectamos a la base de datos (<em>test_db</em>) donde vamos a aplicar estos privilegios y con un usuario privilegiado para poder hacer las modificaciones (postgres).</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ su - postgres -c <span style="color:#2aa198">&#39;psql -U postgres -d test_db&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ su - postgres -c <span style="color:#2aa198">&#39;psql -U postgres -d test_db&#39;</span>
 </code></pre></div><p>Creamos el ROL <strong>read_user</strong> con privilegios limitados.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># CREATE ROLE read_user;</span>
-</code></pre></div><div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># CREATE ROLE read_user WITH LOGIN ENCRYPTED PASSWORD &#39;password&#39; NOSUPERUSER INHERIT NOCREATEROLE NOREPLICATION NOCREATEDB;</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># CREATE ROLE read_user;</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># CREATE ROLE read_user WITH LOGIN ENCRYPTED PASSWORD &#39;password&#39; NOSUPERUSER INHERIT NOCREATEROLE NOREPLICATION NOCREATEDB;</span>
 </code></pre></div><p>Damos privilegio <code>CONNECT</code> para que nuestro usuario read_user puede conectarse a la base de datos <strong>test_db</strong>, y <code>USAGE</code> para usar el esquema que definamos, en nuestro caso <code>public</code></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># GRANT CONNECT ON DATABASE test_db TO read_user;</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># GRANT CONNECT ON DATABASE test_db TO read_user;</span>
 <span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># GRANT USAGE ON SCHEMA public TO read_user;</span>
 </code></pre></div><p>Al usuario read_user le vamos a dar los privilegios de <code>SELECT</code> en las todas las tablas en el SCHEMA public (Que por defecto es el esquema que usa postgresql para una base de datos) y el privilegio <code>EXECUTE</code> sobre funciones en la base de datos.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># GRANT SELECT ON ALL TABLES IN SCHEMA public TO read_user;</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># GRANT SELECT ON ALL TABLES IN SCHEMA public TO read_user;</span>
 <span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO read_user;</span>
 </code></pre></div><p>Ahora bien los comandos anteriores solo tienen efecto sobre las tablas existentes, necesitamos modificar los privilegios por defecto de la base de datos test_db para que se apliquen los privilegios anteriores a nuevas tablas.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO read_user;</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO read_user;</span>
 <span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO read_user;</span>
 </code></pre></div><p>Para ver los privilegios actuales de las tables en la base de datos ejecutamos <code>\z</code> en el cmd.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># \z</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># \z</span>
 Access privileges
   Schema  |        Name        |   Type   |     Access privileges     | Column access privileges
 ----------+--------------------------+----------+---------------------------+-------------------
  public   | prueba_tabla       | table    | <span style="color:#268bd2">postgres</span><span style="color:#719e07">=</span>arwdDxt/postgres+|
           |                    |          | <span style="color:#268bd2">read_user</span><span style="color:#719e07">=</span>r/postgres      |
 </code></pre></div><p>Ahora creamos un usuario que herede los privilegios del Rol que definimos para un usuario de solo lectura.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># CREATE ROLE menganito WITH LOGIN ENCRYPTED PASSWORD &#39;password&#39; NOSUPERUSER INHERIT NOCREATEROLE NOREPLICATION NOCREATEDB;</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># CREATE ROLE menganito WITH LOGIN ENCRYPTED PASSWORD &#39;password&#39; NOSUPERUSER INHERIT NOCREATEROLE NOREPLICATION NOCREATEDB;</span>
 <span style="color:#268bd2">test_db</span><span style="color:#719e07">=</span><span style="color:#586e75"># GRANT read_user TO menganito;</span>
 </code></pre></div>
 		</div>

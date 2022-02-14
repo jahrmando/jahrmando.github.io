@@ -6,9 +6,10 @@
 	<meta property="og:title" content="PostgreSQL replicar en maestro-esclavo" />
 <meta property="og:description" content="Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2015/postgresql-replicar-en-maestro-esclavo/" />
+<meta property="og:url" content="https://armanroot.com/posts/2015/postgresql-replicar-en-maestro-esclavo/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2015-01-31T10:54:38-05:00" />
 <meta property="article:modified_time" content="2015-01-31T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="PostgreSQL replicar en maestro-esclavo"/>
 <meta name="twitter:description" content="Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9."/>
@@ -71,87 +72,87 @@
 		<div class="markdown">
 			<p>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.2</p>
 <p>Creamos y asignamos los permisos para el directorio que alojara todos los archivos necesarios para nuestra nueva instancia de servicio postgresql. #more</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir /var/lib/pgsql/9.2/data_slave
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir /var/lib/pgsql/9.2/data_slave
 $ chown postgres.postgres /var/lib/pgsql/9.2/data_slave/
 </code></pre></div><p>Hacemos una copia del script de inicio postgresql</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /etc/init.d/postgresql-9.2 /etc/init.d/postgresql-slave9.2
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /etc/init.d/postgresql-9.2 /etc/init.d/postgresql-slave9.2
 </code></pre></div><p>Modificamos los siguientes parametros en el script</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/init.d/postgresql-slave9.2
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/init.d/postgresql-slave9.2
 <span style="color:#268bd2">PGPORT</span><span style="color:#719e07">=</span><span style="color:#2aa198">5433</span>
 <span style="color:#268bd2">PGDATA</span><span style="color:#719e07">=</span>/var/lib/pgsql/9.2/data_slave
 <span style="color:#268bd2">PGLOG</span><span style="color:#719e07">=</span>/var/lib/pgsql/9.2/pgstartup_slave.log
 </code></pre></div><p>Agregamos el script al sistema de inicio y lo activamos.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chkconfig --add postgresql-slave9.2
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chkconfig --add postgresql-slave9.2
 $ chkconfig postgresql-slave9.2 on
 </code></pre></div><p>Inicializamos nuestra instancia postgresql</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service postgresql-slave9.2 initdb
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service postgresql-slave9.2 initdb
 </code></pre></div><p>Editamos estos parametros minimos para nuestra nueva instancia.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data_slave/postgresql.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data_slave/postgresql.conf
 <span style="color:#268bd2">listen_addresses</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">&#39;*&#39;</span>
 <span style="color:#268bd2">port</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">5433</span>
 </code></pre></div><p>Podemos copiar nuestra politica de acceso que tenemos en nuestra instancia anterior a la nueva instancia si asi lo consideramos optimo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /var/lib/pgsql/9.2/data/pg_hba.conf /var/lib/pgsql/9.2/data_slave/pg_hba.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /var/lib/pgsql/9.2/data/pg_hba.conf /var/lib/pgsql/9.2/data_slave/pg_hba.conf
 </code></pre></div><p>Iniciamos nuestro nueva instancia de servicio postgresql</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service postgresql-slave9.2 start
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service postgresql-slave9.2 start
 </code></pre></div><p>Conectandonos a la nueva instancia con <code>psql</code></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ su - postgres
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ su - postgres
 -bash-4.1$ psql -p5433
 </code></pre></div><h2 id="servicio-postgresql-en-modo-maestro-esclavo">Servicio PostgreSQL en modo Maestro-Esclavo</h2>
 <p>Hasta este punto tenemos nuestras dos instancias, ahora seguimos con las configuraciones para replicar en modo maestro-esclavo.</p>
 <h3 id="configuracion-del-servicio-maestro">Configuracion del servicio maestro.</h3>
 <p>Editamos el archivo principal de configuracion los paremetros para <em>WAL</em></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data/postgresql.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data/postgresql.conf
 <span style="color:#268bd2">wal_level</span> <span style="color:#719e07">=</span> hot_standby
 <span style="color:#268bd2">max_wal_senders</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">1</span>
 <span style="color:#268bd2">wal_keep_segments</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">50</span>
 <span style="color:#268bd2">archive_command</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">&#39;cp %p /tmp/backup/db001/%f&#39;</span>
 <span style="color:#268bd2">archive_mode</span> <span style="color:#719e07">=</span> on
 </code></pre></div><p>Editamos el archivo de configuracion de accesos</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data/pg_hba.conf
 host    replication     postgres        127.0.0.1/32            trust
 host    replication     postgres        ::1/128                 trust
 </code></pre></div><p>Reiniciamos el servidor maestro</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">service postgresql-9.2 restart
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">service postgresql-9.2 restart
 </code></pre></div><p>Ahora crearemos un <em>snapshot</em> de nuestro servidor maestro para el
 servidor esclavo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ su - postgres
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ su - postgres
 -bash-4.1$ psql -c <span style="color:#2aa198">&#34;SELECT pg_start_backup(&#39;mi_backup&#39;);&#34;</span>
 -bash-4.1$ cp -rvf /var/lib/pgsql/9.2/data /tmp/
 -bash-4.1$ psql -c <span style="color:#2aa198">&#34;SELECT pg_stop_backup();&#34;</span>
 -bash-4.1$ <span style="color:#b58900">exit</span>
 </code></pre></div><h2 id="confuguraciones-en-el-servicio-esclavo">Confuguraciones en el servicio esclavo</h2>
 <p>Detenemos el servicio</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service postgresql-slave9.2 stop
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service postgresql-slave9.2 stop
 </code></pre></div><p>Respaldamos los archivos de configuracion del servicio esclavo</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /var/lib/pgsql/9.2/data_slave/*.conf /tmp/
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /var/lib/pgsql/9.2/data_slave/*.conf /tmp/
 </code></pre></div><p>Eliminamos el directorio del servicio esclavo. Copiamos el <em>snapshot</em> maestro al directorio del servicio esclavo</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ su - postgres
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ su - postgres
 -bash-4.1$ rm -rf /var/lib/pgsql/9.2/data_slave/
 -bash-4.1$ mv /tmp/data /tmp/data_slave
 -bash-4.1$ cp -rvf /tmp/data_slave /var/lib/pgsql/9.2/
 </code></pre></div><p>Restauramos los archivos de configuracion del esclavo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">-bash-4.1$ cp /tmp/*.conf /var/lib/pgsql/9.2/data_slave/
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">-bash-4.1$ cp /tmp/*.conf /var/lib/pgsql/9.2/data_slave/
 </code></pre></div><p>Eliminar el <em>postmaster.pid</em> y los archivos xlog</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ rm -f /var/lib/pgsql/9.2/data_slave/postmaster.pid
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ rm -f /var/lib/pgsql/9.2/data_slave/postmaster.pid
 $ rm -r hotstandby2/pg_xlog/*
 </code></pre></div><p>Editamos lo siguiente en el archivo principal de configuracion los paremetros para <em>WAL</em></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data_slave/postgresql.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data_slave/postgresql.conf
 <span style="color:#268bd2">wal_level</span> <span style="color:#719e07">=</span> hot_standby
 <span style="color:#268bd2">archive_mode</span> <span style="color:#719e07">=</span> on
 <span style="color:#268bd2">archive_command</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">&#39;/bin/true&#39;</span>
 <span style="color:#268bd2">hot_standby</span> <span style="color:#719e07">=</span> on
 </code></pre></div><p>Creamos el archivo <em>recovery.conf</em> que es indispensable para que nuestro servicio esclavo
 empieze a recibir la replicacion.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /usr/pgsql-9.2/share/recovery.conf.sample /var/lib/pgsql/9.2/data_slave/recovery.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /usr/pgsql-9.2/share/recovery.conf.sample /var/lib/pgsql/9.2/data_slave/recovery.conf
 $ chown postgres.postgres /var/lib/pgsql/9.2/data_slave/recovery.conf
 </code></pre></div><p>Agregamos las siguiente configuracion a <em>recovery.conf</em></p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data_slave/recovery.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /var/lib/pgsql/9.2/data_slave/recovery.conf
 <span style="color:#268bd2">standby_mode</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">&#39;on&#39;</span>
 <span style="color:#268bd2">primary_conninfo</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">&#39;host=127.0.0.1 port=5432 user=postgres&#39;</span>
 <span style="color:#268bd2">trigger_file</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">&#39;/tmp/postgresql.slave.trigger&#39;</span>
 <span style="color:#268bd2">restore_command</span> <span style="color:#719e07">=</span> <span style="color:#2aa198">&#39;cp /tmp/backup/db001/%f \&#34;%p\&#34;&#39;</span>
 </code></pre></div><p>Iniciamos el servicio esclavo</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service postgresql-slave9.2 start
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service postgresql-slave9.2 start
 </code></pre></div>
 		</div>
 

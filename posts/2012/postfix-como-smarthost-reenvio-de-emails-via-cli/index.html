@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Postfix como smarthost, reenvio de emails via CLI" />
 <meta property="og:description" content="Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2012/postfix-como-smarthost-reenvio-de-emails-via-cli/" />
+<meta property="og:url" content="https://armanroot.com/posts/2012/postfix-como-smarthost-reenvio-de-emails-via-cli/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2012-10-10T10:54:38-05:00" />
 <meta property="article:modified_time" content="2012-10-10T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Postfix como smarthost, reenvio de emails via CLI"/>
 <meta name="twitter:description" content="Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal."/>
@@ -71,14 +72,14 @@
 		<div class="markdown">
 			<p>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.</p>
 <p>Instalamos los paquetes necesarios</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install postfix mailx cyrus-sasl cyrus-sasl-plain -y
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install postfix mailx cyrus-sasl cyrus-sasl-plain -y
 </code></pre></div><p>Configuración de credenciales</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/postfix/sasl_passwd
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/postfix/sasl_passwd
 smtp.gmail.com  user@gmail.com:miPassWord
 
 $ postmap hash:/etc/postfix/sasl_passwd
 </code></pre></div><p>Configurando postfix</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/postfix/main.cf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/postfix/main.cf
 <span style="color:#586e75">###################</span>
 <span style="color:#586e75"># SMARTHOST GMAIL #</span>
 <span style="color:#586e75">###################</span>
@@ -89,7 +90,7 @@ $ postmap hash:/etc/postfix/sasl_passwd
 <span style="color:#268bd2">smtp_sasl_password_maps</span> <span style="color:#719e07">=</span> hash:/etc/postfix/sasl_passwd
 <span style="color:#268bd2">smtp_tls_CAfile</span> <span style="color:#719e07">=</span> /etc/ssl/certs/ca-bundle.crt
 </code></pre></div><p>Configurando los servicios:</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl stop sendmail.service
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl stop sendmail.service
 $ systemctl disable sendmail.service
 $ alternatives --config mta
 There are <span style="color:#2aa198">2</span> programs which provide ‘mta’.
@@ -100,7 +101,7 @@ There are <span style="color:#2aa198">2</span> programs which provide ‘mta’.
        Enter to keep the current selection<span style="color:#719e07">[</span>+<span style="color:#719e07">]</span>, or <span style="color:#b58900">type</span> selection number: <span style="color:#2aa198">2</span>
 $ systemctl start postfix.service
 </code></pre></div><p>Probando todo</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ <span style="color:#b58900">echo</span> <span style="color:#2aa198">&#34;Hello world!&#34;</span> | mail -s <span style="color:#2aa198">&#34;Prueba de correo&#34;</span> micorreo@test.com
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ <span style="color:#b58900">echo</span> <span style="color:#2aa198">&#34;Hello world!&#34;</span> | mail -s <span style="color:#2aa198">&#34;Prueba de correo&#34;</span> micorreo@test.com
 </code></pre></div>
 		</div>
 

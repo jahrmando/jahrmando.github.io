@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Tue, 28 Jan 2014 10:00:38 -0500</lastBuildDate>
-    
-	<atom:link href="https://armanroot.com/tags/bind/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 28 Jan 2014 10:00:38 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/bind/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bloquear conexiones HTTPS usando DNS</title>
       <link>https://armanroot.com/posts/2014/bloquear-conexiones-https-usando-dns/</link>

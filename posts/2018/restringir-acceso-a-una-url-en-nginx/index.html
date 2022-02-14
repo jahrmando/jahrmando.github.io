@@ -6,9 +6,10 @@
 	<meta property="og:title" content="Restringir acceso a una URL en NGINX" />
 <meta property="og:description" content="Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2018/restringir-acceso-a-una-url-en-nginx/" />
+<meta property="og:url" content="https://armanroot.com/posts/2018/restringir-acceso-a-una-url-en-nginx/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2018-09-06T10:54:38-05:00" />
 <meta property="article:modified_time" content="2018-09-06T10:54:38-05:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Restringir acceso a una URL en NGINX"/>
 <meta name="twitter:description" content="Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP."/>
@@ -72,17 +73,17 @@
 			<p>Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.</p>
 <p>La utilidad <code>htpasswd</code> nos permite manejar los accesos de usuario para la autenticación básica por HTTP, esto en <em>CentOS</em> se encuentra en el paquete <strong>httpd-tools</strong>.</p>
 <p>Instalamos el paquete <em>httpd-tools</em>.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install httpd-tools
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install httpd-tools
 </code></pre></div><p>Agregamos el usuario, usando la opción <code>-c</code> para crear el archivo de base de datos y este se alojara en el directorio <strong><em>/etc/nginx/htpasswd</em></strong>, con la opción <code>-s</code> habilitamos que la contraseña sea cifrada en <em><strong>SHA</strong></em>.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ htpasswd -s -c /etc/nginx/htpasswd <span style="color:#719e07">[</span>mi usuario<span style="color:#719e07">]</span>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ htpasswd -s -c /etc/nginx/htpasswd <span style="color:#719e07">[</span>mi usuario<span style="color:#719e07">]</span>
 </code></pre></div><p>Asignamos como propietario al usuario y grupo <em>NGINX</em>.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chown nginx:nginx /etc/nginx/htpasswd
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chown nginx:nginx /etc/nginx/htpasswd
 </code></pre></div><p>Asignamos acceso de solo lectura a usuario y grupo.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">440</span> /etc/nginx/htpasswd
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">440</span> /etc/nginx/htpasswd
 </code></pre></div><p>Seguimos con la configuración del servicio <em>NGINX</em>, dentro del bloque <em><strong>server</strong></em> usamos el bloque <em><strong>location</strong></em> donde describimos el acceso a nuestro recurso <em>/manager/</em>, con las directivas <em><strong>allow</strong></em> y <em><strong>deny</strong></em> restringimos el acceso vía IP ó subred.</p>
 <p>Con el modulo <em><strong>ngx_http_auth_basic_module</strong></em> solicitamos acceso vía usuario-contraseña, esta se activa con la directiva <strong>auth_basic</strong> y con la directiva <em><strong>auth_basic_user_file</strong></em> especificamos el directorio donde se encuentra nuestro base de datos de usuarios generado con <code>htpasswd</code> anteriormente.</p>
 <p>La directiva <em><strong>alias</strong></em> describimos el directorio en el servidor.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/nginx/sites-available/my_site.conf
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/nginx/sites-available/my_site.conf
 server <span style="color:#719e07">{</span>
 <span style="color:#719e07">[</span>...<span style="color:#719e07">]</span>
 	location /manager/ <span style="color:#719e07">{</span>
@@ -96,7 +97,7 @@ server <span style="color:#719e07">{</span>
 <span style="color:#719e07">[</span>...<span style="color:#719e07">]</span>
 <span style="color:#719e07">}</span>
 </code></pre></div><p>Recargamos el servicio NGINX para aplicar los cambios.</p>
-<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service nginx reload
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service nginx reload
 </code></pre></div>
 		</div>
 
