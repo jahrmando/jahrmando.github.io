@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
     <copyright>© Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Mon, 14 Feb 2022 15:49:57 -0600</lastBuildDate><atom:link href="https://armanroot.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 17 Feb 2022 11:48:33 -0600</lastBuildDate><atom:link href="https://armanroot.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Migrar servicio a otra región AWS usando Terraform Workspaces y Git Branches</title>
+      <link>https://armanroot.com/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/</link>
+      <pubDate>Thu, 17 Feb 2022 11:48:33 -0600</pubDate>
+      
+      <guid>https://armanroot.com/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/</guid>
+      <description>En este ejercicio lo que queremos realizar es el migrar un servicio (Cluster, ECS, RDS, EC2) hacia otra región de AWS.</description>
+    </item>
+    
     <item>
       <title>Copiar archivo en multiples directorios Linux</title>
       <link>https://armanroot.com/posts/2022/copiar-archivo-en-multiples-directorios-linux/</link>

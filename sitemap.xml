@@ -3,15 +3,18 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://armanroot.com/</loc>
-    <lastmod>2022-02-14T15:49:57-06:00</lastmod>
+    <lastmod>2022-02-17T11:48:33-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/</loc>
+    <lastmod>2022-02-17T11:48:33-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/posts/</loc>
+    <lastmod>2022-02-17T11:48:33-06:00</lastmod>
   </url><url>
     <loc>https://armanroot.com/tags/command-line/</loc>
     <lastmod>2022-02-14T15:49:57-06:00</lastmod>
   </url><url>
     <loc>https://armanroot.com/posts/2022/copiar-archivo-en-multiples-directorios-linux/</loc>
-    <lastmod>2022-02-14T15:49:57-06:00</lastmod>
-  </url><url>
-    <loc>https://armanroot.com/posts/</loc>
     <lastmod>2022-02-14T15:49:57-06:00</lastmod>
   </url><url>
     <loc>https://armanroot.com/tags/</loc>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Migrar servicio a otra región AWS usando Terraform Workspaces y Git Branches - Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/favicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Migrar servicio a otra región AWS usando Terraform Workspaces y Git Branches" />
+<meta property="og:description" content="En este ejercicio lo que queremos realizar es el migrar un servicio (Cluster, ECS, RDS, EC2) hacia otra región de AWS." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://armanroot.com/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-02-17T11:48:33-06:00" />
+<meta property="article:modified_time" content="2022-02-17T11:48:33-06:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Migrar servicio a otra región AWS usando Terraform Workspaces y Git Branches"/>
+<meta name="twitter:description" content="En este ejercicio lo que queremos realizar es el migrar un servicio (Cluster, ECS, RDS, EC2) hacia otra región de AWS."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
+	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://armanroot.com/js/main.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<base href="https://armanroot.com/">
+	<h1 class="site-title"><a href="https://armanroot.com/">Blog - Armando Uch</a></h1>
+	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Inicio</a>
+			</li>
+			
+			<li>
+				<a href="/posts">Bitacora</a>
+			</li>
+			
+			<li>
+				<a href="/opinion">Opinion</a>
+			</li>
+			
+			<li>
+				<a href="/about">Acerca de</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Topics</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Migrar servicio a otra región AWS usando Terraform Workspaces y Git Branches</h1>
+			<div class="meta">Posted at &mdash; Feb 17, 2022</div>
+		</div>
+
+		<div class="markdown">
+			<p>En este ejercicio lo que queremos realizar es el migrar un servicio (Cluster, ECS, RDS, EC2) hacia
+otra región de AWS.</p>
+<p>La idea principal es crear un <strong>workspace</strong> en terraform para manejar el estado de trancision y
+una rama de <strong>git</strong> para llevar los cambios necesarios en los archivos <em>.tf</em> y si
+tu infraestructura lo permite solo tendrías que meter cambios en el segmento <code>provider</code> como se ve
+acontinuación.</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">provider &#34;aws&#34; {
+  region = &#34;us-east-1&#34;
+}
+</code></pre></div><p>Tomemos en cuenta que este ejercicio depende de:</p>
+<ul>
+<li>Tu <strong>backend</strong> de estados esta en <strong>S3</strong></li>
+<li>Tu <strong>Lock</strong> con <strong>DynamoDB</strong></li>
+</ul>
+<p>Y muy importante <em><strong>notificar</strong></em> a tu Equipo que estas trabajando en una migración para que no metan cambios :)</p>
+<h2 id="migrar-el-servicio">Migrar el servicio</h2>
+<p>Creamos una rama <strong>git</strong> para los cambios y un <strong>workspace</strong> para el estado</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">git checkout -b enhancement/migration
+terraform workspace new migration
+</code></pre></div><p>Revisamos que estemos en el nuevo <strong>workspace</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">terraform workspace list
+  default
+* migration
+</code></pre></div><p>Realizamos las adecuaciones a nuestros archivos terraform, como el cambio de nombre de la región AWS en
+el segmento de <code>provider</code>.</p>
+<p>Validamos y aplicamos los recursos en la nueva región.</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">terraform plan
+terraform apply
+</code></pre></div><p>Ahora tenemos nuestro servicio completamente creado, hacemos nuestras pruebas
+para validar que la replica en la región este funcional antes de pasar a migrar el estado de
+terraform.</p>
+<p>Para finalizar confirmamos nuestros cambios en la rama</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">git add *.tf 
+git commit -b &#34;region migration for service X&#34;
+git push 
+</code></pre></div><h2 id="mover-nuestro-workspace-_migration_-hacia-el-_default_">Mover nuestro workspace <em>migration</em> hacia el <em>default</em></h2>
+<p>Una vez que terminamos de crear el servicio en la nueva región tenemos ahora que mover nuestro
+estado de terraform hacia el <strong>workspace</strong> <code>default</code>.</p>
+<blockquote>
+<p>Siempre antes de hacer algun moviento con terraform apliquen un <code>plan</code> para verificar que
+nuestra infraestructura esta sin cambios pendientes.</p>
+</blockquote>
+<p>Primero nos movemos al workspace <em>migration</em> y respaldamos el estado para importarlo mas adelante.</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">terraform workspace <span style="color:#719e07">select</span> migration
+terraform state pull &gt; migration.tfstate
+</code></pre></div><p>Una vez respaldado, nos movemos al workspace <em>default</em>  y a nuestra rama de producción (<em>master</em>)</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">git checkout master
+terraform workspace <span style="color:#719e07">select</span> default
+</code></pre></div><p>Ahora volvemos a confirmar cambios y eliminamos el stack que ya migramos</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">terraform plan
+terraform destroy
+</code></pre></div><p>Nos regresamos a la rama de migración que tiene los cambios e importamos el estado previo
+que generamos (<em>migration.tfstate</em>)  al workspace <em>default</em>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">git checkout enhancement/migration
+terraform workspace <span style="color:#719e07">select</span> default
+terraform state push migration.tfstate
+</code></pre></div><p>Validamos con un <code>plan</code> para revisar que la infraestructura no tenga cambios.</p>
+<p>Y para finalizar eliminamos nuestro workspace donde llevamos la migración</p>
+<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">terraform workspace delete -force migration
+</code></pre></div><p>Con el estado ya alojado en nuestro <strong>workspace</strong> <em>default</em> creamos un PR ó hacemos merge de
+nuestros cambios al branch master, cual sea su flujo de integración.</p>
+<p>Este es un proceso que me sirvió y espero a alguno de ustedes les ayude. :)</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = 'armanroot-com';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> © Copyright All Rights Reserved |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>
