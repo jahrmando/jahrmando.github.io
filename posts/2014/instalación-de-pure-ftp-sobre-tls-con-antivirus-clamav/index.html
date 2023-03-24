@@ -1,76 +1,52 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Instalación de Pure-FTP sobre TLS con antivirus ClamAV - Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/favicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta property="og:title" content="Instalación de Pure-FTP sobre TLS con antivirus ClamAV" />
-<meta property="og:description" content="Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2014/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2014-04-28T16:00:00-05:00" />
-<meta property="article:modified_time" content="2014-04-28T16:00:00-05:00" />
+<html lang="es">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Instalación de Pure-FTP sobre TLS con antivirus ClamAV"/>
-<meta name="twitter:description" content="Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV"/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+    <head><title>Instalación de Pure-FTP sobre TLS con antivirus ClamAV &ndash; Blog de Armando</title>
+<meta name="description" content="An Accidental Engineer&lt;br&gt;• Lazy #Programmer • #TacOps 🌮 • #BOFH&lt;br&gt; 🎸⚾️🍺☕️">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
 
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-	<script src="https://armanroot.com/js/main.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://armanroot.com/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://armanroot.com/css/risotto.css">
+<link rel="stylesheet" href="https://armanroot.com/css/custom.css">
 </head>
 
-<body>
-	<div class="container wrapper post">
-		<div class="header">
-	<base href="https://armanroot.com/">
-	<h1 class="site-title"><a href="https://armanroot.com/">Blog - Armando Uch</a></h1>
-	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
-			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
-		</nav>
-	</div>
+    <body>
+        <div class="page">
 
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Inicio</a>
-			</li>
-			
-			<li>
-				<a href="/posts">Bitacora</a>
-			</li>
-			
-			<li>
-				<a href="/opinion">Opinion</a>
-			</li>
-			
-			<li>
-				<a href="/about">Acerca de</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Topics</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
+            <header class="page__header"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1>
+<nav class="page__nav main-nav">
+    <ul>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/about/" title="">Acerca de</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/posts/" title="">bitacora</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/blog/" title="">blog</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/tags/" title="">Topics</a></li>
+    
+    </ul>
+</nav>
 
+</header>
 
-		<div class="post-header">
-			<h1 class="title">Instalación de Pure-FTP sobre TLS con antivirus ClamAV</h1>
-			<div class="meta">Posted at &mdash; Apr 28, 2014</div>
-		</div>
-
-		<div class="markdown">
-			<p>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV</p>
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Instalación de Pure-FTP sobre TLS con antivirus ClamAV</h1>
+    </header>
+    <div class="content__body">
+        <p>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV</p>
 <h2 id="repositorios">Repositorios</h2>
 <p>Instalación de repositorio RPM Fusión (En caso de no tenerlo instalado)</p>
 <p>Arquitecturas:</p>
@@ -79,177 +55,201 @@
 <li><a href="http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm">x86_64</a></li>
 </ul>
 <p>En este ejemplo de instalación usamos el repositorio de <strong>x86_64</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
-$ rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
-$ rpm -K rpmforge-release-0.5.2-2.el6.rf.*.rpm
-rpmforge-release-0.5.2-2.el6.rf.i686.rpm: <span style="color:#719e07">(</span>sha1<span style="color:#719e07">)</span> dsa sha1 md5 gpg BIEN
-</code></pre></div><h2 id="instalacion">Instalacion</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
+</span></span><span style="display:flex;"><span>$ rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
+</span></span><span style="display:flex;"><span>$ rpm -K rpmforge-release-0.5.2-2.el6.rf.*.rpm
+</span></span><span style="display:flex;"><span>rpmforge-release-0.5.2-2.el6.rf.i686.rpm: <span style="color:#f92672">(</span>sha1<span style="color:#f92672">)</span> dsa sha1 md5 gpg BIEN
+</span></span></code></pre></div><h2 id="instalacion">Instalacion</h2>
 <p>Instalamos pure-ftp desde el repositorio RPM Forge.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install pure-ftpd -y --enablerepo rpmforge
-</code></pre></div><h2 id="configuración">Configuración</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ yum install pure-ftpd -y --enablerepo rpmforge
+</span></span></code></pre></div><h2 id="configuración">Configuración</h2>
 <p>Siga la siguiente configuración.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/pure-ftpd/pure-ftpd.conf
-<span style="color:#586e75"># Don&#39;t allow authenticated users - have a public anonymous FTP only.</span>
-AnonymousOnly               no
-
-<span style="color:#586e75"># Disallow anonymous connections. Only allow authenticated users.</span>
-NoAnonymous                 yes
-
-<span style="color:#586e75"># If you want simple Unix (/etc/passwd) authentication, uncomment this</span>
-UnixAuthentication            yes
-
-<span style="color:#586e75"># Port range for passive connections replies. - for firewalling.</span>
-PassivePortRange            <span style="color:#2aa198">30000</span> <span style="color:#2aa198">35000</span>
-
-<span style="color:#586e75"># So 1000:10 limits every user to 1000 files and 10 Mb.</span>
-Quota                       1000:10
-
-<span style="color:#586e75"># When the partition is more that X percent full, new uploads are disallowed.</span>
-MaxDiskUsage               <span style="color:#2aa198">90</span>
-
-<span style="color:#586e75"># Users can&#39;t delete/write files beginning with a dot (&#39;.&#39;)</span>
-ProhibitDotFilesWrite       yes
-
-<span style="color:#586e75"># Prohibit *reading* of files beginning with a dot (.history, .ssh...)</span>
-ProhibitDotFilesRead        yes
-
-<span style="color:#586e75"># Create an additional log file with transfers logged in the standard W3C</span>
-<span style="color:#586e75"># format (compatible with most commercial log analyzers)</span>
-AltLog                     w3c:/var/log/pureftpd.log
-
-<span style="color:#586e75"># Listen only to IPv4 addresses in standalone mode (ie. disable IPv6)</span>
-<span style="color:#586e75"># By default, both IPv4 and IPv6 are enabled.</span>
-IPV4Only                 yes
-</code></pre></div><p>Reiniciamos el servicio.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service pure-ftpd start
-Iniciando pure-ftpd:                                       <span style="color:#719e07">[</span>  OK  <span style="color:#719e07">]</span>
-</code></pre></div><p>Agregamos que el servicio inicie con el sistema.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chkconfig pure-ftpd on
-</code></pre></div><h3 id="configuración-de-mensaje-de-bienvenida-opcional">Configuración de mensaje de bienvenida (opcional)</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/pure-ftpd/pure-ftpd.conf
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Don&#39;t allow authenticated users - have a public anonymous FTP only.</span>
+</span></span><span style="display:flex;"><span>AnonymousOnly               no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Disallow anonymous connections. Only allow authenticated users.</span>
+</span></span><span style="display:flex;"><span>NoAnonymous                 yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># If you want simple Unix (/etc/passwd) authentication, uncomment this</span>
+</span></span><span style="display:flex;"><span>UnixAuthentication            yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Port range for passive connections replies. - for firewalling.</span>
+</span></span><span style="display:flex;"><span>PassivePortRange            <span style="color:#ae81ff">30000</span> <span style="color:#ae81ff">35000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># So 1000:10 limits every user to 1000 files and 10 Mb.</span>
+</span></span><span style="display:flex;"><span>Quota                       1000:10
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># When the partition is more that X percent full, new uploads are disallowed.</span>
+</span></span><span style="display:flex;"><span>MaxDiskUsage               <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Users can&#39;t delete/write files beginning with a dot (&#39;.&#39;)</span>
+</span></span><span style="display:flex;"><span>ProhibitDotFilesWrite       yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prohibit *reading* of files beginning with a dot (.history, .ssh...)</span>
+</span></span><span style="display:flex;"><span>ProhibitDotFilesRead        yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create an additional log file with transfers logged in the standard W3C</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># format (compatible with most commercial log analyzers)</span>
+</span></span><span style="display:flex;"><span>AltLog                     w3c:/var/log/pureftpd.log
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Listen only to IPv4 addresses in standalone mode (ie. disable IPv6)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># By default, both IPv4 and IPv6 are enabled.</span>
+</span></span><span style="display:flex;"><span>IPV4Only                 yes
+</span></span></code></pre></div><p>Reiniciamos el servicio.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ service pure-ftpd start
+</span></span><span style="display:flex;"><span>Iniciando pure-ftpd:                                       <span style="color:#f92672">[</span>  OK  <span style="color:#f92672">]</span>
+</span></span></code></pre></div><p>Agregamos que el servicio inicie con el sistema.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ chkconfig pure-ftpd on
+</span></span></code></pre></div><h3 id="configuración-de-mensaje-de-bienvenida-opcional">Configuración de mensaje de bienvenida (opcional)</h3>
 <p>Creamos un  archivo con el mensaje.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ touch /etc/pure-ftpd/welcome.msg
-$ vim /etc/pure-ftpd/welcome.msg
-!ACCESO RESTRINGIDO! !RESTRICTED ACCESS!
-* Nos reservamos el derecho de guardar su IP
-* We reserve the right to store your IP address
-</code></pre></div><p>Editamos el <em>script</em> de inicio del servicio y agregamos la opción <strong>-F</strong> junto con el <em><strong>path</strong></em> del mensaje que editamos. Busque la linea y edite como se muestra a continuación</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/init.d/pure-ftpd
-.
-.
-daemon <span style="color:#2aa198">&#34;</span><span style="color:#268bd2">$pure_launch_script</span><span style="color:#2aa198"> </span><span style="color:#268bd2">$pure_config</span><span style="color:#2aa198"> --daemonize &gt; /dev/null -F /etc/pure-ftpd/welcome.msg&#34;</span>
-.
-.
-</code></pre></div><h3 id="configuración-de-firewall">Configuración de Firewall</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ touch /etc/pure-ftpd/welcome.msg
+</span></span><span style="display:flex;"><span>$ vim /etc/pure-ftpd/welcome.msg
+</span></span><span style="display:flex;"><span>!ACCESO RESTRINGIDO! !RESTRICTED ACCESS!
+</span></span><span style="display:flex;"><span>* Nos reservamos el derecho de guardar su IP
+</span></span><span style="display:flex;"><span>* We reserve the right to store your IP address
+</span></span></code></pre></div><p>Editamos el <em>script</em> de inicio del servicio y agregamos la opción <strong>-F</strong> junto con el <em><strong>path</strong></em> del mensaje que editamos. Busque la linea y edite como se muestra a continuación</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/init.d/pure-ftpd
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>daemon <span style="color:#e6db74">&#34;</span>$pure_launch_script<span style="color:#e6db74"> </span>$pure_config<span style="color:#e6db74"> --daemonize &gt; /dev/null -F /etc/pure-ftpd/welcome.msg&#34;</span>
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>.
+</span></span></code></pre></div><h3 id="configuración-de-firewall">Configuración de Firewall</h3>
 <p>Abrimos los puertos en el <em>firewall</em> del sistema que va requerir el servicio.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/sysconfig/iptables
--A INPUT -m state --state NEW -m tcp -p tcp --dport 20:21 -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 30000:40000 -j ACCEPT
-</code></pre></div><p>Reiniciamos el servicio para aplicar cambios.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service iptables restart
-</code></pre></div><h2 id="configuracion-de-soporte-ssl-ftps">Configuracion de Soporte SSL (ftps)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/sysconfig/iptables
+</span></span><span style="display:flex;"><span>-A INPUT -m state --state NEW -m tcp -p tcp --dport 20:21 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -m state --state NEW -m tcp -p tcp --dport 30000:40000 -j ACCEPT
+</span></span></code></pre></div><p>Reiniciamos el servicio para aplicar cambios.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ service iptables restart
+</span></span></code></pre></div><h2 id="configuracion-de-soporte-ssl-ftps">Configuracion de Soporte SSL (ftps)</h2>
 <p>Instamos <em><strong>openssl</strong></em>, requerido para manejar el soporte SSL.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install openssl -y
-</code></pre></div><p>Abrimos el archivo de configuración del servicio y editamos de acuerdo a los siguiente.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vi /etc/pure-ftpd/pure-ftpd.conf
-<span style="color:#586e75"># This option can accept three values :</span>
-<span style="color:#586e75"># 0 : disable SSL/TLS encryption layer (default).</span>
-<span style="color:#586e75"># 1 : accept both traditional and encrypted sessions.</span>
-<span style="color:#586e75"># 2 : refuse connections that don&#39;t use SSL/TLS security mechanisms,</span>
-<span style="color:#586e75">#     including anonymous sessions.</span>
-
-TLS                      <span style="color:#2aa198">2</span>
-
-<span style="color:#586e75"># List of ciphers that will be accepted for SSL/TLS connections</span>
-
-TLSCipherSuite           HIGH:!MEDIUM:!LOW:+TLSv1:!SSLv2:+SSLv3@STRENGTH
-</code></pre></div><p>Generemos los certificados que usara el servicio con <code>openssl</code>. Fíjese en la opción <strong>-days</strong> y ajuste según su criterio.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/pki/pure-ftpd/pure-ftpd.pem -out /etc/pki/pure-ftpd/pure-ftpd.pem -days <span style="color:#2aa198">3650</span>
-</code></pre></div><p>Ajustamos los permisos del archivo a solo lectura por el usuario.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">400</span> /etc/pki/pure-ftpd/pure-ftpd.pem
-</code></pre></div><p>Reiniciamos el servicio para aplicar los cambios.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service pure-ftpd restart
-</code></pre></div><h2 id="integración-de-clamav-antivirus">Integración de ClamAV (Antivirus)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ yum install openssl -y
+</span></span></code></pre></div><p>Abrimos el archivo de configuración del servicio y editamos de acuerdo a los siguiente.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vi /etc/pure-ftpd/pure-ftpd.conf
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This option can accept three values :</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 0 : disable SSL/TLS encryption layer (default).</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1 : accept both traditional and encrypted sessions.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2 : refuse connections that don&#39;t use SSL/TLS security mechanisms,</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#     including anonymous sessions.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>TLS                      <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># List of ciphers that will be accepted for SSL/TLS connections</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>TLSCipherSuite           HIGH:!MEDIUM:!LOW:+TLSv1:!SSLv2:+SSLv3@STRENGTH
+</span></span></code></pre></div><p>Generemos los certificados que usara el servicio con <code>openssl</code>. Fíjese en la opción <strong>-days</strong> y ajuste según su criterio.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/pki/pure-ftpd/pure-ftpd.pem -out /etc/pki/pure-ftpd/pure-ftpd.pem -days <span style="color:#ae81ff">3650</span>
+</span></span></code></pre></div><p>Ajustamos los permisos del archivo a solo lectura por el usuario.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ chmod <span style="color:#ae81ff">400</span> /etc/pki/pure-ftpd/pure-ftpd.pem
+</span></span></code></pre></div><p>Reiniciamos el servicio para aplicar los cambios.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ service pure-ftpd restart
+</span></span></code></pre></div><h2 id="integración-de-clamav-antivirus">Integración de ClamAV (Antivirus)</h2>
 <p>En Pure-FTP es posible integrar un escaneo de los archivos que se suben por medio de FTP  con ClamAV.</p>
 <p>Instalamos el servicio ClamAV desde RPM Forge.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install clamav clamd -y --enablerepo rpmforge
-</code></pre></div><p>Damos de alta el servicio para el inicio con el sistema.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chkconfig clamd on
-</code></pre></div><p>Iniciamos el servicio.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service clamd start
-</code></pre></div><p>Actualizamos la base de datos de virus.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ freshclam
-</code></pre></div><p>Abrimos el archivo de configuración del servicio y lo habilitamos poniendo el valor <strong>yes</strong> en <em><strong>CallUploadScript</strong></em></p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vi /etc/pure-ftpd/pure-ftpd.conf
-<span style="color:#586e75"># If your pure-ftpd has been compiled with pure-uploadscript support,</span>
-<span style="color:#586e75"># this will make pure-ftpd write info about new uploads to</span>
-<span style="color:#586e75"># /var/run/pure-ftpd.upload.pipe so pure-uploadscript can read it and</span>
-<span style="color:#586e75"># spawn a script to handle the upload.</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ yum install clamav clamd -y --enablerepo rpmforge
+</span></span></code></pre></div><p>Damos de alta el servicio para el inicio con el sistema.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ chkconfig clamd on
+</span></span></code></pre></div><p>Iniciamos el servicio.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ service clamd start
+</span></span></code></pre></div><p>Actualizamos la base de datos de virus.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ freshclam
+</span></span></code></pre></div><p>Abrimos el archivo de configuración del servicio y lo habilitamos poniendo el valor <strong>yes</strong> en <em><strong>CallUploadScript</strong></em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vi /etc/pure-ftpd/pure-ftpd.conf
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># If your pure-ftpd has been compiled with pure-uploadscript support,</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># this will make pure-ftpd write info about new uploads to</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># /var/run/pure-ftpd.upload.pipe so pure-uploadscript can read it and</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># spawn a script to handle the upload.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>CallUploadScript yes
+</span></span></code></pre></div><p>Creamos el siguiente <em>script</em> que nos permitirá ejecutar el ClamAV y escanear el archivo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vi /etc/pure-ftpd/clamav_check.sh
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash</span>
+</span></span><span style="display:flex;"><span>/usr/bin/clamscan --remove --quiet --no-summary <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>Ajustamos los permisos del script.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ chmod <span style="color:#ae81ff">555</span> /etc/pure-ftpd/clamav_check.sh
+</span></span></code></pre></div><p>Probamos que nuestro script funcione con <code>pure-uploadscript</code>, que es el encargado de ejecutar nuestro script y tenga la integración con ClamAV el servicio pure-ftp.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ pure-uploadscript -B -r /etc/pure-ftpd/clamav_check.sh
+</span></span></code></pre></div><p>Agregamos que se ejecute <code>pure-uploadscript</code> cada inicio de sistema.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vi /etc/rc.local
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This script will be executed *after* all the other init scripts.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># You can put your own initialization stuff in here if you don&#39;t</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># want to do the full Sys V style init stuff.</span>
+</span></span><span style="display:flex;"><span>/usr/sbin/pure-uploadscript -B -r /etc/pure-ftpd/clamav_check.sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>touch /var/lock/subsys/local
+</span></span></code></pre></div><p>Reiniciamos el servicio para aplicar los cambios.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ service pure-ftpd restart
+</span></span></code></pre></div>
+    </div>
+    <footer class="content__footer"></footer>
 
-CallUploadScript yes
-</code></pre></div><p>Creamos el siguiente <em>script</em> que nos permitirá ejecutar el ClamAV y escanear el archivo.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vi /etc/pure-ftpd/clamav_check.sh
-<span style="color:#586e75">#!/bin/bash</span>
-/usr/bin/clamscan --remove --quiet --no-summary <span style="color:#2aa198">&#34;</span><span style="color:#268bd2">$1</span><span style="color:#2aa198">&#34;</span>
-</code></pre></div><p>Ajustamos los permisos del script.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#2aa198">555</span> /etc/pure-ftpd/clamav_check.sh
-</code></pre></div><p>Probamos que nuestro script funcione con <code>pure-uploadscript</code>, que es el encargado de ejecutar nuestro script y tenga la integración con ClamAV el servicio pure-ftp.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ pure-uploadscript -B -r /etc/pure-ftpd/clamav_check.sh
-</code></pre></div><p>Agregamos que se ejecute <code>pure-uploadscript</code> cada inicio de sistema.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vi /etc/rc.local
-<span style="color:#586e75">#!/bin/sh</span>
-<span style="color:#586e75">#</span>
-<span style="color:#586e75"># This script will be executed *after* all the other init scripts.</span>
-<span style="color:#586e75"># You can put your own initialization stuff in here if you don&#39;t</span>
-<span style="color:#586e75"># want to do the full Sys V style init stuff.</span>
-/usr/sbin/pure-uploadscript -B -r /etc/pure-ftpd/clamav_check.sh
+            </section>
 
-touch /var/lock/subsys/local
-</code></pre></div><p>Reiniciamos el servicio para aplicar los cambios.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service pure-ftpd restart
-</code></pre></div>
-		</div>
-
-		<div class="post-tags">
-			
-				
-					<nav class="nav tags">
-							<ul class="flat">
-								
-								<li><a href="/tags/pureftp">pureftp</a></li>
-								
-								<li><a href="/tags/centos">centos</a></li>
-								
-							</ul>
-					</nav>
-				
-			
-		</div>
-		<div id="disqus_thread"></div>
-<script type="text/javascript">
-	(function () {
-		
-		
-		if (window.location.hostname == "localhost")
-			return;
-
-		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-		var disqus_shortname = 'armanroot-com';
-		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-	})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
-		Disqus.</a></noscript>
-<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div> © Copyright All Rights Reserved |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="https://armanroot.com/images/avatar.jpeg" alt="Logo">
+<h1 class="about__title">Armando Uch</h1>
+<p class="about__description">An Accidental Engineer<br>• Lazy #Programmer • #TacOps 🌮 • #BOFH<br> 🎸⚾️🍺☕️</p>
 </div>
 
 
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/jahrmando" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://www.linkedin.com/in/armandouch/" rel="me" aria-label="Linkedin" title="Linkedin"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://twitter.com/armanroot" rel="me" aria-label="Twitter" title="Twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2014-04-28
+        </p>
+    
 
-<script>feather.replace()</script>
-</body>
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">© Armando Uch | Copyright All Rights Reserved</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
 </html>

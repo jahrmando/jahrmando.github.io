@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog - Armando Uch</title>
+    <title>Hola! on Blog de Armando</title>
     <link>https://armanroot.com/</link>
-    <description>Recent content on Blog - Armando Uch</description>
+    <description>Recent content in Hola! on Blog de Armando</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Thu, 17 Feb 2022 11:48:33 -0600</lastBuildDate><atom:link href="https://armanroot.com/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
+    <lastBuildDate>Fri, 19 Apr 2019 21:37:58 +0530</lastBuildDate><atom:link href="https://armanroot.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Como uso mi Tarjeta de Credito en mis gastos diarios</title>
+      <link>https://armanroot.com/blog/2023/como-uso-mi-tarjeta-de-credito-en-mis-gastos-diarios/</link>
+      <pubDate>Fri, 24 Mar 2023 15:49:13 -0600</pubDate>
+      
+      <guid>https://armanroot.com/blog/2023/como-uso-mi-tarjeta-de-credito-en-mis-gastos-diarios/</guid>
+      <description>Esto es algo que hago y me permite no descapitalizarme $$ (mas en estos tiempos) y usar la TDC para mis gastos fijos/corriente, además de generar historial crediticio. Muchos tienen miedo de usarla ó tienden a usarlo de manera equivocada.
+Aquí mis tips de como lo uso:
+Has tu lista de gastos fijos (supermercado, agua, luz, internet, servicio en línea, etc) usa el valor exacto ó un valor máximo y fechas de pago, esto para determinar tu gasto total en por mes.</description>
+    </item>
+    
     <item>
       <title>Migrar servicio a otra región AWS usando Terraform Workspaces y Git Branches</title>
       <link>https://armanroot.com/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/</link>
       <pubDate>Thu, 17 Feb 2022 11:48:33 -0600</pubDate>
       
       <guid>https://armanroot.com/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/</guid>
-      <description>En este ejercicio lo que queremos realizar es el migrar un servicio (Cluster, ECS, RDS, EC2) hacia otra región de AWS.</description>
+      <description>En este ejercicio lo que queremos realizar es el migrar un servicio (Cluster, ECS, RDS, EC2) hacia otra región de AWS.
+La idea principal es crear un workspace en terraform para manejar el estado de transición y una rama de git para llevar los cambios necesarios en los archivos .tf y si tu infraestructura lo permite solo tendrías que meter cambios en el segmento provider como se ve acontinuación.
+provider &amp;#34;aws&amp;#34; { region = &amp;#34;us-east-1&amp;#34; } Tomemos en cuenta que este ejercicio depende de:</description>
     </item>
     
     <item>
@@ -23,7 +36,9 @@
       <pubDate>Mon, 14 Feb 2022 15:49:57 -0600</pubDate>
       
       <guid>https://armanroot.com/posts/2022/copiar-archivo-en-multiples-directorios-linux/</guid>
-      <description>Cada que pienso en correr un comando que va ser repetitivo y sin generar algun script en bash o algo, siempre pienso en el comando xargs y veran muchos tips usandolo aqui.</description>
+      <description>Cada que pienso en correr un comando que va ser repetitivo y sin generar algun script en bash o algo, siempre pienso en el comando xargs y veran muchos tips usandolo aqui.
+Ahora tengo la necesidad de copiar un archivo en varios subdiretorios que tienen algun prefijo, primero genero los paths con echo y los paso despues al pipe | junto con xargs para correrlo por cada subdiretorio generado:
+echo dest-path-sufix-{1,2} | xargs -n 1 cp -v another-path/file-to-copy.</description>
     </item>
     
     <item>
@@ -32,7 +47,9 @@
       <pubDate>Thu, 15 Apr 2021 16:08:59 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2021/agregar-mimetype-webp-centos7-a-comando-file/</guid>
-      <description>Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia.</description>
+      <description>Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia.
+Despues de que stackoverflow me falló ya me fui a los manuales de file donde nos dice que podemos agregar nuestros propias reglas para identificar archivos, esto esto en:
+$HOME/.magic /etc/magic Revisando en poco el repositorio de mimetypes, encontré una coincidencia para WEBP, de este modo pudé determinar como debe ir mi regla y con el manual el formato final.</description>
     </item>
     
     <item>
@@ -41,8 +58,11 @@
       <pubDate>Fri, 19 Apr 2019 21:37:58 +0530</pubDate>
       
       <guid>https://armanroot.com/about/</guid>
-      <description>Greetings human!
-Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y una breve explicación de lo que aquí encontraras y lo que no encontraras (Windows :P).</description>
+      <description>Hola! Hola! soy Armando, Actualmente trabajo como DevOps Engineer y tengo un amplio interés sobre temas como:
+Cloud Computing Linux Infosec Programación Siempre ando probando y aprendiendo nuevas cosas respecto a estos temas.
+Me considero un entusiasta sobre Python 🐍 y Linux 🐧, esto porque no pierdo ninguna oportunidad de hablar sobre esto 😅.
+Actualmente estoy trabajando en Meru 💻
+Preguntame sobre.. En mi trayectoria de trabajo tengo experiencia con lo siguiente:</description>
     </item>
     
     <item>
@@ -51,7 +71,10 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2018/restringir-acceso-a-una-url-en-nginx/</guid>
-      <description>Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.</description>
+      <description>Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.
+La utilidad htpasswd nos permite manejar los accesos de usuario para la autenticación básica por HTTP, esto en CentOS se encuentra en el paquete httpd-tools.
+Instalamos el paquete httpd-tools.
+$ yum install httpd-tools Agregamos el usuario, usando la opción -c para crear el archivo de base de datos y este se alojara en el directorio /etc/nginx/htpasswd, con la opción -s habilitamos que la contraseña sea cifrada en SHA.</description>
     </item>
     
     <item>
@@ -60,7 +83,9 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Mon, 20 Feb 2017 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2017/aplicar-un-update-a-vmware-esxi-5/</guid>
-      <description>Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.</description>
+      <description>Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.
+Este proceso se hace por medio de SSH. Se tiene que activar desde el VMware vShepere Client:
+Server&amp;gt;Configuration&amp;gt;SecurityProfiles&amp;gt;Services&amp;gt;Properties Apagar todas las maquinas virtuales Antes de entrar a modo de mantenimiento es necesario apagar todas las maquinas virtuales o migrarlos si es posible.</description>
     </item>
     
     <item>
@@ -69,7 +94,10 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemukvm/</guid>
-      <description>Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone.</description>
+      <description>Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone.
+Es necesario suspender ó apagar al cliente para poder clonarlo.
+$ virsh suspend VM1 Dominio VM1 suspendido Para clonar una instancia virtual lo hacemos con el comando virt-clone. Explicando un poco las opciones básicas seleccionadas acontinuación:
+-o, nombramos el cliente que vamos a clonar -n, es el nombre del nuevo cliente clonado -f, es la dirección absoluta de la nueva imagen de almacenamiento $ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.</description>
     </item>
     
     <item>
@@ -78,7 +106,10 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Fri, 27 Mar 2015 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/sitio-web-en-mantenimiento-con-nginx/</guid>
-      <description>Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline.</description>
+      <description>Crear un estado de “Mantenimiento de sitio” es necesario para mantener informado a nuestros usuarios de lo que acontece con nuestro sitio y no verla completamente offline.
+La idea es poder intercambiar rápidamente a un “estado de mantenimiento” de sitio controlado por una sentencia IF.
+Todas las configuraciones se hacen dentro de la directiva de configuración server.
+Definimos una variable llamada $maintenance que nos servirá para poder controlar el estatus de nuestro sitio.</description>
     </item>
     
     <item>
@@ -87,7 +118,11 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/</guid>
-      <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.</description>
+      <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.
+Las configuraciones presentadas funcionan bajo el esquema de seguridad SELINUX.
+Instalemos el servicio NGINX desde los reposotorios EPEL.
+$ sudo yum install nginx --enablerepo epel Si no tiene el repositorio EPEL configurado hagalo desde aquí
+Ahora vamos a habilitar el servicio en el inicio de sistema con el comando enable y despues iniciamos el servicio (start).</description>
     </item>
     
     <item>
@@ -96,7 +131,10 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Sat, 31 Jan 2015 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/postgresql-replicar-en-maestro-esclavo/</guid>
-      <description>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.</description>
+      <description>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.2
+Creamos y asignamos los permisos para el directorio que alojara todos los archivos necesarios para nuestra nueva instancia de servicio postgresql. #more
+$ mkdir /var/lib/pgsql/9.2/data_slave $ chown postgres.postgres /var/lib/pgsql/9.2/data_slave/ Hacemos una copia del script de inicio postgresql
+$ cp /etc/init.d/postgresql-9.2 /etc/init.d/postgresql-slave9.2 Modificamos los siguientes parametros en el script</description>
     </item>
     
     <item>
@@ -105,7 +143,8 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Fri, 16 Jan 2015 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/instalacion-de-bacula-en-centos-7/</guid>
-      <description>Bacula es un conjunto de programas Open Source, listos para la empresa, que permiten administrar los backups, restauración y verificación de datos en una red heterogénea.</description>
+      <description>Bacula es un conjunto de programas Open Source, listos para la empresa, que permiten administrar los backups, restauración y verificación de datos en una red heterogénea.
+Bacula es relativamente fácil de usar y eficiente, a la vez que ofrece muchas funcionalidades avanzadas para la administración de los datos almacenados, lo cual facilita hallar y recuperar archivos perdidos o dañados. En términos técnicos, Bacula es un sistema de backups Open Source, orientado a la red y listo para la empresa.</description>
     </item>
     
     <item>
@@ -114,7 +153,14 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Wed, 07 Jan 2015 16:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/referencia-r%C3%A1pida-systemctl/</guid>
-      <description>Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd.</description>
+      <description>Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd.
+Estado del servicio
+$ systemctl status foo.service Iniciar/Detener servicio
+$ systemcl [start|stop] foo.service Habilitar/Inhabilitar servicio al inicio del sistema
+$ systemctl [enable|disable] foo.service Estado de los servicios que estan ejecutandose
+$ systemctl -t service list-units Estado de los servicios que estan instalados (chkconfig --list)
+$ systemctl -t service list-unit-files Servicios actualmente ejecutandose
+$ systemctl -t service list-units --state running </description>
     </item>
     
     <item>
@@ -123,7 +169,8 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/cambiar-cifrado-de-contrase%C3%B1as-en-centos/</guid>
-      <description>Podemos cambiar el algoritmo de cifrado que va usar el PAM en el archivo /etc/passwd.</description>
+      <description>Podemos cambiar el algoritmo de cifrado que va usar el PAM en el archivo /etc/passwd.
+$ vim /etc/sysconfig/authconfig PASSWDALGORITHM=value # # The password algorithm. The value can be bigcrypt, descrypt, md5, sha256, or sha512. For example: # PASSWDALGORITHM=sha512 Happy hacking..</description>
     </item>
     
     <item>
@@ -132,7 +179,10 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Mon, 24 Nov 2014 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/redireccionar-el-trafico-http-hacia-https-con-nginx/</guid>
-      <description>Cuando tengamos que mudar un sitio web completamente a protocolo seguro HTTPS necesitamos que toda petición que venga como HTTP y redirigir hacia el protocolo seguro.</description>
+      <description>Cuando tengamos que mudar un sitio web completamente a protocolo seguro HTTPS necesitamos que toda petición que venga como HTTP y redirigir hacia el protocolo seguro.
+Creamos dos instancias server, una para el puerto 80 (http) y otra para el puerto 443 (https).
+Para la instancia server del puerto 443 pondremos toda la configuración del sitio y con los debidos ajustes que SSL requiere.
+server { listen 443 ssl; server_name example.</description>
     </item>
     
     <item>
@@ -141,7 +191,8 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Sat, 16 Aug 2014 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/top-10-ips-mas-visitados-en-apache-/-nginx/</guid>
-      <description>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.</description>
+      <description>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.
+$ cat site.access.log | awk &amp;#39;{print $1}&amp;#39; | sort | uniq -c | sort -nr | head -n 10 78320 187.xxx.xxx.74 75052 187.xxx.xxx.76 74229 187.xxx.xxx.206 72214 187.xxx.xxx.79 70507 192.168.xxx.200 68457 187.xxx.xxx.123 67956 187.xxx.xxx.207 66438 187.xxx.xxx.78 64883 187.xxx.xxx.201 64874 187.</description>
     </item>
     
     <item>
@@ -150,7 +201,8 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       <pubDate>Fri, 27 Jun 2014 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/crear-usuario-de-lectura-read-only-en-postgresql/</guid>
-      <description>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.</description>
+      <description>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.
+Nos conectamos a la base de datos (test_db) donde vamos a aplicar estos privilegios y con un usuario privilegiado para poder hacer las modificaciones (postgres).</description>
     </item>
     
     <item>
@@ -160,7 +212,11 @@ Bueno ya que has caído en este sitio permite me hablarte un poco sobre mí y un
       
       <guid>https://armanroot.com/posts/2014/configuracion-y-administracion-de-postgresql-9.x/</guid>
       <description>En este howto configuraremos la version de PostgreSQL 9.3 la mas reciente hasta ahora.
-Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.</description>
+Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.
+$ vim /etc/yum.repos.d/CentOS-Base.repo [base] ... ... exclude=postgresql* [updates] ... ... exclude=postgresql* Instalacion de repositorio Postgresql
+Puedes buscar el repositorio mas adecuado a tu arquitectura y la version mas actual en http://yum.postgresql.org/repopackages.php
+$ cd /tmp/ $ wget http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm $ yum localinstall pgdg-centos93-9.3-1.noarch.rpm Instalando
+$ yum install postgresql93-server postgresql93-contrib Inicializando la base de datos</description>
     </item>
     
     <item>
@@ -169,7 +225,12 @@ Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdq
       <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/</guid>
-      <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV</description>
+      <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV
+Repositorios Instalación de repositorio RPM Fusión (En caso de no tenerlo instalado)
+Arquitecturas:
+i686 x86_64 En este ejemplo de instalación usamos el repositorio de x86_64
+$ wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm $ rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt $ rpm -K rpmforge-release-0.5.2-2.el6.rf.*.rpm rpmforge-release-0.5.2-2.el6.rf.i686.rpm: (sha1) dsa sha1 md5 gpg BIEN Instalacion Instalamos pure-ftp desde el repositorio RPM Forge.
+$ yum install pure-ftpd -y --enablerepo rpmforge Configuración Siga la siguiente configuración.</description>
     </item>
     
     <item>
@@ -178,7 +239,11 @@ Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdq
       <pubDate>Fri, 25 Apr 2014 16:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/post-instalacion-de-centos-7-minimal/</guid>
-      <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.</description>
+      <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.
+$ yum update -y $ reboot Instalacion de repositorios extras
+Los repositorios oficiales o bases del sistema no siempre traen servicios o utilidades que podamos necesitar, por ello es necerario agregar algunos repositorios extras (de los ya muy conocidos)
+Antes instalamos utilidades que nos serviran para las siguientes tareas.
+$ yum install wget vim Repositorio RPMforge</description>
     </item>
     
     <item>
@@ -187,7 +252,9 @@ Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdq
       <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/bloquear-conexiones-https-usando-dns/</guid>
-      <description>En este caso ejemplificaremos el bloqueo del sitio facebook.com. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.</description>
+      <description>En este caso ejemplificaremos el bloqueo del sitio facebook.com. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.
+En teoría este método consiste en otorgarle al cliente cuando solicite la dirección facebook.com una IP no válida ó bloqueada, con esto rechazaremos las conexiones hacia ese dominio.
+Pero si lo que queremos es controlar quienes pueden acceder, podemos controlar que IP publica válida resolver para el dominio ya que el servicio facebook.</description>
     </item>
     
     <item>
@@ -197,7 +264,10 @@ Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdq
       
       <guid>https://armanroot.com/posts/2013/configurando-django-stack-en-centos6/</guid>
       <description>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
-preinstalacion Instalamos los siguientes paquetes para compilaciones.</description>
+preinstalacion Instalamos los siguientes paquetes para compilaciones. Es de utilidad en algunos paquetes que instalemos dentro de PIP y los archivos de desarrollo de python.
+$ yum install gcc make python-devel pip, virtualenv Instalamos PIP desde los repositorios EPEL
+$ yum -y install python-pip --enablerepo epel Instalamos virtualenvwrapper desde PIP, este instalara como dependencia a virtualenv.
+$ pip install virtualenvwrapper Creamos nuestras variables de sistema para virtualenv y lo alojamos en el archivo de configuración bash del usuario unix.</description>
     </item>
     
     <item>
@@ -208,7 +278,9 @@ preinstalacion Instalamos los siguientes paquetes para compilaciones.</descripti
       <guid>https://armanroot.com/posts/2013/bloquear-intentos-de-sesi%C3%B3n-fallidas-en-centos/</guid>
       <description>Bloquear usuarios tras intentos de sesión fallidas CentOS 6.
 Parámetros de configuración:
- deny. Numero de intentos even_deny_root.</description>
+deny. Numero de intentos even_deny_root. Bloquear también a root unlock_time. Tiempo de bloqueo, esta en segundos root_unlock_time. Tiempo de bloqueo de root, esta en segundos Agregamos las siguientes lineas de configuración en el archivo /etc/pam.d/password-auth
+auth required pam_tally2.so file=/var/log/tallylog deny=3 even_deny_root unlock_time=3600 account required pam_tally2.so El archivo de configuración quedaría como el siguiente ejemplo:
+$ vim /etc/pam.d/password-auth #%PAM-1.0 # This file is auto-generated.</description>
     </item>
     
     <item>
@@ -218,7 +290,8 @@ Parámetros de configuración:
       
       <guid>https://armanroot.com/posts/2013/desactivar-la-expiraci%C3%B3n-de-contrase%C3%B1as-en-centos/</guid>
       <description>Con la utilidad chage podemos reasignar los valores de expiración.
-Verificamos las fechas de expiración de los passwords</description>
+Verificamos las fechas de expiración de los passwords
+$ chage -l usuario Last password change : Jul 23, 2012 Password expires : Sep 21, 2012 Password inactive : Sep 28, 2012 Account expires : never Minimum number of days between password change : 1 Maximum number of days between password change : 60 Number of days of warning before password expires : 7 Tenemos dos modos para poder modificar la expiración:</description>
     </item>
     
     <item>
@@ -227,7 +300,9 @@ Verificamos las fechas de expiración de los passwords</description>
       <pubDate>Thu, 11 Oct 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/limitar-acceso-al-commando-su-en-centos/</guid>
-      <description>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.</description>
+      <description>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.
+Quitamos el simbolo de comentario de la linea auth required pam_wheel.so use_uid:
+$ vim /etc/pam.d/su #%PAM-1.0 auth sufficient pam_rootok.so # Uncomment the following line to require a user to be in the “wheel” group. auth required pam_wheel.so use_uid ... Agregar a usuarios a grupo wheel para tener acceso a su</description>
     </item>
     
     <item>
@@ -236,7 +311,10 @@ Verificamos las fechas de expiración de los passwords</description>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/interfaz-virtual-de-red-en-centos/</guid>
-      <description>Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.</description>
+      <description>Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.
+Copiamos la configuración de la nic a la que le asignaremos la interfaz virtual en este caso eth0, a la virtual le asignamos el mismo nombre pero con el sufijo :0.
+El numero cero es consecutivo, podemos seguir agregando mas nic virtuales.
+$ cd /etc/sysconfig/network-scripts/ $ cp ifcfg-eth0 ifcfg-eth0:0 Configuramos la nic virtual</description>
     </item>
     
     <item>
@@ -245,7 +323,11 @@ Verificamos las fechas de expiración de los passwords</description>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/postfix-como-smarthost-reenvio-de-emails-via-cli/</guid>
-      <description>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.</description>
+      <description>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.
+Instalamos los paquetes necesarios
+$ yum install postfix mailx cyrus-sasl cyrus-sasl-plain -y Configuración de credenciales
+$ vim /etc/postfix/sasl_passwd smtp.gmail.com user@gmail.com:miPassWord $ postmap hash:/etc/postfix/sasl_passwd Configurando postfix
+$ vim /etc/postfix/main.cf ################### # SMARTHOST GMAIL # ################### relayhost = [smtp.gmail.com]:587 smtp_use_tls = yes smtp_sasl_auth_enable = yes smtp_sasl_security_options = noanonymous smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd smtp_tls_CAfile = /etc/ssl/certs/ca-bundle.crt Configurando los servicios:</description>
     </item>
     
     <item>
@@ -254,7 +336,9 @@ Verificamos las fechas de expiración de los passwords</description>
       <pubDate>Tue, 22 May 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/establecer-vigencia-y-reglas-sobre-contrase%C3%B1as-a-usuarios-linux/</guid>
-      <description>Lo que haremos en este post es el establecer una política de seguridad para la renovación de contraseñas de los usuarios en el servidor y también sobre reglas para la creación de las mismas.</description>
+      <description>Lo que haremos en este post es el establecer una política de seguridad para la renovación de contraseñas de los usuarios en el servidor y también sobre reglas para la creación de las mismas.
+Abrimos y editamos el siguiente archivo:
+$ vi /etc/login.defs # Controles de vigencia de contraseñas: # # PASS_MAX_DAYS Máximo numero de días que una contraseña debe usarse # PASS_MIN_DAYS Número mínimo de días permitidos entre los cambios de contraseña.</description>
     </item>
     
     <item>
@@ -263,7 +347,9 @@ Verificamos las fechas de expiración de los passwords</description>
       <pubDate>Sun, 08 Apr 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/asignaci%C3%B3n-de-permisos-en-linux/</guid>
-      <description>Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:</description>
+      <description>Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:
+Propietario - Grupo - Otros A cada nivel de permiso se le tiene asignado un valor numérico.
+Lectura (r) = 4 Escritura (w) = 2 Ejecución (x) = 1 Ahora bien para asignar permisos se usa el comando chmod, solo tenemos realmente que sumar los valores de los permisos que queremos darle a cada nivel:</description>
     </item>
     
     <item>
@@ -272,7 +358,8 @@ Verificamos las fechas de expiración de los passwords</description>
       <pubDate>Fri, 25 Mar 2011 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2011/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/</guid>
-      <description>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS.</description>
+      <description>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS. Lo primero que haremos es buscar nuestra partición NTFS y encontrar la información que nos servirá.
+$ sudo blkid /dev/sda1: UUID=&amp;#34;926c754a-0678-414f-9820-7fcb6a62239c&amp;#34; TYPE=&amp;#34;ext4&amp;#34; /dev/sda2: UUID=&amp;#34;d55e3ab6-46fd-45f4-9755-e5b47a33c45a&amp;#34; TYPE=&amp;#34;swap&amp;#34; /dev/sda3: LABEL=&amp;#34;Documentos&amp;#34; UUID=&amp;#34;7C121D59121D19AA&amp;#34; TYPE=&amp;#34;ntfs&amp;#34; Dos datos nos interesa en esta información que nos arroja, la primera es el LABEL que es el nombre o etiqueta de la partición y la otra es el UUID que es el identificador único de las partición para el sistema.</description>
     </item>
     
   </channel>

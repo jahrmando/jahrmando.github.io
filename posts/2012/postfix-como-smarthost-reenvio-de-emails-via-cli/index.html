@@ -1,151 +1,151 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Postfix como smarthost, reenvio de emails via CLI - Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/favicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta property="og:title" content="Postfix como smarthost, reenvio de emails via CLI" />
-<meta property="og:description" content="Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2012/postfix-como-smarthost-reenvio-de-emails-via-cli/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2012-10-10T10:54:38-05:00" />
-<meta property="article:modified_time" content="2012-10-10T10:54:38-05:00" />
+<html lang="es">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Postfix como smarthost, reenvio de emails via CLI"/>
-<meta name="twitter:description" content="Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal."/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+    <head><title>Postfix como smarthost, reenvio de emails via CLI &ndash; Blog de Armando</title>
+<meta name="description" content="An Accidental Engineer&lt;br&gt;• Lazy #Programmer • #TacOps 🌮 • #BOFH&lt;br&gt; 🎸⚾️🍺☕️">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
 
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-	<script src="https://armanroot.com/js/main.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://armanroot.com/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://armanroot.com/css/risotto.css">
+<link rel="stylesheet" href="https://armanroot.com/css/custom.css">
 </head>
 
-<body>
-	<div class="container wrapper post">
-		<div class="header">
-	<base href="https://armanroot.com/">
-	<h1 class="site-title"><a href="https://armanroot.com/">Blog - Armando Uch</a></h1>
-	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
-			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
-		</nav>
-	</div>
+    <body>
+        <div class="page">
 
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Inicio</a>
-			</li>
-			
-			<li>
-				<a href="/posts">Bitacora</a>
-			</li>
-			
-			<li>
-				<a href="/opinion">Opinion</a>
-			</li>
-			
-			<li>
-				<a href="/about">Acerca de</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Topics</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
+            <header class="page__header"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1>
+<nav class="page__nav main-nav">
+    <ul>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/about/" title="">Acerca de</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/posts/" title="">bitacora</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/blog/" title="">blog</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/tags/" title="">Topics</a></li>
+    
+    </ul>
+</nav>
 
+</header>
 
-		<div class="post-header">
-			<h1 class="title">Postfix como smarthost, reenvio de emails via CLI</h1>
-			<div class="meta">Posted at &mdash; Oct 10, 2012</div>
-		</div>
-
-		<div class="markdown">
-			<p>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.</p>
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Postfix como smarthost, reenvio de emails via CLI</h1>
+    </header>
+    <div class="content__body">
+        <p>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.</p>
 <p>Instalamos los paquetes necesarios</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install postfix mailx cyrus-sasl cyrus-sasl-plain -y
-</code></pre></div><p>Configuración de credenciales</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/postfix/sasl_passwd
-smtp.gmail.com  user@gmail.com:miPassWord
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ yum install postfix mailx cyrus-sasl cyrus-sasl-plain -y
+</span></span></code></pre></div><p>Configuración de credenciales</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/postfix/sasl_passwd
+</span></span><span style="display:flex;"><span>smtp.gmail.com  user@gmail.com:miPassWord
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ postmap hash:/etc/postfix/sasl_passwd
+</span></span></code></pre></div><p>Configurando postfix</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/postfix/main.cf
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###################</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># SMARTHOST GMAIL #</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###################</span>
+</span></span><span style="display:flex;"><span>relayhost <span style="color:#f92672">=</span> <span style="color:#f92672">[</span>smtp.gmail.com<span style="color:#f92672">]</span>:587
+</span></span><span style="display:flex;"><span>smtp_use_tls <span style="color:#f92672">=</span> yes
+</span></span><span style="display:flex;"><span>smtp_sasl_auth_enable <span style="color:#f92672">=</span> yes
+</span></span><span style="display:flex;"><span>smtp_sasl_security_options <span style="color:#f92672">=</span> noanonymous
+</span></span><span style="display:flex;"><span>smtp_sasl_password_maps <span style="color:#f92672">=</span> hash:/etc/postfix/sasl_passwd
+</span></span><span style="display:flex;"><span>smtp_tls_CAfile <span style="color:#f92672">=</span> /etc/ssl/certs/ca-bundle.crt
+</span></span></code></pre></div><p>Configurando los servicios:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ systemctl stop sendmail.service
+</span></span><span style="display:flex;"><span>$ systemctl disable sendmail.service
+</span></span><span style="display:flex;"><span>$ alternatives --config mta
+</span></span><span style="display:flex;"><span>There are <span style="color:#ae81ff">2</span> programs which provide ‘mta’.
+</span></span><span style="display:flex;"><span>      Selection    Command
+</span></span><span style="display:flex;"><span>    ———————————————————————-
+</span></span><span style="display:flex;"><span>    *+ <span style="color:#ae81ff">1</span>           /usr/sbin/sendmail.sendmail
+</span></span><span style="display:flex;"><span>       <span style="color:#ae81ff">2</span>           /usr/sbin/sendmail.postfix
+</span></span><span style="display:flex;"><span>       Enter to keep the current selection<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span>, or type selection number: <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>$ systemctl start postfix.service
+</span></span></code></pre></div><p>Probando todo</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ echo <span style="color:#e6db74">&#34;Hello world!&#34;</span> | mail -s <span style="color:#e6db74">&#34;Prueba de correo&#34;</span> micorreo@test.com
+</span></span></code></pre></div>
+    </div>
+    <footer class="content__footer"></footer>
 
-$ postmap hash:/etc/postfix/sasl_passwd
-</code></pre></div><p>Configurando postfix</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/postfix/main.cf
-<span style="color:#586e75">###################</span>
-<span style="color:#586e75"># SMARTHOST GMAIL #</span>
-<span style="color:#586e75">###################</span>
-<span style="color:#268bd2">relayhost</span> <span style="color:#719e07">=</span> <span style="color:#719e07">[</span>smtp.gmail.com<span style="color:#719e07">]</span>:587
-<span style="color:#268bd2">smtp_use_tls</span> <span style="color:#719e07">=</span> yes
-<span style="color:#268bd2">smtp_sasl_auth_enable</span> <span style="color:#719e07">=</span> yes
-<span style="color:#268bd2">smtp_sasl_security_options</span> <span style="color:#719e07">=</span> noanonymous
-<span style="color:#268bd2">smtp_sasl_password_maps</span> <span style="color:#719e07">=</span> hash:/etc/postfix/sasl_passwd
-<span style="color:#268bd2">smtp_tls_CAfile</span> <span style="color:#719e07">=</span> /etc/ssl/certs/ca-bundle.crt
-</code></pre></div><p>Configurando los servicios:</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ systemctl stop sendmail.service
-$ systemctl disable sendmail.service
-$ alternatives --config mta
-There are <span style="color:#2aa198">2</span> programs which provide ‘mta’.
-      Selection    Command
-    ———————————————————————-
-    *+ <span style="color:#2aa198">1</span>           /usr/sbin/sendmail.sendmail
-       <span style="color:#2aa198">2</span>           /usr/sbin/sendmail.postfix
-       Enter to keep the current selection<span style="color:#719e07">[</span>+<span style="color:#719e07">]</span>, or <span style="color:#b58900">type</span> selection number: <span style="color:#2aa198">2</span>
-$ systemctl start postfix.service
-</code></pre></div><p>Probando todo</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ <span style="color:#b58900">echo</span> <span style="color:#2aa198">&#34;Hello world!&#34;</span> | mail -s <span style="color:#2aa198">&#34;Prueba de correo&#34;</span> micorreo@test.com
-</code></pre></div>
-		</div>
+            </section>
 
-		<div class="post-tags">
-			
-				
-					<nav class="nav tags">
-							<ul class="flat">
-								
-								<li><a href="/tags/sysadmin">sysadmin</a></li>
-								
-								<li><a href="/tags/postfix">postfix</a></li>
-								
-							</ul>
-					</nav>
-				
-			
-		</div>
-		<div id="disqus_thread"></div>
-<script type="text/javascript">
-	(function () {
-		
-		
-		if (window.location.hostname == "localhost")
-			return;
-
-		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-		var disqus_shortname = 'armanroot-com';
-		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-	})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
-		Disqus.</a></noscript>
-<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div> © Copyright All Rights Reserved |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="https://armanroot.com/images/avatar.jpeg" alt="Logo">
+<h1 class="about__title">Armando Uch</h1>
+<p class="about__description">An Accidental Engineer<br>• Lazy #Programmer • #TacOps 🌮 • #BOFH<br> 🎸⚾️🍺☕️</p>
 </div>
 
 
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/jahrmando" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://www.linkedin.com/in/armandouch/" rel="me" aria-label="Linkedin" title="Linkedin"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://twitter.com/armanroot" rel="me" aria-label="Twitter" title="Twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2012-10-10
+        </p>
+    
 
-<script>feather.replace()</script>
-</body>
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">© Armando Uch | Copyright All Rights Reserved</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
 </html>

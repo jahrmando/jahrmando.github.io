@@ -1,466 +1,460 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Configurando DJANGO stack en CentOS6 - Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/favicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta property="og:title" content="Configurando DJANGO stack en CentOS6" />
-<meta property="og:description" content="Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
-preinstalacion Instalamos los siguientes paquetes para compilaciones." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2013/configurando-django-stack-en-centos6/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2013-10-15T10:00:00-05:00" />
-<meta property="article:modified_time" content="2013-10-15T10:00:00-05:00" />
+<html lang="es">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Configurando DJANGO stack en CentOS6"/>
-<meta name="twitter:description" content="Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
-preinstalacion Instalamos los siguientes paquetes para compilaciones."/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+    <head><title>Configurando DJANGO stack en CentOS6 &ndash; Blog de Armando</title>
+<meta name="description" content="An Accidental Engineer&lt;br&gt;• Lazy #Programmer • #TacOps 🌮 • #BOFH&lt;br&gt; 🎸⚾️🍺☕️">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
 
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-	<script src="https://armanroot.com/js/main.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://armanroot.com/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://armanroot.com/css/risotto.css">
+<link rel="stylesheet" href="https://armanroot.com/css/custom.css">
 </head>
 
-<body>
-	<div class="container wrapper post">
-		<div class="header">
-	<base href="https://armanroot.com/">
-	<h1 class="site-title"><a href="https://armanroot.com/">Blog - Armando Uch</a></h1>
-	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
-			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
-		</nav>
-	</div>
+    <body>
+        <div class="page">
 
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Inicio</a>
-			</li>
-			
-			<li>
-				<a href="/posts">Bitacora</a>
-			</li>
-			
-			<li>
-				<a href="/opinion">Opinion</a>
-			</li>
-			
-			<li>
-				<a href="/about">Acerca de</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Topics</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
+            <header class="page__header"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1>
+<nav class="page__nav main-nav">
+    <ul>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/about/" title="">Acerca de</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/posts/" title="">bitacora</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/blog/" title="">blog</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/tags/" title="">Topics</a></li>
+    
+    </ul>
+</nav>
 
+</header>
 
-		<div class="post-header">
-			<h1 class="title">Configurando DJANGO stack en CentOS6</h1>
-			<div class="meta">Posted at &mdash; Oct 15, 2013</div>
-		</div>
-
-		<div class="markdown">
-			<p>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR</p>
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Configurando DJANGO stack en CentOS6</h1>
+    </header>
+    <div class="content__body">
+        <p>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR</p>
 <h2 id="preinstalacion">preinstalacion</h2>
 <p>Instalamos los siguientes paquetes para compilaciones. Es de utilidad en algunos paquetes que instalemos dentro de PIP y los archivos de desarrollo de python.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install gcc make python-devel
-</code></pre></div><h2 id="pip-virtualenv">pip, virtualenv</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ yum install gcc make python-devel
+</span></span></code></pre></div><h2 id="pip-virtualenv">pip, virtualenv</h2>
 <p>Instalamos PIP desde los repositorios EPEL</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum -y install python-pip --enablerepo epel
-</code></pre></div><p>Instalamos virtualenvwrapper desde PIP, este instalara como dependencia a virtualenv.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ pip install virtualenvwrapper
-</code></pre></div><p>Creamos nuestras variables de sistema para virtualenv y lo alojamos en el archivo de configuración bash del usuario unix.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ touch /etc/profile.d/virtualenv.sh
-$ <span style="color:#b58900">echo</span> <span style="color:#2aa198">&#39;export WORKON_HOME=/opt/virtualenvs&#39;</span> &gt;&gt; /etc/profile.d/virtualenv.sh
-$ <span style="color:#b58900">echo</span> <span style="color:#2aa198">&#39;export VIRTUALENVWRAPPER_HOOK_DIR=$WORKON_HOME/hooks&#39;</span> &gt;&gt; /etc/profile.d/virtualenv.sh
-$ <span style="color:#b58900">echo</span> <span style="color:#2aa198">&#39;source /usr/bin/virtualenvwrapper.sh&#39;</span> &gt;&gt; /etc/profile.d/virtualenv.sh
-</code></pre></div><p>Necesitamos reiniciar la sesión de sistema ó cargar las variables de entorno a la sesion actual con <code>source</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ <span style="color:#b58900">source</span> /etc/profile.d/virtualenv.sh
-</code></pre></div><p>Se verifica si tenemos nuestras variables de entorno cargadas.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ env | grep -P <span style="color:#2aa198">&#39;VIRTUALENVWRAPPER|WORKON_HOME&#39;</span>
-<span style="color:#268bd2">VIRTUALENVWRAPPER_PROJECT_FILENAME</span><span style="color:#719e07">=</span>.project
-<span style="color:#268bd2">WORKON_HOME</span><span style="color:#719e07">=</span>/opt/virtualenvs
-<span style="color:#268bd2">VIRTUALENVWRAPPER_HOOK_DIR</span><span style="color:#719e07">=</span>/opt/virtualenvs/hooks
-</code></pre></div><p>Creamos la carpeta para HOOKs.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir -p /opt/virtualenvs/hooks
-</code></pre></div><p>Creamos un entorno virtual de prueba</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkvirtualenv projectwebapp
-</code></pre></div><p>Salimos del entorno virtual</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>projectwebapp<span style="color:#719e07">)</span>$ deactivate
-</code></pre></div><h2 id="django">django</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ yum -y install python-pip --enablerepo epel
+</span></span></code></pre></div><p>Instalamos virtualenvwrapper desde PIP, este instalara como dependencia a virtualenv.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ pip install virtualenvwrapper
+</span></span></code></pre></div><p>Creamos nuestras variables de sistema para virtualenv y lo alojamos en el archivo de configuración bash del usuario unix.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ touch /etc/profile.d/virtualenv.sh
+</span></span><span style="display:flex;"><span>$ echo <span style="color:#e6db74">&#39;export WORKON_HOME=/opt/virtualenvs&#39;</span> &gt;&gt; /etc/profile.d/virtualenv.sh
+</span></span><span style="display:flex;"><span>$ echo <span style="color:#e6db74">&#39;export VIRTUALENVWRAPPER_HOOK_DIR=$WORKON_HOME/hooks&#39;</span> &gt;&gt; /etc/profile.d/virtualenv.sh
+</span></span><span style="display:flex;"><span>$ echo <span style="color:#e6db74">&#39;source /usr/bin/virtualenvwrapper.sh&#39;</span> &gt;&gt; /etc/profile.d/virtualenv.sh
+</span></span></code></pre></div><p>Necesitamos reiniciar la sesión de sistema ó cargar las variables de entorno a la sesion actual con <code>source</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ source /etc/profile.d/virtualenv.sh
+</span></span></code></pre></div><p>Se verifica si tenemos nuestras variables de entorno cargadas.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ env | grep -P <span style="color:#e6db74">&#39;VIRTUALENVWRAPPER|WORKON_HOME&#39;</span>
+</span></span><span style="display:flex;"><span>VIRTUALENVWRAPPER_PROJECT_FILENAME<span style="color:#f92672">=</span>.project
+</span></span><span style="display:flex;"><span>WORKON_HOME<span style="color:#f92672">=</span>/opt/virtualenvs
+</span></span><span style="display:flex;"><span>VIRTUALENVWRAPPER_HOOK_DIR<span style="color:#f92672">=</span>/opt/virtualenvs/hooks
+</span></span></code></pre></div><p>Creamos la carpeta para HOOKs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ mkdir -p /opt/virtualenvs/hooks
+</span></span></code></pre></div><p>Creamos un entorno virtual de prueba</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ mkvirtualenv projectwebapp
+</span></span></code></pre></div><p>Salimos del entorno virtual</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#f92672">(</span>projectwebapp<span style="color:#f92672">)</span>$ deactivate
+</span></span></code></pre></div><h2 id="django">django</h2>
 <p>Creamos una carpeta donde alojaremos nuestros proyectos Django y nos cambiamos al directorio.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir /home/www/
-$ <span style="color:#b58900">cd</span> /home/www
-</code></pre></div><p>Habilitamos el entorno virtual para el proyecto</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">www $ workon projectwebapp
-</code></pre></div><p>Instalamos Django desde PIP y creamos un proyecto Django</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>projectwebapp<span style="color:#719e07">)</span> www $ pip install django
-<span style="color:#719e07">(</span>projectwebapp<span style="color:#719e07">)</span> www $ django-admin.py startproject projectwebapp
-<span style="color:#719e07">(</span>projectwebapp<span style="color:#719e07">)</span> www $ <span style="color:#b58900">cd</span> projectwebapp/
-</code></pre></div><p>Iniciamos el servicio http de Django nativo para probar que todo este funcional hasta este punto.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>projectwebapp<span style="color:#719e07">)</span> projectwebapp $ python manage.py runserver
-Validating models...
-<span style="color:#2aa198">0</span> errors found
-October 15, <span style="color:#2aa198">2013</span> - 13:54:33
-Django version 1.5.4, using settings <span style="color:#2aa198">&#39;projectwebapp.settings&#39;</span>
-Development server is running at http://127.0.0.1:8000/
-Quit the server with CONTROL-C.
-</code></pre></div><p>Detenemos el servicio Django con el atajo de teclado <em>CONTROL-C</em>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ mkdir /home/www/
+</span></span><span style="display:flex;"><span>$ cd /home/www
+</span></span></code></pre></div><p>Habilitamos el entorno virtual para el proyecto</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>www $ workon projectwebapp
+</span></span></code></pre></div><p>Instalamos Django desde PIP y creamos un proyecto Django</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#f92672">(</span>projectwebapp<span style="color:#f92672">)</span> www $ pip install django
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>projectwebapp<span style="color:#f92672">)</span> www $ django-admin.py startproject projectwebapp
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>projectwebapp<span style="color:#f92672">)</span> www $ cd projectwebapp/
+</span></span></code></pre></div><p>Iniciamos el servicio http de Django nativo para probar que todo este funcional hasta este punto.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#f92672">(</span>projectwebapp<span style="color:#f92672">)</span> projectwebapp $ python manage.py runserver
+</span></span><span style="display:flex;"><span>Validating models...
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span> errors found
+</span></span><span style="display:flex;"><span>October 15, <span style="color:#ae81ff">2013</span> - 13:54:33
+</span></span><span style="display:flex;"><span>Django version 1.5.4, using settings <span style="color:#e6db74">&#39;projectwebapp.settings&#39;</span>
+</span></span><span style="display:flex;"><span>Development server is running at http://127.0.0.1:8000/
+</span></span><span style="display:flex;"><span>Quit the server with CONTROL-C.
+</span></span></code></pre></div><p>Detenemos el servicio Django con el atajo de teclado <em>CONTROL-C</em>.</p>
 <h2 id="gunicorn-python-wsgi-http-server">gunicorn. python wsgi http server</h2>
 <p>Instalamos gunicorn via PIP dentro del entorno virtual del proyecto. También se instala <code>setproctitle</code> que nos permite renombrar el proceso gunicorn por el nombre del proyecto Django.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>projectwebapp<span style="color:#719e07">)</span> projectwebapp $ pip install gunicorn setproctitle
-</code></pre></div><p>Estando en la carpeta del proyecto iniciamos el proyecto con gunicorn usando el modulo UWSGI del proyecto Django.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#719e07">(</span>projectwebapp<span style="color:#719e07">)</span> projectwebapp $ gunicorn projectwebapp.wsgi
-<span style="color:#719e07">[</span>13252<span style="color:#719e07">]</span> <span style="color:#719e07">[</span>INFO<span style="color:#719e07">]</span> Starting gunicorn 18.0
-<span style="color:#719e07">[</span>13252<span style="color:#719e07">]</span> <span style="color:#719e07">[</span>INFO<span style="color:#719e07">]</span> Listening at: http://127.0.0.1:8000 <span style="color:#719e07">(</span>13252<span style="color:#719e07">)</span>
-<span style="color:#719e07">[</span>13252<span style="color:#719e07">]</span> <span style="color:#719e07">[</span>INFO<span style="color:#719e07">]</span> Using worker: sync
-<span style="color:#719e07">[</span>13257<span style="color:#719e07">]</span> <span style="color:#719e07">[</span>INFO<span style="color:#719e07">]</span> Booting worker with pid: <span style="color:#2aa198">13257</span>
-</code></pre></div><p>Detenemos el servicio Gunicorn con el atajo de teclado <em>CONTROL-C</em>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#f92672">(</span>projectwebapp<span style="color:#f92672">)</span> projectwebapp $ pip install gunicorn setproctitle
+</span></span></code></pre></div><p>Estando en la carpeta del proyecto iniciamos el proyecto con gunicorn usando el modulo UWSGI del proyecto Django.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#f92672">(</span>projectwebapp<span style="color:#f92672">)</span> projectwebapp $ gunicorn projectwebapp.wsgi
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>13252<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Starting gunicorn 18.0
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>13252<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Listening at: http://127.0.0.1:8000 <span style="color:#f92672">(</span>13252<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>13252<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Using worker: sync
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>13257<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Booting worker with pid: <span style="color:#ae81ff">13257</span>
+</span></span></code></pre></div><p>Detenemos el servicio Gunicorn con el atajo de teclado <em>CONTROL-C</em>.</p>
 <p>Salimos del entorno virtual</p>
 <p>(projectwebapp)[root@websrv1 projectwebapp]# deactive</p>
 <p>Creamos el directorio donde alojaremos el script bash que nos iniciara el Gunicorn, debemos tener creado antes el directorio <em>/opt/gunicorn/</em> para alojar mas proyectos.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir /opt/gunicorn/projectwebapp/
-</code></pre></div><p>Creamos y editamos el archivo script para ejecutar el proyecto con gunicorn</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /opt/gunicorn/projectwebapp/gunicorn_start.sh
-<span style="color:#586e75">#!/bin/bash</span>
-
-<span style="color:#268bd2">DJANGODIR</span><span style="color:#719e07">=</span>/home/www/projectwebapp             <span style="color:#586e75"># Directorio del proyecto Django</span>
-<span style="color:#268bd2">SOCKFILE</span><span style="color:#719e07">=</span>/var/run/gunicorn/projectwebapp.sock <span style="color:#586e75"># Unix socket</span>
-<span style="color:#268bd2">USER</span><span style="color:#719e07">=</span>nginx                                    <span style="color:#586e75"># Usuario</span>
-<span style="color:#268bd2">GROUP</span><span style="color:#719e07">=</span>root                                    <span style="color:#586e75"># Grupo</span>
-<span style="color:#268bd2">NUM_WORKERS</span><span style="color:#719e07">=</span><span style="color:#2aa198">3</span>                                 <span style="color:#586e75"># Numero de procesos para gunicorn</span>
-<span style="color:#268bd2">DJANGO_SETTINGS_MODULE</span><span style="color:#719e07">=</span>projectwebapp.settings <span style="color:#586e75"># Archivo settings del proyecto</span>
-<span style="color:#268bd2">DJANGO_WSGI_MODULE</span><span style="color:#719e07">=</span>projectwebapp.wsgi         <span style="color:#586e75"># Modulo WSGI del proyecto</span>
-
-
-<span style="color:#586e75"># Activar el entorno virtual</span>
-<span style="color:#b58900">cd</span> <span style="color:#268bd2">$DJANGODIR</span>
-<span style="color:#b58900">source</span> /usr/bin/virtualenvwrapper.sh
-workon projectwebapp
-<span style="color:#b58900">export</span> <span style="color:#268bd2">DJANGO_SETTINGS_MODULE</span><span style="color:#719e07">=</span><span style="color:#268bd2">$DJANGO_SETTINGS_MODULE</span>
-<span style="color:#b58900">export</span> <span style="color:#268bd2">PYTHONPATH</span><span style="color:#719e07">=</span><span style="color:#268bd2">$DJANGODIR</span>:<span style="color:#268bd2">$PYTHONPATH</span>
-
-<span style="color:#586e75"># Crear el directorio del socket si no existe</span>
-<span style="color:#268bd2">RUNDIR</span><span style="color:#719e07">=</span><span style="color:#719e07">$(</span>dirname <span style="color:#268bd2">$SOCKFILE</span><span style="color:#719e07">)</span>
-<span style="color:#b58900">test</span> -d <span style="color:#268bd2">$RUNDIR</span> <span style="color:#719e07">||</span> mkdir -p <span style="color:#268bd2">$RUNDIR</span>
-
-<span style="color:#586e75"># Iniciar el proyecto Django</span>
-<span style="color:#586e75"># No se usa el modo --daemon ya que este sera manejado por supervisor</span>
-<span style="color:#b58900">exec</span> gunicorn <span style="color:#2aa198">${</span><span style="color:#268bd2">DJANGO_WSGI_MODULE</span><span style="color:#2aa198">}</span> <span style="color:#cb4b16">\
-</span><span style="color:#cb4b16"></span>  --workers <span style="color:#268bd2">$NUM_WORKERS</span> <span style="color:#cb4b16">\
-</span><span style="color:#cb4b16"></span>  --user<span style="color:#719e07">=</span><span style="color:#268bd2">$USER</span> --group<span style="color:#719e07">=</span><span style="color:#268bd2">$GROUP</span> <span style="color:#cb4b16">\
-</span><span style="color:#cb4b16"></span>  --log-level<span style="color:#719e07">=</span>debug <span style="color:#cb4b16">\
-</span><span style="color:#cb4b16"></span>  --bind<span style="color:#719e07">=</span>unix:<span style="color:#268bd2">$SOCKFILE</span>
-</code></pre></div><p>Ajustamos los permisos de ejecucion</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod u+x /opt/gunicorn/projectwebapp/gunicorn_start.sh
-</code></pre></div><h2 id="supervisor">supervisor.</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ mkdir /opt/gunicorn/projectwebapp/
+</span></span></code></pre></div><p>Creamos y editamos el archivo script para ejecutar el proyecto con gunicorn</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /opt/gunicorn/projectwebapp/gunicorn_start.sh
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DJANGODIR<span style="color:#f92672">=</span>/home/www/projectwebapp             <span style="color:#75715e"># Directorio del proyecto Django</span>
+</span></span><span style="display:flex;"><span>SOCKFILE<span style="color:#f92672">=</span>/var/run/gunicorn/projectwebapp.sock <span style="color:#75715e"># Unix socket</span>
+</span></span><span style="display:flex;"><span>USER<span style="color:#f92672">=</span>nginx                                    <span style="color:#75715e"># Usuario</span>
+</span></span><span style="display:flex;"><span>GROUP<span style="color:#f92672">=</span>root                                    <span style="color:#75715e"># Grupo</span>
+</span></span><span style="display:flex;"><span>NUM_WORKERS<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>                                 <span style="color:#75715e"># Numero de procesos para gunicorn</span>
+</span></span><span style="display:flex;"><span>DJANGO_SETTINGS_MODULE<span style="color:#f92672">=</span>projectwebapp.settings <span style="color:#75715e"># Archivo settings del proyecto</span>
+</span></span><span style="display:flex;"><span>DJANGO_WSGI_MODULE<span style="color:#f92672">=</span>projectwebapp.wsgi         <span style="color:#75715e"># Modulo WSGI del proyecto</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Activar el entorno virtual</span>
+</span></span><span style="display:flex;"><span>cd $DJANGODIR
+</span></span><span style="display:flex;"><span>source /usr/bin/virtualenvwrapper.sh
+</span></span><span style="display:flex;"><span>workon projectwebapp
+</span></span><span style="display:flex;"><span>export DJANGO_SETTINGS_MODULE<span style="color:#f92672">=</span>$DJANGO_SETTINGS_MODULE
+</span></span><span style="display:flex;"><span>export PYTHONPATH<span style="color:#f92672">=</span>$DJANGODIR:$PYTHONPATH
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Crear el directorio del socket si no existe</span>
+</span></span><span style="display:flex;"><span>RUNDIR<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>dirname $SOCKFILE<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>test -d $RUNDIR <span style="color:#f92672">||</span> mkdir -p $RUNDIR
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Iniciar el proyecto Django</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># No se usa el modo --daemon ya que este sera manejado por supervisor</span>
+</span></span><span style="display:flex;"><span>exec gunicorn <span style="color:#e6db74">${</span>DJANGO_WSGI_MODULE<span style="color:#e6db74">}</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --workers $NUM_WORKERS <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --user<span style="color:#f92672">=</span>$USER --group<span style="color:#f92672">=</span>$GROUP <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --log-level<span style="color:#f92672">=</span>debug <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --bind<span style="color:#f92672">=</span>unix:$SOCKFILE
+</span></span></code></pre></div><p>Ajustamos los permisos de ejecucion</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ chmod u+x /opt/gunicorn/projectwebapp/gunicorn_start.sh
+</span></span></code></pre></div><h2 id="supervisor">supervisor.</h2>
 <p>Instalamos la mas reciente versión de supervisor desde PIP.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ pip install supervisor
-</code></pre></div><p>Creamos el archivo de configuración.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ echo_supervisord_conf &gt; /etc/supervisord.conf
-</code></pre></div><p>Creamos la carpeta de logs.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir /var/log/supervisor
-</code></pre></div><p>Configuramos los siguientes parámetros.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/supervisord.conf
-<span style="color:#586e75"># Modifique las siguientes configuraciones</span>
-<span style="color:#719e07">[</span>unix_http_server<span style="color:#719e07">]</span>
-...
-<span style="color:#268bd2">file</span><span style="color:#719e07">=</span>/var/run/supervisor.sock
-...
-
-<span style="color:#719e07">[</span>supervisord<span style="color:#719e07">]</span>
-...
-<span style="color:#268bd2">logfile</span><span style="color:#719e07">=</span>/var/log/supervisor/supervisord.log
-<span style="color:#268bd2">pidfile</span><span style="color:#719e07">=</span>/var/run/supervisord.pid
-<span style="color:#268bd2">umask</span><span style="color:#719e07">=</span><span style="color:#2aa198">022</span>
-<span style="color:#268bd2">user</span><span style="color:#719e07">=</span>root
-...
-</code></pre></div><p>Creamos el script para supervisor que ejecutara el servicio como daemon y auto inicio con el sistema. Este es una adaptación propia del script de Mike McGrath <a href="mailto:mmcgrath@redhat.com">mmcgrath@redhat.com</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/init.d/supervisord
-<span style="color:#586e75">#!/bin/bash</span>
-<span style="color:#586e75">#</span>
-<span style="color:#586e75"># supervisord   This scripts turns supervisord on</span>
-<span style="color:#586e75">#</span>
-<span style="color:#586e75"># chkconfig:  - 95 04</span>
-<span style="color:#586e75">#</span>
-<span style="color:#586e75"># processname:  supervisord</span>
-<span style="color:#586e75"># config: /etc/supervisord.conf</span>
-<span style="color:#586e75">#</span>
-
-<span style="color:#586e75"># source function library</span>
-. /etc/rc.d/init.d/functions
-
-<span style="color:#268bd2">RETVAL</span><span style="color:#719e07">=</span><span style="color:#2aa198">0</span>
-<span style="color:#268bd2">conffile</span><span style="color:#719e07">=</span><span style="color:#2aa198">${</span><span style="color:#268bd2">CONFFILE</span>-/etc/supervisord.conf<span style="color:#2aa198">}</span>
-<span style="color:#268bd2">user</span><span style="color:#719e07">=</span><span style="color:#2aa198">${</span><span style="color:#268bd2">USER</span>-root<span style="color:#2aa198">}</span>
-
-start<span style="color:#719e07">()</span> <span style="color:#719e07">{</span>
-        <span style="color:#b58900">echo</span> -n <span style="color:#2aa198">$&#34;Starting supervisord: &#34;</span>
-        runuser -l <span style="color:#2aa198">${</span><span style="color:#268bd2">user</span><span style="color:#2aa198">}</span> -c <span style="color:#2aa198">&#34;supervisord -c </span><span style="color:#2aa198">${</span><span style="color:#268bd2">conffile</span><span style="color:#2aa198">}</span><span style="color:#2aa198">&#34;</span> <span style="color:#719e07">&amp;&amp;</span> echo_success <span style="color:#719e07">||</span> echo_failure
-        <span style="color:#268bd2">RETVAL</span><span style="color:#719e07">=</span><span style="color:#268bd2">$?</span>
-        <span style="color:#b58900">echo</span>
-        <span style="color:#719e07">[</span> <span style="color:#268bd2">$RETVAL</span> -eq <span style="color:#2aa198">0</span> <span style="color:#719e07">]</span> <span style="color:#719e07">&amp;&amp;</span> touch /var/lock/subsys/supervisord
-<span style="color:#719e07">}</span>
-
-stop<span style="color:#719e07">()</span> <span style="color:#719e07">{</span>
-  <span style="color:#b58900">echo</span> -n <span style="color:#2aa198">$&#34;Stopping supervisord: &#34;</span>
-  killproc supervisord
-  <span style="color:#b58900">echo</span>
-  <span style="color:#719e07">[</span> <span style="color:#268bd2">$RETVAL</span> -eq <span style="color:#2aa198">0</span> <span style="color:#719e07">]</span> <span style="color:#719e07">&amp;&amp;</span> rm -f /var/lock/subsys/supervisord
-<span style="color:#719e07">}</span>
-
-restart<span style="color:#719e07">()</span> <span style="color:#719e07">{</span>
-  stop
-  start
-<span style="color:#719e07">}</span>
-
-<span style="color:#719e07">case</span> <span style="color:#2aa198">&#34;</span><span style="color:#268bd2">$1</span><span style="color:#2aa198">&#34;</span> in
-  start<span style="color:#719e07">)</span>
-  start
-  ;;
-  stop<span style="color:#719e07">)</span>
-  stop
-  ;;
-  restart|force-reload|reload<span style="color:#719e07">)</span>
-  restart
-  ;;
-  condrestart<span style="color:#719e07">)</span>
-  <span style="color:#719e07">[</span> -f /var/lock/subsys/supervisord <span style="color:#719e07">]</span> <span style="color:#719e07">&amp;&amp;</span> restart
-  ;;
-  status<span style="color:#719e07">)</span>
-  status supervisord
-  <span style="color:#268bd2">RETVAL</span><span style="color:#719e07">=</span><span style="color:#268bd2">$?</span>
-  ;;
-  *<span style="color:#719e07">)</span>
-  <span style="color:#b58900">echo</span> $<span style="color:#2aa198">&#34;Usage: </span><span style="color:#268bd2">$0</span><span style="color:#2aa198"> {start|stop|status|restart|reload|force-reload|condrestart}&#34;</span>
-  <span style="color:#b58900">exit</span> <span style="color:#2aa198">1</span>
-<span style="color:#719e07">esac</span>
-
-<span style="color:#b58900">exit</span> <span style="color:#268bd2">$RETVAL</span>
-</code></pre></div><p>Damos de alta nuestro script como servicio.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chkconfig --add supervisord
-</code></pre></div><p>Lo agregamos al inicio de sistema con el runrevel por defecto.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chkconfig supervisord on
-</code></pre></div><p>Iniciamos el servicio.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service supervisord start
-</code></pre></div><p>Configuramos una instancia de programa agregando nuestro script gunicorn que ejecuta nuestra app Django.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/supervisord.conf
-<span style="color:#586e75"># Agregue este bloque de configuracion segun su proyecto</span>
-<span style="color:#719e07">[</span>program:projectwebapp<span style="color:#719e07">]</span>
-<span style="color:#268bd2">command</span><span style="color:#719e07">=</span>/opt/gunicorn/projectwebapp/gunicorn_start.sh
-<span style="color:#268bd2">user</span><span style="color:#719e07">=</span>root
-<span style="color:#268bd2">autostart</span><span style="color:#719e07">=</span><span style="color:#b58900">true</span>
-<span style="color:#268bd2">autorestart</span><span style="color:#719e07">=</span><span style="color:#b58900">true</span>
-<span style="color:#268bd2">stdout_logfile</span><span style="color:#719e07">=</span>/var/log/supervisor/projectwebapp.log
-<span style="color:#268bd2">redirect_stderr</span><span style="color:#719e07">=</span>True
-</code></pre></div><p>Reiniciamos supervisor</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service supervisord restart
-</code></pre></div><h2 id="nginx-http-server">nginx. http server</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ pip install supervisor
+</span></span></code></pre></div><p>Creamos el archivo de configuración.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ echo_supervisord_conf &gt; /etc/supervisord.conf
+</span></span></code></pre></div><p>Creamos la carpeta de logs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ mkdir /var/log/supervisor
+</span></span></code></pre></div><p>Configuramos los siguientes parámetros.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/supervisord.conf
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Modifique las siguientes configuraciones</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>unix_http_server<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>file<span style="color:#f92672">=</span>/var/run/supervisor.sock
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>supervisord<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>logfile<span style="color:#f92672">=</span>/var/log/supervisor/supervisord.log
+</span></span><span style="display:flex;"><span>pidfile<span style="color:#f92672">=</span>/var/run/supervisord.pid
+</span></span><span style="display:flex;"><span>umask<span style="color:#f92672">=</span><span style="color:#ae81ff">022</span>
+</span></span><span style="display:flex;"><span>user<span style="color:#f92672">=</span>root
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>Creamos el script para supervisor que ejecutara el servicio como daemon y auto inicio con el sistema. Este es una adaptación propia del script de Mike McGrath <a href="mailto:mmcgrath@redhat.com">mmcgrath@redhat.com</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/init.d/supervisord
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># supervisord   This scripts turns supervisord on</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># chkconfig:  - 95 04</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># processname:  supervisord</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># config: /etc/supervisord.conf</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># source function library</span>
+</span></span><span style="display:flex;"><span>. /etc/rc.d/init.d/functions
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RETVAL<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>conffile<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>CONFFILE-/etc/supervisord.conf<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>user<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>USER-root<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>start<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        echo -n <span style="color:#e6db74">$&#34;Starting supervisord: &#34;</span>
+</span></span><span style="display:flex;"><span>        runuser -l <span style="color:#e6db74">${</span>user<span style="color:#e6db74">}</span> -c <span style="color:#e6db74">&#34;supervisord -c </span><span style="color:#e6db74">${</span>conffile<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&amp;&amp;</span> echo_success <span style="color:#f92672">||</span> echo_failure
+</span></span><span style="display:flex;"><span>        RETVAL<span style="color:#f92672">=</span>$?
+</span></span><span style="display:flex;"><span>        echo
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">[</span> $RETVAL -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> touch /var/lock/subsys/supervisord
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>stop<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  echo -n <span style="color:#e6db74">$&#34;Stopping supervisord: &#34;</span>
+</span></span><span style="display:flex;"><span>  killproc supervisord
+</span></span><span style="display:flex;"><span>  echo
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">[</span> $RETVAL -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> rm -f /var/lock/subsys/supervisord
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>restart<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  stop
+</span></span><span style="display:flex;"><span>  start
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> in
+</span></span><span style="display:flex;"><span>  start<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  start
+</span></span><span style="display:flex;"><span>  ;;
+</span></span><span style="display:flex;"><span>  stop<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  stop
+</span></span><span style="display:flex;"><span>  ;;
+</span></span><span style="display:flex;"><span>  restart|force-reload|reload<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  restart
+</span></span><span style="display:flex;"><span>  ;;
+</span></span><span style="display:flex;"><span>  condrestart<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">[</span> -f /var/lock/subsys/supervisord <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> restart
+</span></span><span style="display:flex;"><span>  ;;
+</span></span><span style="display:flex;"><span>  status<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  status supervisord
+</span></span><span style="display:flex;"><span>  RETVAL<span style="color:#f92672">=</span>$?
+</span></span><span style="display:flex;"><span>  ;;
+</span></span><span style="display:flex;"><span>  *<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  echo $<span style="color:#e6db74">&#34;Usage: </span>$0<span style="color:#e6db74"> {start|stop|status|restart|reload|force-reload|condrestart}&#34;</span>
+</span></span><span style="display:flex;"><span>  exit <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">esac</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>exit $RETVAL
+</span></span></code></pre></div><p>Damos de alta nuestro script como servicio.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ chkconfig --add supervisord
+</span></span></code></pre></div><p>Lo agregamos al inicio de sistema con el runrevel por defecto.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ chkconfig supervisord on
+</span></span></code></pre></div><p>Iniciamos el servicio.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ service supervisord start
+</span></span></code></pre></div><p>Configuramos una instancia de programa agregando nuestro script gunicorn que ejecuta nuestra app Django.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/supervisord.conf
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Agregue este bloque de configuracion segun su proyecto</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>program:projectwebapp<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>command<span style="color:#f92672">=</span>/opt/gunicorn/projectwebapp/gunicorn_start.sh
+</span></span><span style="display:flex;"><span>user<span style="color:#f92672">=</span>root
+</span></span><span style="display:flex;"><span>autostart<span style="color:#f92672">=</span>true
+</span></span><span style="display:flex;"><span>autorestart<span style="color:#f92672">=</span>true
+</span></span><span style="display:flex;"><span>stdout_logfile<span style="color:#f92672">=</span>/var/log/supervisor/projectwebapp.log
+</span></span><span style="display:flex;"><span>redirect_stderr<span style="color:#f92672">=</span>True
+</span></span></code></pre></div><p>Reiniciamos supervisor</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ service supervisord restart
+</span></span></code></pre></div><h2 id="nginx-http-server">nginx. http server</h2>
 <p>Instalamos la repo NGINX oficial.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ touch /etc/yum.repos.d/nginx.repo
-$ vim /etc/yum.repos.d/nginx.repo
-<span style="color:#719e07">[</span>nginx<span style="color:#719e07">]</span>
-<span style="color:#268bd2">name</span><span style="color:#719e07">=</span>nginx repo
-<span style="color:#268bd2">baseurl</span><span style="color:#719e07">=</span>http://nginx.org/packages/centos/6/<span style="color:#268bd2">$basearch</span>/
-<span style="color:#268bd2">gpgcheck</span><span style="color:#719e07">=</span><span style="color:#2aa198">0</span>
-<span style="color:#268bd2">enabled</span><span style="color:#719e07">=</span><span style="color:#2aa198">1</span>
-</code></pre></div><p>Instalamos nginx, los agregamos al inicio de sistema e iniciamos.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ yum install nginx
-$ chkconfig nginx on
-$ service nginx start
-</code></pre></div><p>Creamos las carpetas donde alojamos configuración de los sitios.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkdir /etc/nginx/sites-available
-$ mkdir /etc/nginx/sites-enabled
-$ mkdir /var/log/nginx/sites
-</code></pre></div><p>Creamos un respaldo de la configuración global y aplicamos las configuraciones siguientes para el servicio.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
-$ vim /etc/nginx/nginx.conf
-user  nginx;
-<span style="color:#586e75"># Numero de CPUs</span>
-worker_processes  2;
-
-error_log  /var/log/nginx/error.log warn;
-pid        /var/run/nginx.pid;
-
-
-events <span style="color:#719e07">{</span>
-    worker_connections  1024;
-<span style="color:#719e07">}</span>
-
-http <span style="color:#719e07">{</span>
-    include       /etc/nginx/mime.types;
-    default_type  application/octet-stream;
-
-    log_format  main  <span style="color:#2aa198">&#39;$remote_addr - $remote_user [$time_local] &#34;$request&#34; &#39;</span>
-                      <span style="color:#2aa198">&#39;$status $body_bytes_sent &#34;$http_referer&#34; &#39;</span>
-                      <span style="color:#2aa198">&#39;&#34;$http_user_agent&#34; &#34;$http_x_forwarded_for&#34;&#39;</span>;
-
-    access_log  /var/log/nginx/access.log  main;
-
-    sendfile        on;
-    <span style="color:#586e75">## Optimiza el rendimiento de sendfile al enviar tramas HTTP</span>
-    <span style="color:#586e75">## en un solo paquete.</span>
-    tcp_nopush     on;
-    <span style="color:#586e75">## Soporte gzip. Reduce la cantidad de datos a transferir</span>
-    gzip  on;
-
-    <span style="color:#586e75">## Configuracion de buffers</span>
-    client_body_buffer_size  1K;
-    client_header_buffer_size 1k;
-    client_max_body_size 1k;
-    large_client_header_buffers <span style="color:#2aa198">2</span> 1k;
-
-    <span style="color:#586e75">## Configuracion de timeouts</span>
-    client_body_timeout   10;
-    client_header_timeout 10;
-    keepalive_timeout     <span style="color:#2aa198">5</span> 5;
-    send_timeout          10;
-
-    include /etc/nginx/conf.d/*.conf;
-
-    <span style="color:#586e75">## Directorio de configuracion para vhost&#39;s en linea</span>
-    include /etc/nginx/sites-enabled/*.conf;
-<span style="color:#719e07">}</span>
-</code></pre></div><p>Agregamos la ip <code>127.0.0.1</code> para escucha solo local del sitio default, también podemos borrar este archivo si quieren des-habilitar completamente.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/nginx/conf.d/default.conf
-server <span style="color:#719e07">{</span>
-    listen       127.0.0.1:80;
-</code></pre></div><p>Creamos y configuramos el sitio para nuestro proyecto projectwebapp de la siguiente manera.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/nginx/sites-available/projectwebapp.conf
-<span style="color:#586e75"># Configuracion NGINX para projectwebapp</span>
-<span style="color:#586e75">#</span>
-upstream projectwebapp <span style="color:#719e07">{</span>
-  server unix:/var/run/gunicorn/projectwebapp.sock <span style="color:#268bd2">fail_timeout</span><span style="color:#719e07">=</span>0;
-<span style="color:#719e07">}</span>
-
-server <span style="color:#719e07">{</span>
-    listen       10.0.0.23:80;
-
-    <span style="color:#586e75"># Configuracion HTTPS</span>
-    <span style="color:#586e75"># listen       10.0.0.23:443 ssl;</span>
-
-    server_name  app.example.com;
-    server_tokens off;
-
-    access_log  /var/log/nginx/sites/projectwebapp.access.log;
-    error_log  /var/log/nginx/sites/projectwebapp.error.log;
-
-    <span style="color:#586e75"># Limite subidas de archivos.</span>
-    client_max_body_size 1M;
-
-    <span style="color:#586e75"># Acceso solo por medio del dominio</span>
-    <span style="color:#719e07">if</span> <span style="color:#719e07">(</span> <span style="color:#268bd2">$host</span> !~ ^<span style="color:#719e07">(</span>app.example.com<span style="color:#719e07">)</span>$ <span style="color:#719e07">)</span> <span style="color:#719e07">{</span>
-         <span style="color:#719e07">return</span> 444;
-    <span style="color:#719e07">}</span>
-    <span style="color:#586e75"># Metodos http permitidos</span>
-    <span style="color:#719e07">if</span> <span style="color:#719e07">(</span><span style="color:#268bd2">$request_method</span> !~ ^<span style="color:#719e07">(</span>GET|HEAD|POST<span style="color:#719e07">)</span>$ <span style="color:#719e07">)</span> <span style="color:#719e07">{</span>
-         <span style="color:#719e07">return</span> 444;
-    <span style="color:#719e07">}</span>
-    <span style="color:#586e75"># Directorio para STATIC</span>
-    location /static/ <span style="color:#719e07">{</span>
-            <span style="color:#b58900">alias</span> /home/www/projectwebapp/projectwebapp/static/;
-    <span style="color:#719e07">}</span>
-    <span style="color:#586e75"># Directorio para MEDIA</span>
-    location /media/ <span style="color:#719e07">{</span>
-            <span style="color:#b58900">alias</span> /home/www/projectwebapp/projectwebapp/media/;
-    <span style="color:#719e07">}</span>
-
-    location / <span style="color:#719e07">{</span>
-
-        proxy_set_header X-Forwarded-For <span style="color:#268bd2">$proxy_add_x_forwarded_for</span>;
-
-        <span style="color:#586e75"># Configuracion HTTPS</span>
-        <span style="color:#586e75">#proxy_set_header X-Forwarded-Proto https;</span>
-
-        proxy_set_header Host <span style="color:#268bd2">$http_host</span>;
-        proxy_redirect off;
-
-        <span style="color:#719e07">if</span> <span style="color:#719e07">(</span>!-f <span style="color:#268bd2">$request_filename</span><span style="color:#719e07">)</span> <span style="color:#719e07">{</span>
-            proxy_pass http://projectwebapp;
-            break;
-        <span style="color:#719e07">}</span>
-    <span style="color:#719e07">}</span>
-
-   <span style="color:#586e75"># Paginas de error</span>
-    error_page <span style="color:#2aa198">500</span> <span style="color:#2aa198">502</span> <span style="color:#2aa198">503</span> <span style="color:#2aa198">504</span> /500.html;
-    <span style="color:#268bd2">location</span> <span style="color:#719e07">=</span> /500.html <span style="color:#719e07">{</span>
-        root /home/www/projectwebapp/templates/;
-    <span style="color:#719e07">}</span>
-    error_page <span style="color:#2aa198">404</span> /404.html;
-    <span style="color:#268bd2">location</span> <span style="color:#719e07">=</span> /404.html <span style="color:#719e07">{</span>
-        root /home/www/projectwebapp/templates/;
-    <span style="color:#719e07">}</span>
-
-<span style="color:#719e07">}</span>
-</code></pre></div><p>Habilitamos nuestro archivo de sitio</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ln -s /etc/nginx/sites-available/projectwebapp.conf /etc/nginx/sites-enabled/projectwebapp.conf
-</code></pre></div><p>Reiniciamos nginx</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ service nginx restart
-</code></pre></div><h2 id="iptables-firewall">iptables. firewall</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ touch /etc/yum.repos.d/nginx.repo
+</span></span><span style="display:flex;"><span>$ vim /etc/yum.repos.d/nginx.repo
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>nginx<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>name<span style="color:#f92672">=</span>nginx repo
+</span></span><span style="display:flex;"><span>baseurl<span style="color:#f92672">=</span>http://nginx.org/packages/centos/6/$basearch/
+</span></span><span style="display:flex;"><span>gpgcheck<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>enabled<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>Instalamos nginx, los agregamos al inicio de sistema e iniciamos.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ yum install nginx
+</span></span><span style="display:flex;"><span>$ chkconfig nginx on
+</span></span><span style="display:flex;"><span>$ service nginx start
+</span></span></code></pre></div><p>Creamos las carpetas donde alojamos configuración de los sitios.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ mkdir /etc/nginx/sites-available
+</span></span><span style="display:flex;"><span>$ mkdir /etc/nginx/sites-enabled
+</span></span><span style="display:flex;"><span>$ mkdir /var/log/nginx/sites
+</span></span></code></pre></div><p>Creamos un respaldo de la configuración global y aplicamos las configuraciones siguientes para el servicio.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+</span></span><span style="display:flex;"><span>$ vim /etc/nginx/nginx.conf
+</span></span><span style="display:flex;"><span>user  nginx;
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Numero de CPUs</span>
+</span></span><span style="display:flex;"><span>worker_processes  2;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>error_log  /var/log/nginx/error.log warn;
+</span></span><span style="display:flex;"><span>pid        /var/run/nginx.pid;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>events <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    worker_connections  1024;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>http <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    include       /etc/nginx/mime.types;
+</span></span><span style="display:flex;"><span>    default_type  application/octet-stream;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    log_format  main  <span style="color:#e6db74">&#39;$remote_addr - $remote_user [$time_local] &#34;$request&#34; &#39;</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#e6db74">&#39;$status $body_bytes_sent &#34;$http_referer&#34; &#39;</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#e6db74">&#39;&#34;$http_user_agent&#34; &#34;$http_x_forwarded_for&#34;&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    access_log  /var/log/nginx/access.log  main;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    sendfile        on;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## Optimiza el rendimiento de sendfile al enviar tramas HTTP</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## en un solo paquete.</span>
+</span></span><span style="display:flex;"><span>    tcp_nopush     on;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## Soporte gzip. Reduce la cantidad de datos a transferir</span>
+</span></span><span style="display:flex;"><span>    gzip  on;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## Configuracion de buffers</span>
+</span></span><span style="display:flex;"><span>    client_body_buffer_size  1K;
+</span></span><span style="display:flex;"><span>    client_header_buffer_size 1k;
+</span></span><span style="display:flex;"><span>    client_max_body_size 1k;
+</span></span><span style="display:flex;"><span>    large_client_header_buffers <span style="color:#ae81ff">2</span> 1k;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## Configuracion de timeouts</span>
+</span></span><span style="display:flex;"><span>    client_body_timeout   10;
+</span></span><span style="display:flex;"><span>    client_header_timeout 10;
+</span></span><span style="display:flex;"><span>    keepalive_timeout     <span style="color:#ae81ff">5</span> 5;
+</span></span><span style="display:flex;"><span>    send_timeout          10;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    include /etc/nginx/conf.d/*.conf;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## Directorio de configuracion para vhost&#39;s en linea</span>
+</span></span><span style="display:flex;"><span>    include /etc/nginx/sites-enabled/*.conf;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>Agregamos la ip <code>127.0.0.1</code> para escucha solo local del sitio default, también podemos borrar este archivo si quieren des-habilitar completamente.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/nginx/conf.d/default.conf
+</span></span><span style="display:flex;"><span>server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    listen       127.0.0.1:80;
+</span></span></code></pre></div><p>Creamos y configuramos el sitio para nuestro proyecto projectwebapp de la siguiente manera.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/nginx/sites-available/projectwebapp.conf
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Configuracion NGINX para projectwebapp</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>upstream projectwebapp <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  server unix:/var/run/gunicorn/projectwebapp.sock fail_timeout<span style="color:#f92672">=</span>0;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    listen       10.0.0.23:80;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Configuracion HTTPS</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># listen       10.0.0.23:443 ssl;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    server_name  app.example.com;
+</span></span><span style="display:flex;"><span>    server_tokens off;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    access_log  /var/log/nginx/sites/projectwebapp.access.log;
+</span></span><span style="display:flex;"><span>    error_log  /var/log/nginx/sites/projectwebapp.error.log;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Limite subidas de archivos.</span>
+</span></span><span style="display:flex;"><span>    client_max_body_size 1M;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Acceso solo por medio del dominio</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span> $host !~ ^<span style="color:#f92672">(</span>app.example.com<span style="color:#f92672">)</span>$ <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">return</span> 444;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Metodos http permitidos</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>$request_method !~ ^<span style="color:#f92672">(</span>GET|HEAD|POST<span style="color:#f92672">)</span>$ <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">return</span> 444;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Directorio para STATIC</span>
+</span></span><span style="display:flex;"><span>    location /static/ <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            alias /home/www/projectwebapp/projectwebapp/static/;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Directorio para MEDIA</span>
+</span></span><span style="display:flex;"><span>    location /media/ <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            alias /home/www/projectwebapp/projectwebapp/media/;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    location / <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Configuracion HTTPS</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#proxy_set_header X-Forwarded-Proto https;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        proxy_set_header Host $http_host;
+</span></span><span style="display:flex;"><span>        proxy_redirect off;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>!-f $request_filename<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            proxy_pass http://projectwebapp;
+</span></span><span style="display:flex;"><span>            break;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e"># Paginas de error</span>
+</span></span><span style="display:flex;"><span>    error_page <span style="color:#ae81ff">500</span> <span style="color:#ae81ff">502</span> <span style="color:#ae81ff">503</span> <span style="color:#ae81ff">504</span> /500.html;
+</span></span><span style="display:flex;"><span>    location <span style="color:#f92672">=</span> /500.html <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        root /home/www/projectwebapp/templates/;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    error_page <span style="color:#ae81ff">404</span> /404.html;
+</span></span><span style="display:flex;"><span>    location <span style="color:#f92672">=</span> /404.html <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        root /home/www/projectwebapp/templates/;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>Habilitamos nuestro archivo de sitio</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ ln -s /etc/nginx/sites-available/projectwebapp.conf /etc/nginx/sites-enabled/projectwebapp.conf
+</span></span></code></pre></div><p>Reiniciamos nginx</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ service nginx restart
+</span></span></code></pre></div><h2 id="iptables-firewall">iptables. firewall</h2>
 <p>No olvidar abrir los respectivos puertos que usara nginx para darle salida a nuestros sitios.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ vim /etc/sysconfig/iptables
--A INPUT -m state --state NEW -m tcp -p tcp --dport <span style="color:#2aa198">80</span> -j ACCEPT
-$ service iptables restart
-</code></pre></div>
-		</div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ vim /etc/sysconfig/iptables
+</span></span><span style="display:flex;"><span>-A INPUT -m state --state NEW -m tcp -p tcp --dport <span style="color:#ae81ff">80</span> -j ACCEPT
+</span></span><span style="display:flex;"><span>$ service iptables restart
+</span></span></code></pre></div>
+    </div>
+    <footer class="content__footer"></footer>
 
-		<div class="post-tags">
-			
-				
-					<nav class="nav tags">
-							<ul class="flat">
-								
-								<li><a href="/tags/sysadmin">sysadmin</a></li>
-								
-								<li><a href="/tags/nginx">nginx</a></li>
-								
-								<li><a href="/tags/django">django</a></li>
-								
-								<li><a href="/tags/python">python</a></li>
-								
-							</ul>
-					</nav>
-				
-			
-		</div>
-		<div id="disqus_thread"></div>
-<script type="text/javascript">
-	(function () {
-		
-		
-		if (window.location.hostname == "localhost")
-			return;
+            </section>
 
-		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-		var disqus_shortname = 'armanroot-com';
-		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-	})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
-		Disqus.</a></noscript>
-<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div> © Copyright All Rights Reserved |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="https://armanroot.com/images/avatar.jpeg" alt="Logo">
+<h1 class="about__title">Armando Uch</h1>
+<p class="about__description">An Accidental Engineer<br>• Lazy #Programmer • #TacOps 🌮 • #BOFH<br> 🎸⚾️🍺☕️</p>
 </div>
 
 
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/jahrmando" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://www.linkedin.com/in/armandouch/" rel="me" aria-label="Linkedin" title="Linkedin"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://twitter.com/armanroot" rel="me" aria-label="Twitter" title="Twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2013-10-15
+        </p>
+    
 
-<script>feather.replace()</script>
-</body>
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">© Armando Uch | Copyright All Rights Reserved</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
 </html>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>django on Blog - Armando Uch</title>
+    <title>django on Blog de Armando</title>
     <link>https://armanroot.com/tags/django/</link>
-    <description>Recent content in django on Blog - Armando Uch</description>
+    <description>Recent content in django on Blog de Armando</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright All Rights Reserved</copyright>
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
     <lastBuildDate>Tue, 15 Oct 2013 10:00:00 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/django/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Configurando DJANGO stack en CentOS6</title>
@@ -15,7 +15,10 @@
       
       <guid>https://armanroot.com/posts/2013/configurando-django-stack-en-centos6/</guid>
       <description>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
-preinstalacion Instalamos los siguientes paquetes para compilaciones.</description>
+preinstalacion Instalamos los siguientes paquetes para compilaciones. Es de utilidad en algunos paquetes que instalemos dentro de PIP y los archivos de desarrollo de python.
+$ yum install gcc make python-devel pip, virtualenv Instalamos PIP desde los repositorios EPEL
+$ yum -y install python-pip --enablerepo epel Instalamos virtualenvwrapper desde PIP, este instalara como dependencia a virtualenv.
+$ pip install virtualenvwrapper Creamos nuestras variables de sistema para virtualenv y lo alojamos en el archivo de configuración bash del usuario unix.</description>
     </item>
     
   </channel>

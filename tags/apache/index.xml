@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>apache on Blog - Armando Uch</title>
+    <title>apache on Blog de Armando</title>
     <link>https://armanroot.com/tags/apache/</link>
-    <description>Recent content in apache on Blog - Armando Uch</description>
+    <description>Recent content in apache on Blog de Armando</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright All Rights Reserved</copyright>
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
     <lastBuildDate>Sat, 16 Aug 2014 10:00:00 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/apache/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Top 10 IPs mas visitados en Apache / Nginx</title>
@@ -14,7 +14,8 @@
       <pubDate>Sat, 16 Aug 2014 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/top-10-ips-mas-visitados-en-apache-/-nginx/</guid>
-      <description>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.</description>
+      <description>Obtener las 10 IPs que mas visitan un sitio web a partir de los registros de acceso de Apache ó NGINX, ademas de listar el numero de accesos encontrados para cada IP.
+$ cat site.access.log | awk &amp;#39;{print $1}&amp;#39; | sort | uniq -c | sort -nr | head -n 10 78320 187.xxx.xxx.74 75052 187.xxx.xxx.76 74229 187.xxx.xxx.206 72214 187.xxx.xxx.79 70507 192.168.xxx.200 68457 187.xxx.xxx.123 67956 187.xxx.xxx.207 66438 187.xxx.xxx.78 64883 187.xxx.xxx.201 64874 187.</description>
     </item>
     
     <item>
@@ -23,7 +24,8 @@
       <pubDate>Fri, 25 Mar 2011 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2011/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/</guid>
-      <description>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS.</description>
+      <description>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS. Lo primero que haremos es buscar nuestra partición NTFS y encontrar la información que nos servirá.
+$ sudo blkid /dev/sda1: UUID=&amp;#34;926c754a-0678-414f-9820-7fcb6a62239c&amp;#34; TYPE=&amp;#34;ext4&amp;#34; /dev/sda2: UUID=&amp;#34;d55e3ab6-46fd-45f4-9755-e5b47a33c45a&amp;#34; TYPE=&amp;#34;swap&amp;#34; /dev/sda3: LABEL=&amp;#34;Documentos&amp;#34; UUID=&amp;#34;7C121D59121D19AA&amp;#34; TYPE=&amp;#34;ntfs&amp;#34; Dos datos nos interesa en esta información que nos arroja, la primera es el LABEL que es el nombre o etiqueta de la partición y la otra es el UUID que es el identificador único de las partición para el sistema.</description>
     </item>
     
   </channel>

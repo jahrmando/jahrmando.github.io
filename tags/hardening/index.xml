@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>hardening on Blog - Armando Uch</title>
+    <title>hardening on Blog de Armando</title>
     <link>https://armanroot.com/tags/hardening/</link>
-    <description>Recent content in hardening on Blog - Armando Uch</description>
+    <description>Recent content in hardening on Blog de Armando</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright All Rights Reserved</copyright>
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
     <lastBuildDate>Thu, 04 Dec 2014 10:54:38 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/hardening/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cambiar cifrado de contraseñas en CentOS</title>
@@ -14,7 +14,8 @@
       <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/cambiar-cifrado-de-contrase%C3%B1as-en-centos/</guid>
-      <description>Podemos cambiar el algoritmo de cifrado que va usar el PAM en el archivo /etc/passwd.</description>
+      <description>Podemos cambiar el algoritmo de cifrado que va usar el PAM en el archivo /etc/passwd.
+$ vim /etc/sysconfig/authconfig PASSWDALGORITHM=value # # The password algorithm. The value can be bigcrypt, descrypt, md5, sha256, or sha512. For example: # PASSWDALGORITHM=sha512 Happy hacking..</description>
     </item>
     
     <item>
@@ -23,7 +24,11 @@
       <pubDate>Fri, 25 Apr 2014 16:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/post-instalacion-de-centos-7-minimal/</guid>
-      <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.</description>
+      <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.
+$ yum update -y $ reboot Instalacion de repositorios extras
+Los repositorios oficiales o bases del sistema no siempre traen servicios o utilidades que podamos necesitar, por ello es necerario agregar algunos repositorios extras (de los ya muy conocidos)
+Antes instalamos utilidades que nos serviran para las siguientes tareas.
+$ yum install wget vim Repositorio RPMforge</description>
     </item>
     
     <item>
@@ -34,7 +39,9 @@
       <guid>https://armanroot.com/posts/2013/bloquear-intentos-de-sesi%C3%B3n-fallidas-en-centos/</guid>
       <description>Bloquear usuarios tras intentos de sesión fallidas CentOS 6.
 Parámetros de configuración:
- deny. Numero de intentos even_deny_root.</description>
+deny. Numero de intentos even_deny_root. Bloquear también a root unlock_time. Tiempo de bloqueo, esta en segundos root_unlock_time. Tiempo de bloqueo de root, esta en segundos Agregamos las siguientes lineas de configuración en el archivo /etc/pam.d/password-auth
+auth required pam_tally2.so file=/var/log/tallylog deny=3 even_deny_root unlock_time=3600 account required pam_tally2.so El archivo de configuración quedaría como el siguiente ejemplo:
+$ vim /etc/pam.d/password-auth #%PAM-1.0 # This file is auto-generated.</description>
     </item>
     
     <item>
@@ -43,7 +50,9 @@ Parámetros de configuración:
       <pubDate>Thu, 11 Oct 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/limitar-acceso-al-commando-su-en-centos/</guid>
-      <description>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.</description>
+      <description>Como restringir a usuarios el escalar a usuario root por medio del comando su y especificar que usuarios si pueden acceder pero perteneciendo al grupo de sistema wheel.
+Quitamos el simbolo de comentario de la linea auth required pam_wheel.so use_uid:
+$ vim /etc/pam.d/su #%PAM-1.0 auth sufficient pam_rootok.so # Uncomment the following line to require a user to be in the “wheel” group. auth required pam_wheel.so use_uid ... Agregar a usuarios a grupo wheel para tener acceso a su</description>
     </item>
     
     <item>
@@ -52,7 +61,9 @@ Parámetros de configuración:
       <pubDate>Sun, 08 Apr 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/asignaci%C3%B3n-de-permisos-en-linux/</guid>
-      <description>Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:</description>
+      <description>Los permisos se dividen en tres niveles para los directorios o archivos en linux que son:
+Propietario - Grupo - Otros A cada nivel de permiso se le tiene asignado un valor numérico.
+Lectura (r) = 4 Escritura (w) = 2 Ejecución (x) = 1 Ahora bien para asignar permisos se usa el comando chmod, solo tenemos realmente que sumar los valores de los permisos que queremos darle a cada nivel:</description>
     </item>
     
   </channel>

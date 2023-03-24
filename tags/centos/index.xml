@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>centos on Blog - Armando Uch</title>
+    <title>centos on Blog de Armando</title>
     <link>https://armanroot.com/tags/centos/</link>
-    <description>Recent content in centos on Blog - Armando Uch</description>
+    <description>Recent content in centos on Blog de Armando</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright All Rights Reserved</copyright>
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
     <lastBuildDate>Thu, 15 Apr 2021 16:08:59 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/centos/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Agregar Mimetype WEBP Centos7 a comando File</title>
@@ -14,7 +14,9 @@
       <pubDate>Thu, 15 Apr 2021 16:08:59 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2021/agregar-mimetype-webp-centos7-a-comando-file/</guid>
-      <description>Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia.</description>
+      <description>Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia.
+Despues de que stackoverflow me falló ya me fui a los manuales de file donde nos dice que podemos agregar nuestros propias reglas para identificar archivos, esto esto en:
+$HOME/.magic /etc/magic Revisando en poco el repositorio de mimetypes, encontré una coincidencia para WEBP, de este modo pudé determinar como debe ir mi regla y con el manual el formato final.</description>
     </item>
     
     <item>
@@ -23,7 +25,10 @@
       <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2018/restringir-acceso-a-una-url-en-nginx/</guid>
-      <description>Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.</description>
+      <description>Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.
+La utilidad htpasswd nos permite manejar los accesos de usuario para la autenticación básica por HTTP, esto en CentOS se encuentra en el paquete httpd-tools.
+Instalamos el paquete httpd-tools.
+$ yum install httpd-tools Agregamos el usuario, usando la opción -c para crear el archivo de base de datos y este se alojara en el directorio /etc/nginx/htpasswd, con la opción -s habilitamos que la contraseña sea cifrada en SHA.</description>
     </item>
     
     <item>
@@ -32,7 +37,11 @@
       <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/</guid>
-      <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.</description>
+      <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.
+Las configuraciones presentadas funcionan bajo el esquema de seguridad SELINUX.
+Instalemos el servicio NGINX desde los reposotorios EPEL.
+$ sudo yum install nginx --enablerepo epel Si no tiene el repositorio EPEL configurado hagalo desde aquí
+Ahora vamos a habilitar el servicio en el inicio de sistema con el comando enable y despues iniciamos el servicio (start).</description>
     </item>
     
     <item>
@@ -41,7 +50,10 @@
       <pubDate>Sat, 31 Jan 2015 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/postgresql-replicar-en-maestro-esclavo/</guid>
-      <description>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.</description>
+      <description>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.2
+Creamos y asignamos los permisos para el directorio que alojara todos los archivos necesarios para nuestra nueva instancia de servicio postgresql. #more
+$ mkdir /var/lib/pgsql/9.2/data_slave $ chown postgres.postgres /var/lib/pgsql/9.2/data_slave/ Hacemos una copia del script de inicio postgresql
+$ cp /etc/init.d/postgresql-9.2 /etc/init.d/postgresql-slave9.2 Modificamos los siguientes parametros en el script</description>
     </item>
     
     <item>
@@ -50,7 +62,8 @@
       <pubDate>Fri, 16 Jan 2015 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/instalacion-de-bacula-en-centos-7/</guid>
-      <description>Bacula es un conjunto de programas Open Source, listos para la empresa, que permiten administrar los backups, restauración y verificación de datos en una red heterogénea.</description>
+      <description>Bacula es un conjunto de programas Open Source, listos para la empresa, que permiten administrar los backups, restauración y verificación de datos en una red heterogénea.
+Bacula es relativamente fácil de usar y eficiente, a la vez que ofrece muchas funcionalidades avanzadas para la administración de los datos almacenados, lo cual facilita hallar y recuperar archivos perdidos o dañados. En términos técnicos, Bacula es un sistema de backups Open Source, orientado a la red y listo para la empresa.</description>
     </item>
     
     <item>
@@ -59,7 +72,14 @@
       <pubDate>Wed, 07 Jan 2015 16:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2015/referencia-r%C3%A1pida-systemctl/</guid>
-      <description>Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd.</description>
+      <description>Este post es mas una ayuda rapida para aquellos que apenas se estan metiendo a usar systemd.
+Estado del servicio
+$ systemctl status foo.service Iniciar/Detener servicio
+$ systemcl [start|stop] foo.service Habilitar/Inhabilitar servicio al inicio del sistema
+$ systemctl [enable|disable] foo.service Estado de los servicios que estan ejecutandose
+$ systemctl -t service list-units Estado de los servicios que estan instalados (chkconfig --list)
+$ systemctl -t service list-unit-files Servicios actualmente ejecutandose
+$ systemctl -t service list-units --state running </description>
     </item>
     
     <item>
@@ -68,7 +88,8 @@
       <pubDate>Fri, 27 Jun 2014 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/crear-usuario-de-lectura-read-only-en-postgresql/</guid>
-      <description>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.</description>
+      <description>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.
+Nos conectamos a la base de datos (test_db) donde vamos a aplicar estos privilegios y con un usuario privilegiado para poder hacer las modificaciones (postgres).</description>
     </item>
     
     <item>
@@ -78,7 +99,11 @@
       
       <guid>https://armanroot.com/posts/2014/configuracion-y-administracion-de-postgresql-9.x/</guid>
       <description>En este howto configuraremos la version de PostgreSQL 9.3 la mas reciente hasta ahora.
-Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.</description>
+Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.
+$ vim /etc/yum.repos.d/CentOS-Base.repo [base] ... ... exclude=postgresql* [updates] ... ... exclude=postgresql* Instalacion de repositorio Postgresql
+Puedes buscar el repositorio mas adecuado a tu arquitectura y la version mas actual en http://yum.postgresql.org/repopackages.php
+$ cd /tmp/ $ wget http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm $ yum localinstall pgdg-centos93-9.3-1.noarch.rpm Instalando
+$ yum install postgresql93-server postgresql93-contrib Inicializando la base de datos</description>
     </item>
     
     <item>
@@ -87,7 +112,12 @@ Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdq
       <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/</guid>
-      <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV</description>
+      <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV
+Repositorios Instalación de repositorio RPM Fusión (En caso de no tenerlo instalado)
+Arquitecturas:
+i686 x86_64 En este ejemplo de instalación usamos el repositorio de x86_64
+$ wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm $ rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt $ rpm -K rpmforge-release-0.5.2-2.el6.rf.*.rpm rpmforge-release-0.5.2-2.el6.rf.i686.rpm: (sha1) dsa sha1 md5 gpg BIEN Instalacion Instalamos pure-ftp desde el repositorio RPM Forge.
+$ yum install pure-ftpd -y --enablerepo rpmforge Configuración Siga la siguiente configuración.</description>
     </item>
     
     <item>
@@ -96,7 +126,11 @@ Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdq
       <pubDate>Fri, 25 Apr 2014 16:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/post-instalacion-de-centos-7-minimal/</guid>
-      <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.</description>
+      <description>Es importante primero realizar una actualizacion de todos los paquetes que vienen en el disco de instalacion.
+$ yum update -y $ reboot Instalacion de repositorios extras
+Los repositorios oficiales o bases del sistema no siempre traen servicios o utilidades que podamos necesitar, por ello es necerario agregar algunos repositorios extras (de los ya muy conocidos)
+Antes instalamos utilidades que nos serviran para las siguientes tareas.
+$ yum install wget vim Repositorio RPMforge</description>
     </item>
     
     <item>
@@ -106,7 +140,8 @@ Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdq
       
       <guid>https://armanroot.com/posts/2013/desactivar-la-expiraci%C3%B3n-de-contrase%C3%B1as-en-centos/</guid>
       <description>Con la utilidad chage podemos reasignar los valores de expiración.
-Verificamos las fechas de expiración de los passwords</description>
+Verificamos las fechas de expiración de los passwords
+$ chage -l usuario Last password change : Jul 23, 2012 Password expires : Sep 21, 2012 Password inactive : Sep 28, 2012 Account expires : never Minimum number of days between password change : 1 Maximum number of days between password change : 60 Number of days of warning before password expires : 7 Tenemos dos modos para poder modificar la expiración:</description>
     </item>
     
     <item>
@@ -115,7 +150,9 @@ Verificamos las fechas de expiración de los passwords</description>
       <pubDate>Tue, 22 May 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/establecer-vigencia-y-reglas-sobre-contrase%C3%B1as-a-usuarios-linux/</guid>
-      <description>Lo que haremos en este post es el establecer una política de seguridad para la renovación de contraseñas de los usuarios en el servidor y también sobre reglas para la creación de las mismas.</description>
+      <description>Lo que haremos en este post es el establecer una política de seguridad para la renovación de contraseñas de los usuarios en el servidor y también sobre reglas para la creación de las mismas.
+Abrimos y editamos el siguiente archivo:
+$ vi /etc/login.defs # Controles de vigencia de contraseñas: # # PASS_MAX_DAYS Máximo numero de días que una contraseña debe usarse # PASS_MIN_DAYS Número mínimo de días permitidos entre los cambios de contraseña.</description>
     </item>
     
   </channel>

@@ -2,8 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://armanroot.com/</loc>
-    <lastmod>2022-02-17T11:48:33-06:00</lastmod>
+    <loc>https://armanroot.com/blog/</loc>
+    <lastmod>2023-03-24T15:49:13-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/blog/2023/como-uso-mi-tarjeta-de-credito-en-mis-gastos-diarios/</loc>
+    <lastmod>2023-03-24T15:49:13-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/tags/finanzas/</loc>
+    <lastmod>2023-03-24T15:49:13-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/tags/</loc>
+    <lastmod>2023-03-24T15:49:13-06:00</lastmod>
   </url><url>
     <loc>https://armanroot.com/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/</loc>
     <lastmod>2022-02-17T11:48:33-06:00</lastmod>
@@ -15,9 +24,6 @@
     <lastmod>2022-02-14T15:49:57-06:00</lastmod>
   </url><url>
     <loc>https://armanroot.com/posts/2022/copiar-archivo-en-multiples-directorios-linux/</loc>
-    <lastmod>2022-02-14T15:49:57-06:00</lastmod>
-  </url><url>
-    <loc>https://armanroot.com/tags/</loc>
     <lastmod>2022-02-14T15:49:57-06:00</lastmod>
   </url><url>
     <loc>https://armanroot.com/tags/tips/</loc>
@@ -33,6 +39,9 @@
     <lastmod>2021-04-15T16:08:59-05:00</lastmod>
   </url><url>
     <loc>https://armanroot.com/about/</loc>
+    <lastmod>2019-04-19T21:37:58+05:30</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/</loc>
     <lastmod>2019-04-19T21:37:58+05:30</lastmod>
   </url><url>
     <loc>https://armanroot.com/tags/nginx/</loc>
@@ -163,5 +172,9 @@
   </url><url>
     <loc>https://armanroot.com/posts/2011/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/</loc>
     <lastmod>2011-03-25T10:00:00-05:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/categories/</loc>
+  </url><url>
+    <loc>https://armanroot.com/series/</loc>
   </url>
 </urlset>

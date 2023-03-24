@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>postfix on Blog - Armando Uch</title>
+    <title>postfix on Blog de Armando</title>
     <link>https://armanroot.com/tags/postfix/</link>
-    <description>Recent content in postfix on Blog - Armando Uch</description>
+    <description>Recent content in postfix on Blog de Armando</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright All Rights Reserved</copyright>
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
     <lastBuildDate>Wed, 10 Oct 2012 10:54:38 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/postfix/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Postfix como smarthost, reenvio de emails via CLI</title>
@@ -14,7 +14,11 @@
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2012/postfix-como-smarthost-reenvio-de-emails-via-cli/</guid>
-      <description>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.</description>
+      <description>Configuremos el servicio postfix para que actué como smarthost y así poder enviar correos desde la terminal.
+Instalamos los paquetes necesarios
+$ yum install postfix mailx cyrus-sasl cyrus-sasl-plain -y Configuración de credenciales
+$ vim /etc/postfix/sasl_passwd smtp.gmail.com user@gmail.com:miPassWord $ postmap hash:/etc/postfix/sasl_passwd Configurando postfix
+$ vim /etc/postfix/main.cf ################### # SMARTHOST GMAIL # ################### relayhost = [smtp.gmail.com]:587 smtp_use_tls = yes smtp_sasl_auth_enable = yes smtp_sasl_security_options = noanonymous smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd smtp_tls_CAfile = /etc/ssl/certs/ca-bundle.crt Configurando los servicios:</description>
     </item>
     
   </channel>

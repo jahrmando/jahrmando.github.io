@@ -1,76 +1,52 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Agregar Mimetype WEBP Centos7 a comando File - Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/favicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta property="og:title" content="Agregar Mimetype WEBP Centos7 a comando File" />
-<meta property="og:description" content="Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2021/agregar-mimetype-webp-centos7-a-comando-file/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-04-15T16:08:59-05:00" />
-<meta property="article:modified_time" content="2021-04-15T16:08:59-05:00" />
+<html lang="es">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Agregar Mimetype WEBP Centos7 a comando File"/>
-<meta name="twitter:description" content="Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia."/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+    <head><title>Agregar Mimetype WEBP Centos7 a comando File &ndash; Blog de Armando</title>
+<meta name="description" content="An Accidental Engineer&lt;br&gt;• Lazy #Programmer • #TacOps 🌮 • #BOFH&lt;br&gt; 🎸⚾️🍺☕️">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
 
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-	<script src="https://armanroot.com/js/main.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://armanroot.com/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://armanroot.com/css/risotto.css">
+<link rel="stylesheet" href="https://armanroot.com/css/custom.css">
 </head>
 
-<body>
-	<div class="container wrapper post">
-		<div class="header">
-	<base href="https://armanroot.com/">
-	<h1 class="site-title"><a href="https://armanroot.com/">Blog - Armando Uch</a></h1>
-	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
-			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
-		</nav>
-	</div>
+    <body>
+        <div class="page">
 
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Inicio</a>
-			</li>
-			
-			<li>
-				<a href="/posts">Bitacora</a>
-			</li>
-			
-			<li>
-				<a href="/opinion">Opinion</a>
-			</li>
-			
-			<li>
-				<a href="/about">Acerca de</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Topics</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
+            <header class="page__header"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1>
+<nav class="page__nav main-nav">
+    <ul>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/about/" title="">Acerca de</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/posts/" title="">bitacora</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/blog/" title="">blog</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/tags/" title="">Topics</a></li>
+    
+    </ul>
+</nav>
 
+</header>
 
-		<div class="post-header">
-			<h1 class="title">Agregar Mimetype WEBP Centos7 a comando File</h1>
-			<div class="meta">Posted at &mdash; Apr 15, 2021</div>
-		</div>
-
-		<div class="markdown">
-			<p>Bueno me topé con que en centos 7 el comando <code>file</code> arrojaba un diferente
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Agregar Mimetype WEBP Centos7 a comando File</h1>
+    </header>
+    <div class="content__body">
+        <p>Bueno me topé con que en centos 7 el comando <code>file</code> arrojaba un diferente
 <em>mimetype</em> a los archivos de imagen WEBP y la reconocia como <strong>application/octet-stream</strong>
 que es el default para binarios cuando no encuentra una coincidencia.</p>
 <p>Despues de que stackoverflow me falló ya me fui a los manuales de <code>file</code> donde nos dice
@@ -83,57 +59,81 @@ que podemos agregar nuestros propias reglas para identificar archivos, esto esto
 de mimetypes, encontré una coincidencia para WEBP, de este modo pudé determinar como debe
 ir mi regla y con el manual el formato final. Al final el resultado es agregando mi regla
 en el archivo <code>/etc/magic</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback"># URL:	http://fileformats.archiveteam.org/wiki/WebP
+<pre tabindex="0"><code># URL:	http://fileformats.archiveteam.org/wiki/WebP
 0       string          RIFF            RIFF (little-endian) data
 &gt;8      string          WEBP            \b, Web/P image
 !:mime	image/webp
-</code></pre></div><p>La primera linea es importante no omitarla, de lo contrario no reconocera tu regla, ya
+</code></pre><p>La primera linea es importante no omitarla, de lo contrario no reconocera tu regla, ya
 que las WEBP son archivos del grupo RIFF.</p>
 <p>PD: Centos 8.x ya tiene incluido esta regla.</p>
 
-		</div>
+    </div>
+    <footer class="content__footer"></footer>
 
-		<div class="post-tags">
-			
-				
-					<nav class="nav tags">
-							<ul class="flat">
-								
-								<li><a href="/tags/sysadmin">sysadmin</a></li>
-								
-								<li><a href="/tags/centos">centos</a></li>
-								
-							</ul>
-					</nav>
-				
-			
-		</div>
-		<div id="disqus_thread"></div>
-<script type="text/javascript">
-	(function () {
-		
-		
-		if (window.location.hostname == "localhost")
-			return;
+            </section>
 
-		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-		var disqus_shortname = 'armanroot-com';
-		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-	})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
-		Disqus.</a></noscript>
-<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div> © Copyright All Rights Reserved |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="https://armanroot.com/images/avatar.jpeg" alt="Logo">
+<h1 class="about__title">Armando Uch</h1>
+<p class="about__description">An Accidental Engineer<br>• Lazy #Programmer • #TacOps 🌮 • #BOFH<br> 🎸⚾️🍺☕️</p>
 </div>
 
 
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/jahrmando" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://www.linkedin.com/in/armandouch/" rel="me" aria-label="Linkedin" title="Linkedin"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://twitter.com/armanroot" rel="me" aria-label="Twitter" title="Twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2021-04-15
+        </p>
+    
 
-<script>feather.replace()</script>
-</body>
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">© Armando Uch | Copyright All Rights Reserved</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
 </html>

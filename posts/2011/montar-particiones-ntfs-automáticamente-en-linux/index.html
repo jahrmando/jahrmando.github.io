@@ -1,143 +1,141 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Montar particiones NTFS automáticamente en Linux - Blog - Armando Uch</title><link rel="icon" type="image/png" href=icons/favicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta property="og:title" content="Montar particiones NTFS automáticamente en Linux" />
-<meta property="og:description" content="Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://armanroot.com/posts/2011/montar-particiones-ntfs-autom%C3%A1ticamente-en-linux/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2011-03-25T10:00:00-05:00" />
-<meta property="article:modified_time" content="2011-03-25T10:00:00-05:00" />
+<html lang="es">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Montar particiones NTFS automáticamente en Linux"/>
-<meta name="twitter:description" content="Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS."/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+    <head><title>Montar particiones NTFS automáticamente en Linux &ndash; Blog de Armando</title>
+<meta name="description" content="An Accidental Engineer&lt;br&gt;• Lazy #Programmer • #TacOps 🌮 • #BOFH&lt;br&gt; 🎸⚾️🍺☕️">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
 
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-	<script src="https://armanroot.com/js/main.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://armanroot.com/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://armanroot.com/css/risotto.css">
+<link rel="stylesheet" href="https://armanroot.com/css/custom.css">
 </head>
 
-<body>
-	<div class="container wrapper post">
-		<div class="header">
-	<base href="https://armanroot.com/">
-	<h1 class="site-title"><a href="https://armanroot.com/">Blog - Armando Uch</a></h1>
-	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
-			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
-		</nav>
-	</div>
+    <body>
+        <div class="page">
 
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Inicio</a>
-			</li>
-			
-			<li>
-				<a href="/posts">Bitacora</a>
-			</li>
-			
-			<li>
-				<a href="/opinion">Opinion</a>
-			</li>
-			
-			<li>
-				<a href="/about">Acerca de</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Topics</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
+            <header class="page__header"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1>
+<nav class="page__nav main-nav">
+    <ul>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/about/" title="">Acerca de</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/posts/" title="">bitacora</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/blog/" title="">blog</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/tags/" title="">Topics</a></li>
+    
+    </ul>
+</nav>
 
+</header>
 
-		<div class="post-header">
-			<h1 class="title">Montar particiones NTFS automáticamente en Linux</h1>
-			<div class="meta">Posted at &mdash; Mar 25, 2011</div>
-		</div>
-
-		<div class="markdown">
-			<p>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS. Lo primero que haremos es buscar nuestra partición NTFS y encontrar la información que nos servirá.</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo blkid
-/dev/sda1: <span style="color:#268bd2">UUID</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;926c754a-0678-414f-9820-7fcb6a62239c&#34;</span> <span style="color:#268bd2">TYPE</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;ext4&#34;</span>
-/dev/sda2: <span style="color:#268bd2">UUID</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;d55e3ab6-46fd-45f4-9755-e5b47a33c45a&#34;</span> <span style="color:#268bd2">TYPE</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;swap&#34;</span>
-/dev/sda3: <span style="color:#268bd2">LABEL</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;Documentos&#34;</span> <span style="color:#268bd2">UUID</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;7C121D59121D19AA&#34;</span> <span style="color:#268bd2">TYPE</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;ntfs&#34;</span>
-</code></pre></div><p>Dos datos nos interesa en esta información que nos arroja, la primera es el <code>LABEL</code> que es el nombre o etiqueta de la partición y la otra es el <code>UUID</code> que es el identificador único de las partición para el sistema.</p>
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Montar particiones NTFS automáticamente en Linux</h1>
+    </header>
+    <div class="content__body">
+        <p>Esta manera es la manual pero la segura para montar automáticamente las particiones que estén en formato NTFS. Lo primero que haremos es buscar nuestra partición NTFS y encontrar la información que nos servirá.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ sudo blkid
+</span></span><span style="display:flex;"><span>/dev/sda1: UUID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;926c754a-0678-414f-9820-7fcb6a62239c&#34;</span> TYPE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ext4&#34;</span>
+</span></span><span style="display:flex;"><span>/dev/sda2: UUID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;d55e3ab6-46fd-45f4-9755-e5b47a33c45a&#34;</span> TYPE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;swap&#34;</span>
+</span></span><span style="display:flex;"><span>/dev/sda3: LABEL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Documentos&#34;</span> UUID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;7C121D59121D19AA&#34;</span> TYPE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ntfs&#34;</span>
+</span></span></code></pre></div><p>Dos datos nos interesa en esta información que nos arroja, la primera es el <code>LABEL</code> que es el nombre o etiqueta de la partición y la otra es el <code>UUID</code> que es el identificador único de las partición para el sistema.</p>
 <p>Ahora lo que realmente se hace es modificar el archivo <code>FSTAB</code> que contiene todas las particiones que se montan en el sistema. Nosotros vamos a agregar nuestra partición en este archivo de configuración <code>/etc/fstab</code> y agregamos la siguiente linea al final del archivo:</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#268bd2">UUID</span><span style="color:#719e07">=</span>IDENTIFICADOR /media/ETIQUETA ntfs-3g rw,nosuid,nodev,uid<span style="color:#719e07">=</span>1000,exec,utf8 <span style="color:#2aa198">0</span> <span style="color:#2aa198">0</span>
-</code></pre></div><p>Realice lo siguiente:</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo mkdir /media/Documentos
-$ sudo vim /etc/fstab
-<span style="color:#586e75"># /etc/fstab: static file system information.</span>
-<span style="color:#586e75">#</span>
-proc /proc proc nodev,noexec,nosuid <span style="color:#2aa198">0</span> <span style="color:#2aa198">0</span>
-<span style="color:#586e75"># / was on /dev/sda1 during installation</span>
-<span style="color:#268bd2">UUID</span><span style="color:#719e07">=</span>926c754a-0678-414f-9820-7fcb6a62239c / ext4 <span style="color:#268bd2">errors</span><span style="color:#719e07">=</span>remount-ro <span style="color:#2aa198">0</span> <span style="color:#2aa198">1</span>
-<span style="color:#586e75"># swap was on /dev/sda2 during installation</span>
-<span style="color:#268bd2">UUID</span><span style="color:#719e07">=</span>d55e3ab6-46fd-45f4-9755-e5b47a33c45a none swap sw <span style="color:#2aa198">0</span> <span style="color:#2aa198">0</span>
-<span style="color:#586e75">#Mi particion NTFS</span>
-<span style="color:#268bd2">UUID</span><span style="color:#719e07">=</span>7C121D59121D19AA /media/Documentos ntfs-3g rw,nosuid,nodev,uid<span style="color:#719e07">=</span>1000,exec,utf8 <span style="color:#2aa198">0</span> <span style="color:#2aa198">0</span>
-</code></pre></div><p>Volvemos a montar los discos del sistema</p>
-<div class="highlight"><pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ sudo mount -a
-</code></pre></div>
-		</div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>UUID<span style="color:#f92672">=</span>IDENTIFICADOR /media/ETIQUETA ntfs-3g rw,nosuid,nodev,uid<span style="color:#f92672">=</span>1000,exec,utf8 <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><p>Realice lo siguiente:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ sudo mkdir /media/Documentos
+</span></span><span style="display:flex;"><span>$ sudo vim /etc/fstab
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># /etc/fstab: static file system information.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>proc /proc proc nodev,noexec,nosuid <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># / was on /dev/sda1 during installation</span>
+</span></span><span style="display:flex;"><span>UUID<span style="color:#f92672">=</span>926c754a-0678-414f-9820-7fcb6a62239c / ext4 errors<span style="color:#f92672">=</span>remount-ro <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># swap was on /dev/sda2 during installation</span>
+</span></span><span style="display:flex;"><span>UUID<span style="color:#f92672">=</span>d55e3ab6-46fd-45f4-9755-e5b47a33c45a none swap sw <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Mi particion NTFS</span>
+</span></span><span style="display:flex;"><span>UUID<span style="color:#f92672">=</span>7C121D59121D19AA /media/Documentos ntfs-3g rw,nosuid,nodev,uid<span style="color:#f92672">=</span>1000,exec,utf8 <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><p>Volvemos a montar los discos del sistema</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ sudo mount -a
+</span></span></code></pre></div>
+    </div>
+    <footer class="content__footer"></footer>
 
-		<div class="post-tags">
-			
-				
-					<nav class="nav tags">
-							<ul class="flat">
-								
-								<li><a href="/tags/nginx">nginx</a></li>
-								
-								<li><a href="/tags/sysadmin">sysadmin</a></li>
-								
-								<li><a href="/tags/apache">apache</a></li>
-								
-							</ul>
-					</nav>
-				
-			
-		</div>
-		<div id="disqus_thread"></div>
-<script type="text/javascript">
-	(function () {
-		
-		
-		if (window.location.hostname == "localhost")
-			return;
+            </section>
 
-		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-		var disqus_shortname = 'armanroot-com';
-		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-	})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
-		Disqus.</a></noscript>
-<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div> © Copyright All Rights Reserved |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="https://armanroot.com/images/avatar.jpeg" alt="Logo">
+<h1 class="about__title">Armando Uch</h1>
+<p class="about__description">An Accidental Engineer<br>• Lazy #Programmer • #TacOps 🌮 • #BOFH<br> 🎸⚾️🍺☕️</p>
 </div>
 
 
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/jahrmando" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://www.linkedin.com/in/armandouch/" rel="me" aria-label="Linkedin" title="Linkedin"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://twitter.com/armanroot" rel="me" aria-label="Twitter" title="Twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    
+    
+        <p>
+            
+            2011-03-25
+        </p>
+    
 
-<script>feather.replace()</script>
-</body>
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">© Armando Uch | Copyright All Rights Reserved</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
 </html>

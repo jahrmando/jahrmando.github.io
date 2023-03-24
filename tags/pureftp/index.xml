@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>pureftp on Blog - Armando Uch</title>
+    <title>pureftp on Blog de Armando</title>
     <link>https://armanroot.com/tags/pureftp/</link>
-    <description>Recent content in pureftp on Blog - Armando Uch</description>
+    <description>Recent content in pureftp on Blog de Armando</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright All Rights Reserved</copyright>
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
     <lastBuildDate>Mon, 28 Apr 2014 16:00:00 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/pureftp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Instalación de Pure-FTP sobre TLS con antivirus ClamAV</title>
@@ -14,7 +14,12 @@
       <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2014/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/</guid>
-      <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV</description>
+      <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV
+Repositorios Instalación de repositorio RPM Fusión (En caso de no tenerlo instalado)
+Arquitecturas:
+i686 x86_64 En este ejemplo de instalación usamos el repositorio de x86_64
+$ wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm $ rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt $ rpm -K rpmforge-release-0.5.2-2.el6.rf.*.rpm rpmforge-release-0.5.2-2.el6.rf.i686.rpm: (sha1) dsa sha1 md5 gpg BIEN Instalacion Instalamos pure-ftp desde el repositorio RPM Forge.
+$ yum install pure-ftpd -y --enablerepo rpmforge Configuración Siga la siguiente configuración.</description>
     </item>
     
   </channel>

@@ -1,164 +1,119 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta name="generator" content="Hugo 0.92.2" />
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Blog - Armando Uch - An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH </title><link rel="icon" type="image/png" href=icons/favicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="alternate" type="application/rss+xml" href="https://armanroot.com/index.xml" title="Blog - Armando Uch" />
-	<meta property="og:title" content="Blog - Armando Uch" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://armanroot.com/" />
+<html lang="es">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Blog - Armando Uch"/>
-<meta name="twitter:description" content=""/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+    <head>
+	<meta name="generator" content="Hugo 0.105.0"><title>Hola! &ndash; Blog de Armando</title>
+<meta name="description" content="An Accidental Engineer&lt;br&gt;• Lazy #Programmer • #TacOps 🌮 • #BOFH&lt;br&gt; 🎸⚾️🍺☕️">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://armanroot.com/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom.css" />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/dark.css"  />
-	<link rel="stylesheet" type="text/css" href="https://armanroot.com/css/custom-dark.css"  />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
 
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-	<script src="https://armanroot.com/js/main.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+
+
+<link rel="stylesheet" href="https://armanroot.com/css/palettes/base16-dark.css">
+<link rel="stylesheet" href="https://armanroot.com/css/risotto.css">
+<link rel="stylesheet" href="https://armanroot.com/css/custom.css">
 </head>
 
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	<base href="https://armanroot.com/">
-	<h1 class="site-title"><a href="https://armanroot.com/">Blog - Armando Uch</a></h1>
-	<div class="site-description"><h2>An Accidental Engineer • #LazyProgrammer #Linux #DevOps #Python #BOFH</h2><nav class="nav social">
-			<ul class="flat"><a href="https://github.com/jahrmando" title="Github"><i data-feather="github"></i></a><a href="https://twitter.com/armanroot" title="Twitter"><i data-feather="twitter"></i></a></ul>
-		</nav>
-	</div>
+    <body>
+        <div class="page">
 
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Inicio</a>
-			</li>
-			
-			<li>
-				<a href="/posts">Bitacora</a>
-			</li>
-			
-			<li>
-				<a href="/opinion">Opinion</a>
-			</li>
-			
-			<li>
-				<a href="/about">Acerca de</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Topics</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
+            <header class="page__header"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1>
+<nav class="page__nav main-nav">
+    <ul>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/about/" title="">Acerca de</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/posts/" title="">bitacora</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/blog/" title="">blog</a></li>
+    
+    <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/tags/" title="">Topics</a></li>
+    
+    </ul>
+</nav>
 
+</header>
 
-		
-
-		<div class="recent-posts section">
-			<h2 class="section-header">
-				Recent posts
-			</h2>
-			<div class="posts">
-				
-				
-				
-				<div class="post">
-					<div class="meta">Feb 17, 2022</div>
-					<a class="title" href="/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/">Migrar servicio a otra región AWS usando Terraform Workspaces y Git Branches</a> &mdash;
-					<span class="description">
-						
-						En este ejercicio lo que queremos realizar es el migrar un servicio (Cluster, ECS, RDS, EC2) hacia otra región de AWS.&hellip;
-						
-					</span>
-				</div>
-				
-				<div class="post">
-					<div class="meta">Feb 14, 2022</div>
-					<a class="title" href="/posts/2022/copiar-archivo-en-multiples-directorios-linux/">Copiar archivo en multiples directorios Linux</a> &mdash;
-					<span class="description">
-						
-						Cada que pienso en correr un comando que va ser repetitivo y sin generar algun script en bash o algo, siempre pienso en el comando xargs y veran muchos tips usandolo aqui.&hellip;
-						
-					</span>
-				</div>
-				
-				<div class="post">
-					<div class="meta">Apr 15, 2021</div>
-					<a class="title" href="/posts/2021/agregar-mimetype-webp-centos7-a-comando-file/">Agregar Mimetype WEBP Centos7 a comando File</a> &mdash;
-					<span class="description">
-						
-						Bueno me topé con que en centos 7 el comando file arrojaba un diferente mimetype a los archivos de imagen WEBP y la reconocia como application/octet-stream que es el default para binarios cuando no encuentra una coincidencia.&hellip;
-						
-					</span>
-				</div>
-				
-				<div class="post">
-					<div class="meta">Sep 6, 2018</div>
-					<a class="title" href="/posts/2018/restringir-acceso-a-una-url-en-nginx/">Restringir acceso a una URL en NGINX</a> &mdash;
-					<span class="description">
-						
-						Esta configuración nos permitirá el acceso a recursos en un directorio especifico del servidor, el acceso sera limitado a cierto rango de IPs o redes confiables y por ultimo tendrá una autenticación básica HTTP.&hellip;
-						
-					</span>
-				</div>
-				
-				<div class="post">
-					<div class="meta">Feb 20, 2017</div>
-					<a class="title" href="/posts/2017/aplicar-un-update-a-vmware-esxi-5/">Aplicar un update a VMware ESXi 5</a> &mdash;
-					<span class="description">
-						
-						Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.&hellip;
-						
-					</span>
-				</div>
-				
-				<div class="post">
-					<div class="meta">Dec 9, 2015</div>
-					<a class="title" href="/posts/2015/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemukvm/">Migración en tiempo real de instancias en Qemu,KVM</a> &mdash;
-					<span class="description">
-						
-						Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone.&hellip;
-						
-					</span>
-				</div>
-				
-				
-
-<ul class="pagination">
-	<li class="page-item page-prev">
-	
-	</li>
-	<li class="page-item page-next">
-	
-    <a href="/page/2/" class="page-link" aria-label="Next"><span aria-hidden="true">Next page →</span></a>
-	
-	</li>
+            <section class="page__body">
+    <p>Hola 🤘! Bienvenido a mi pequeño espacio, he creado este sitio con el único fin de dejar en
+la web algunas de mis apuntes, tips, opiniones y de mas cosas 🗣 que me parezcan interesantes
+para compartir.</p>
+<p>Y que encontraras aquí? 📝 Bueno me gusta escribir sobre..</p>
+<ul>
+<li>Cloud Computing</li>
+<li>Linux</li>
+<li>Infosec</li>
+<li>Programación</li>
 </ul>
+<p>Algunas veces me atrevo a escribir mis opiniones sobre cultura general y demás, espero que lo tomen como
+tal, una opinion y que no intento convencerte de mi forma de pensar.</p>
+<p>🤞 Espero que alguna publicación te sea de util, bye!👋</p>
 
 
-			</div>
-		</div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div> © Copyright All Rights Reserved |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <img class="about__logo" src="https://armanroot.com/images/avatar.jpeg" alt="Logo">
+<h1 class="about__title">Armando Uch</h1>
+<p class="about__description">An Accidental Engineer<br>• Lazy #Programmer • #TacOps 🌮 • #BOFH<br> 🎸⚾️🍺☕️</p>
 </div>
 
 
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/jahrmando" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://www.linkedin.com/in/armandouch/" rel="me" aria-label="Linkedin" title="Linkedin"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://twitter.com/armanroot" rel="me" aria-label="Twitter" title="Twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+                </div>
+            </section>
 
-<script>feather.replace()</script>
-</body>
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+</p>
+<br /><br />
+<p class="copyright">© Armando Uch | Copyright All Rights Reserved</p>
+<p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
+</footer>
+
+        </div>
+    </body>
+
 </html>

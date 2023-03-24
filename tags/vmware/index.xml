@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>vmware on Blog - Armando Uch</title>
+    <title>vmware on Blog de Armando</title>
     <link>https://armanroot.com/tags/vmware/</link>
-    <description>Recent content in vmware on Blog - Armando Uch</description>
+    <description>Recent content in vmware on Blog de Armando</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-mx</language>
-    <copyright>© Copyright All Rights Reserved</copyright>
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
     <lastBuildDate>Mon, 20 Feb 2017 10:00:00 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Aplicar un update a VMware ESXi 5</title>
@@ -14,7 +14,9 @@
       <pubDate>Mon, 20 Feb 2017 10:00:00 -0500</pubDate>
       
       <guid>https://armanroot.com/posts/2017/aplicar-un-update-a-vmware-esxi-5/</guid>
-      <description>Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.</description>
+      <description>Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.
+Este proceso se hace por medio de SSH. Se tiene que activar desde el VMware vShepere Client:
+Server&amp;gt;Configuration&amp;gt;SecurityProfiles&amp;gt;Services&amp;gt;Properties Apagar todas las maquinas virtuales Antes de entrar a modo de mantenimiento es necesario apagar todas las maquinas virtuales o migrarlos si es posible.</description>
     </item>
     
   </channel>
