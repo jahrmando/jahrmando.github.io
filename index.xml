@@ -58,11 +58,12 @@ $HOME/.magic /etc/magic Revisando en poco el repositorio de mimetypes, encontré
       <pubDate>Fri, 19 Apr 2019 21:37:58 +0530</pubDate>
       
       <guid>https://armanroot.com/about/</guid>
-      <description>Hola! Hola! soy Armando, Actualmente trabajo como DevOps Engineer y tengo un amplio interés sobre temas como:
+      <description>Hola! Actualmente trabajo como DevOps Engineer y tengo un amplio interés sobre temas como:
 Cloud Computing Linux Infosec Programación Siempre ando probando y aprendiendo nuevas cosas respecto a estos temas.
 Me considero un entusiasta sobre Python 🐍 y Linux 🐧, esto porque no pierdo ninguna oportunidad de hablar sobre esto 😅.
 Actualmente estoy trabajando en Meru 💻
-Preguntame sobre.. En mi trayectoria de trabajo tengo experiencia con lo siguiente:</description>
+Preguntame sobre.. En mi trayectoria de trabajo tengo experiencia con lo siguiente:
+Implementación de servicios con alta disponibilidad, monitoreo y seguridad (Cloud/OnPrimise) Virtualización y Contenedores Sobre herramientas IaC (Terraform, Ansible, Chef, etc) Serverless y Microservicios Cloud Services (AWS) ☁️ Administración en Linux Programación (Python, Bash) 📫 Como puedes encontrarme?</description>
     </item>
     
     <item>
