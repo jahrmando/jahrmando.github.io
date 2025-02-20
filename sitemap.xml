@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://armanroot.com/posts/2025/instalar-ruby-3.2.x-con-rvm-en-macos-15.x-arm/</loc>
+    <lastmod>2025-02-20T11:33:54-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/tags/macos/</loc>
+    <lastmod>2025-02-20T11:33:54-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/posts/</loc>
+    <lastmod>2025-02-20T11:33:54-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/tags/ruby/</loc>
+    <lastmod>2025-02-20T11:33:54-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/tags/rvm/</loc>
+    <lastmod>2025-02-20T11:33:54-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/tags/</loc>
+    <lastmod>2025-02-20T11:33:54-06:00</lastmod>
+  </url><url>
+    <loc>https://armanroot.com/tags/troobleshooting/</loc>
+    <lastmod>2025-02-20T11:33:54-06:00</lastmod>
+  </url><url>
     <loc>https://armanroot.com/blog/</loc>
     <lastmod>2023-03-24T15:49:13-06:00</lastmod>
   </url><url>
@@ -11,13 +32,7 @@
     <loc>https://armanroot.com/tags/finanzas/</loc>
     <lastmod>2023-03-24T15:49:13-06:00</lastmod>
   </url><url>
-    <loc>https://armanroot.com/tags/</loc>
-    <lastmod>2023-03-24T15:49:13-06:00</lastmod>
-  </url><url>
     <loc>https://armanroot.com/posts/2022/migrar-servicio-a-otra-regi%C3%B3n-aws-usando-terraform-workspaces-y-git-branches/</loc>
-    <lastmod>2022-02-17T11:48:33-06:00</lastmod>
-  </url><url>
-    <loc>https://armanroot.com/posts/</loc>
     <lastmod>2022-02-17T11:48:33-06:00</lastmod>
   </url><url>
     <loc>https://armanroot.com/tags/command-line/</loc>

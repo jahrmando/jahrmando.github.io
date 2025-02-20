@@ -4,216 +4,199 @@
     <title>Tags on Blog de Armando</title>
     <link>https://armanroot.com/tags/</link>
     <description>Recent content in Tags on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Fri, 24 Mar 2023 15:49:13 -0600</lastBuildDate><atom:link href="https://armanroot.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 20 Feb 2025 11:33:54 -0600</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>finanzas</title>
+      <title>Macos</title>
+      <link>https://armanroot.com/tags/macos/</link>
+      <pubDate>Thu, 20 Feb 2025 11:33:54 -0600</pubDate>
+      <guid>https://armanroot.com/tags/macos/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ruby</title>
+      <link>https://armanroot.com/tags/ruby/</link>
+      <pubDate>Thu, 20 Feb 2025 11:33:54 -0600</pubDate>
+      <guid>https://armanroot.com/tags/ruby/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Rvm</title>
+      <link>https://armanroot.com/tags/rvm/</link>
+      <pubDate>Thu, 20 Feb 2025 11:33:54 -0600</pubDate>
+      <guid>https://armanroot.com/tags/rvm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Troobleshooting</title>
+      <link>https://armanroot.com/tags/troobleshooting/</link>
+      <pubDate>Thu, 20 Feb 2025 11:33:54 -0600</pubDate>
+      <guid>https://armanroot.com/tags/troobleshooting/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Finanzas</title>
       <link>https://armanroot.com/tags/finanzas/</link>
       <pubDate>Fri, 24 Mar 2023 15:49:13 -0600</pubDate>
-      
       <guid>https://armanroot.com/tags/finanzas/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>command-line</title>
+      <title>Command-Line</title>
       <link>https://armanroot.com/tags/command-line/</link>
       <pubDate>Mon, 14 Feb 2022 15:49:57 -0600</pubDate>
-      
       <guid>https://armanroot.com/tags/command-line/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>tips</title>
+      <title>Tips</title>
       <link>https://armanroot.com/tags/tips/</link>
       <pubDate>Mon, 14 Feb 2022 15:49:57 -0600</pubDate>
-      
       <guid>https://armanroot.com/tags/tips/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>centos</title>
+      <title>Centos</title>
       <link>https://armanroot.com/tags/centos/</link>
       <pubDate>Thu, 15 Apr 2021 16:08:59 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/centos/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>sysadmin</title>
+      <title>Sysadmin</title>
       <link>https://armanroot.com/tags/sysadmin/</link>
       <pubDate>Thu, 15 Apr 2021 16:08:59 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/sysadmin/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>nginx</title>
+      <title>Nginx</title>
       <link>https://armanroot.com/tags/nginx/</link>
       <pubDate>Thu, 06 Sep 2018 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/nginx/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>vmware</title>
+      <title>Vmware</title>
       <link>https://armanroot.com/tags/vmware/</link>
       <pubDate>Mon, 20 Feb 2017 10:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/vmware/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>kvm</title>
+      <title>Kvm</title>
       <link>https://armanroot.com/tags/kvm/</link>
       <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/kvm/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Qemu</title>
       <link>https://armanroot.com/tags/qemu/</link>
       <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/qemu/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>virtualizacion</title>
+      <title>Virtualizacion</title>
       <link>https://armanroot.com/tags/virtualizacion/</link>
       <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/virtualizacion/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>php</title>
+      <title>Php</title>
       <link>https://armanroot.com/tags/php/</link>
       <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/php/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>PostgreSQL</title>
+      <title>Postgresql</title>
       <link>https://armanroot.com/tags/postgresql/</link>
       <pubDate>Sat, 31 Jan 2015 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/postgresql/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>bacula</title>
+      <title>Bacula</title>
       <link>https://armanroot.com/tags/bacula/</link>
       <pubDate>Fri, 16 Jan 2015 10:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/bacula/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>hardening</title>
+      <title>Hardening</title>
       <link>https://armanroot.com/tags/hardening/</link>
       <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/hardening/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>security</title>
+      <title>Security</title>
       <link>https://armanroot.com/tags/security/</link>
       <pubDate>Thu, 04 Dec 2014 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/security/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>apache</title>
+      <title>Apache</title>
       <link>https://armanroot.com/tags/apache/</link>
       <pubDate>Sat, 16 Aug 2014 10:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/apache/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>pureftp</title>
+      <title>Pureftp</title>
       <link>https://armanroot.com/tags/pureftp/</link>
       <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/pureftp/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>bind</title>
+      <title>Bind</title>
       <link>https://armanroot.com/tags/bind/</link>
       <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/bind/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>shorewall</title>
+      <title>Shorewall</title>
       <link>https://armanroot.com/tags/shorewall/</link>
       <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/shorewall/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>django</title>
+      <title>Django</title>
       <link>https://armanroot.com/tags/django/</link>
       <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/django/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>python</title>
+      <title>Python</title>
       <link>https://armanroot.com/tags/python/</link>
       <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/python/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>network</title>
+      <title>Network</title>
       <link>https://armanroot.com/tags/network/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/network/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>postfix</title>
+      <title>Postfix</title>
       <link>https://armanroot.com/tags/postfix/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/tags/postfix/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

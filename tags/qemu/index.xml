@@ -4,21 +4,17 @@
     <title>Qemu on Blog de Armando</title>
     <link>https://armanroot.com/tags/qemu/</link>
     <description>Recent content in Qemu on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Wed, 09 Dec 2015 10:54:38 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/qemu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Dec 2015 10:54:38 -0500</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/qemu/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Migración en tiempo real de instancias en Qemu,KVM</title>
       <link>https://armanroot.com/posts/2015/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemukvm/</link>
       <pubDate>Wed, 09 Dec 2015 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2015/migraci%C3%B3n-en-tiempo-real-de-instancias-en-qemukvm/</guid>
-      <description>Hacer una copia del cliente VM1 teniendo como resultado un cliente con el nombre de VM1_clone.
-Es necesario suspender ó apagar al cliente para poder clonarlo.
-$ virsh suspend VM1 Dominio VM1 suspendido Para clonar una instancia virtual lo hacemos con el comando virt-clone. Explicando un poco las opciones básicas seleccionadas acontinuación:
--o, nombramos el cliente que vamos a clonar -n, es el nombre del nuevo cliente clonado -f, es la dirección absoluta de la nueva imagen de almacenamiento $ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.</description>
+      <description>&lt;p&gt;Hacer una copia del cliente &lt;strong&gt;VM1&lt;/strong&gt; teniendo como resultado un cliente con el nombre de &lt;strong&gt;VM1_clone&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Es necesario suspender ó apagar al cliente para poder clonarlo.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ virsh suspend VM1&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Dominio VM1 suspendido&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Para clonar una instancia virtual lo hacemos con el comando &lt;code&gt;virt-clone&lt;/code&gt;. Explicando un poco las opciones básicas seleccionadas acontinuación:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;-o, nombramos el cliente que vamos a clonar&lt;/li&gt;&#xA;&lt;li&gt;-n, es el nombre del nuevo cliente clonado&lt;/li&gt;&#xA;&lt;li&gt;-f, es la dirección absoluta de la nueva imagen de almacenamiento&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ virt-clone -o VM1 -n VM1_clone -f /media/kvm_pool/VM1_clone.img&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Asignando &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VM1_clone.img&amp;#39;&lt;/span&gt; | &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt; GB 04:52&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Clone &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VM1_clone&amp;#39;&lt;/span&gt; created successfully.&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Al terminar la ejecucion del comando anterior con &lt;code&gt;virsh resume&lt;/code&gt; reanudamos nuestro cliente que esta pausado.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

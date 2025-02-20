@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>network on Blog de Armando</title>
+    <title>Network on Blog de Armando</title>
     <link>https://armanroot.com/tags/network/</link>
-    <description>Recent content in network on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Network on Blog de Armando</description>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Wed, 10 Oct 2012 10:54:38 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 10 Oct 2012 10:54:38 -0500</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/network/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Interfaz virtual de red en Centos</title>
       <link>https://armanroot.com/posts/2012/interfaz-virtual-de-red-en-centos/</link>
       <pubDate>Wed, 10 Oct 2012 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2012/interfaz-virtual-de-red-en-centos/</guid>
-      <description>Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.
-Copiamos la configuración de la nic a la que le asignaremos la interfaz virtual en este caso eth0, a la virtual le asignamos el mismo nombre pero con el sufijo :0.
-El numero cero es consecutivo, podemos seguir agregando mas nic virtuales.
-$ cd /etc/sysconfig/network-scripts/ $ cp ifcfg-eth0 ifcfg-eth0:0 Configuramos la nic virtual</description>
+      <description>&lt;p&gt;Como asignarle mas de una IP a una misma interfaz de red (nic) y con eso crear una interfaz virtual.&lt;/p&gt;&#xA;&lt;p&gt;Copiamos la configuración de la nic a la que le asignaremos la interfaz virtual en este caso &lt;code&gt;eth0&lt;/code&gt;, a la virtual le asignamos el mismo nombre pero con el sufijo &lt;code&gt;:0&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;El numero cero es consecutivo, podemos seguir agregando mas nic virtuales.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cd /etc/sysconfig/network-scripts/&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cp ifcfg-eth0 ifcfg-eth0:0&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Configuramos la nic virtual&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

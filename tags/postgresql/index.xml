@@ -1,48 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>PostgreSQL on Blog de Armando</title>
+    <title>Postgresql on Blog de Armando</title>
     <link>https://armanroot.com/tags/postgresql/</link>
-    <description>Recent content in PostgreSQL on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Postgresql on Blog de Armando</description>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Sat, 31 Jan 2015 10:54:38 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/postgresql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 31 Jan 2015 10:54:38 -0500</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/postgresql/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>PostgreSQL replicar en maestro-esclavo</title>
       <link>https://armanroot.com/posts/2015/postgresql-replicar-en-maestro-esclavo/</link>
       <pubDate>Sat, 31 Jan 2015 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2015/postgresql-replicar-en-maestro-esclavo/</guid>
-      <description>Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.2
-Creamos y asignamos los permisos para el directorio que alojara todos los archivos necesarios para nuestra nueva instancia de servicio postgresql. #more
-$ mkdir /var/lib/pgsql/9.2/data_slave $ chown postgres.postgres /var/lib/pgsql/9.2/data_slave/ Hacemos una copia del script de inicio postgresql
-$ cp /etc/init.d/postgresql-9.2 /etc/init.d/postgresql-slave9.2 Modificamos los siguientes parametros en el script</description>
+      <description>&lt;p&gt;Dos servicios postgresql en un mismo servidor y replicar en modo maestro-esclavo. Para esta configuración es necesario tener instalado y configurado previamente un servicio postgresql 9.2&lt;/p&gt;&#xA;&lt;p&gt;Creamos y asignamos los permisos para el directorio que alojara todos los archivos necesarios para nuestra nueva instancia de servicio postgresql. #more&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ mkdir /var/lib/pgsql/9.2/data_slave&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ chown postgres.postgres /var/lib/pgsql/9.2/data_slave/&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Hacemos una copia del script de inicio postgresql&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cp /etc/init.d/postgresql-9.2 /etc/init.d/postgresql-slave9.2&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Modificamos los siguientes parametros en el script&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Crear usuario de lectura (read-only) en PostgreSQL</title>
       <link>https://armanroot.com/posts/2014/crear-usuario-de-lectura-read-only-en-postgresql/</link>
       <pubDate>Fri, 27 Jun 2014 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2014/crear-usuario-de-lectura-read-only-en-postgresql/</guid>
-      <description>Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.
-Nos conectamos a la base de datos (test_db) donde vamos a aplicar estos privilegios y con un usuario privilegiado para poder hacer las modificaciones (postgres).</description>
+      <description>&lt;p&gt;Algunas ocasiones es necesario crear usuarios explícitamente para lectura en una base de datos y como buena practica de seguridad siempre es bueno tener perfiles de accesos para los distintos tipos de roles que un usuario ó aplicación pudiera tener dentro de la base de datos.&lt;/p&gt;&#xA;&lt;p&gt;Nos conectamos a la base de datos (&lt;em&gt;test_db&lt;/em&gt;) donde vamos a aplicar estos privilegios y con un usuario privilegiado para poder hacer las modificaciones (postgres).&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Configuracion y administracion de PostgreSQL 9.x</title>
       <link>https://armanroot.com/posts/2014/configuracion-y-administracion-de-postgresql-9.x/</link>
       <pubDate>Thu, 26 Jun 2014 10:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2014/configuracion-y-administracion-de-postgresql-9.x/</guid>
-      <description>En este howto configuraremos la version de PostgreSQL 9.3 la mas reciente hasta ahora.
-Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.
-$ vim /etc/yum.repos.d/CentOS-Base.repo [base] ... ... exclude=postgresql* [updates] ... ... exclude=postgresql* Instalacion de repositorio Postgresql
-Puedes buscar el repositorio mas adecuado a tu arquitectura y la version mas actual en http://yum.postgresql.org/repopackages.php
-$ cd /tmp/ $ wget http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm $ yum localinstall pgdg-centos93-9.3-1.noarch.rpm Instalando
-$ yum install postgresql93-server postgresql93-contrib Inicializando la base de datos</description>
+      <description>&lt;p&gt;En este howto configuraremos la version de PostgreSQL 9.3 la mas reciente hasta ahora.&lt;/p&gt;&#xA;&lt;p&gt;Configurando repositorio para excluir los paquetes &amp;ldquo;postgresql&amp;rdquo; del repo Base de CentOS.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ vim /etc/yum.repos.d/CentOS-Base.repo&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;base&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;...&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;...&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;exclude&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;postgresql*&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;updates&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;...&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;...&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;exclude&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;postgresql*&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Instalacion de repositorio Postgresql&lt;/p&gt;&#xA;&lt;p&gt;Puedes buscar el repositorio mas adecuado a tu arquitectura y la version mas actual en &lt;a href=&#34;http://yum.postgresql.org/repopackages.php&#34;&gt;http://yum.postgresql.org/repopackages.php&lt;/a&gt;&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cd /tmp/&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ wget http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ yum localinstall pgdg-centos93-9.3-1.noarch.rpm&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Instalando&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ yum install postgresql93-server postgresql93-contrib&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inicializando la base de datos&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

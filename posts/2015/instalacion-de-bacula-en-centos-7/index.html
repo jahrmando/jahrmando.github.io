@@ -9,23 +9,33 @@
 
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
 <link rel="stylesheet" href="https://armanroot.com/css/palettes/base16-dark.css">
 <link rel="stylesheet" href="https://armanroot.com/css/risotto.css">
 <link rel="stylesheet" href="https://armanroot.com/css/custom.css">
+
+
+
+
+
+
+
+
+
+
 </head>
 
     <body>
         <div class="page">
 
-            <header class="page__header"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1>
-<nav class="page__nav main-nav">
+            <header class="page__header"><nav class="page__nav main-nav">
     <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1></li>
     
     
     <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/about/" title="">Acerca de</a></li>
@@ -155,8 +165,7 @@
 <p>Como parte de la arquitectura de configuracion de ejemplo montaremos un recurso compartido <strong>NFS</strong> (previamente configurado) en <em>/mnt/backups</em> que nos servira para guardar los backups.</p>
 <blockquote>
 <p>Considere esto un paso opcional, usted puede solo usar un directorio valido de su sistema para alojar los respaldos.
-<strong>Bacula recomienda</strong> instalar el servicio <em>bacula-sd</em> en un servidor standalone.</p>
-</blockquote>
+<strong>Bacula recomienda</strong> instalar el servicio <em>bacula-sd</em> en un servidor standalone.</p></blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ yum -y install nfs-utils
 </span></span></code></pre></div><p>Iniciamos los servicios</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>systemctl restart rpcbind
@@ -189,8 +198,7 @@
 </code></pre>
 <p>La seccion <strong>FileSet</strong> es donde se define los archivos y directorios que se respaldaran, así como los que serán excluidos, se puede declarar mas de un <em>FileSet</em>.</p>
 <blockquote>
-<p><em>FileSet</em> es requerido en la definicion <strong>Job</strong>.</p>
-</blockquote>
+<p><em>FileSet</em> es requerido en la definicion <strong>Job</strong>.</p></blockquote>
 <p>Vamos a declarar un <em>FileSet</em> con el nombre <em><strong>Linux Set</strong></em>, este tendra un cifrado de tipo <em>SHA1</em> e ira comprimido con <em>GZIP</em>.</p>
 <pre><code>FileSet {
   Name = &quot;Linux Set&quot;		# Nombre
@@ -215,8 +223,7 @@ Exclude {					# Archivos que no se respaldaran
 </code></pre>
 <p>En la seccion <strong>Schedule</strong>, se especifica el tipo, fecha y hora en que se realizara los trabajos de respaldo. En la variable <em><strong>Run</strong></em> definimos primero el tipo de respaldo (completo, diferencial o incremental) y despues su ciclo de ejecucion (definido tipo crontab).</p>
 <blockquote>
-<p><em>Schedule</em> es requerido en la definicion <strong>Job</strong>.</p>
-</blockquote>
+<p><em>Schedule</em> es requerido en la definicion <strong>Job</strong>.</p></blockquote>
 <p>Definamos un <em>schedule</em> con el nombre <em><strong>CicloServidores</strong></em> que ejecurata un tipo de respaldo completo (<em>Full</em>) todos los primer domingo de cada mes, ejecutara un respaldo direfencial (<em>Differential</em>) apartir del segundo al quinto domingo de cada mes y un respaldo incremental de lunes a sabado (<em>Incremental</em>); todos las tareas se ejecutan a las 23 horas.</p>
 <pre><code>Schedule {
   Name = &quot;CicloServidores&quot;						# Nombre
@@ -237,8 +244,7 @@ Exclude {					# Archivos que no se respaldaran
 }
 </code></pre>
 <blockquote>
-<p>En la directiva <strong>Address</strong> es importante no usar <strong>localhost</strong> o la ip <strong>127.0.0.1</strong>, si tienes corriendo el servicio bacula-sd en el mismo servidor del bacula-dir (como es nuestro caso) usa la IP LAN o nombre de dominio asignado al servidor.</p>
-</blockquote>
+<p>En la directiva <strong>Address</strong> es importante no usar <strong>localhost</strong> o la ip <strong>127.0.0.1</strong>, si tienes corriendo el servicio bacula-sd en el mismo servidor del bacula-dir (como es nuestro caso) usa la IP LAN o nombre de dominio asignado al servidor.</p></blockquote>
 <p>En la seccion <strong>Catalog</strong> definimos la base de datos que previamente configuramos en <em>PostgreSQL</em>.</p>
 <p>Le asigamos el nombre <em><strong>MiCatalogo</strong></em> y configuramos los accesos.</p>
 <pre><code>Catalog {
@@ -248,8 +254,7 @@ Exclude {					# Archivos que no se respaldaran
 </code></pre>
 <p>El recurso <strong>Pool</strong> define el conjunto de volúmenes asociados a un trabajo (<em>Job</em>), es decir es una agrupacion de volúmenes de respaldo que se asocian a un trabajo.</p>
 <blockquote>
-<p>Como buena practica podemos crear un <em>Pool</em> por cliente.</p>
-</blockquote>
+<p>Como buena practica podemos crear un <em>Pool</em> por cliente.</p></blockquote>
 <p>Creamos un <em>Pool</em> con el nombre <em><strong>PoolCliente01</strong></em> y configuramos de la siguiente forma.</p>
 <pre><code>Pool {
   Name = PoolCliente01			# Nombre
@@ -353,8 +358,7 @@ $ firewall-cmd --reload
 </span></span><span style="display:flex;"><span>$ make install
 </span></span></code></pre></div><p>Configuraciones de arranque del servicio bacula-fd.</p>
 <blockquote>
-<p>Agregar la siguiente linea: <code># chkconfig: - 87 26</code> en el archivo <em>/etc/init.d/bacula-fd</em></p>
-</blockquote>
+<p>Agregar la siguiente linea: <code># chkconfig: - 87 26</code> en el archivo <em>/etc/init.d/bacula-fd</em></p></blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ cp /usr/sbin/bacula-fd /etc/init.d/
 </span></span><span style="display:flex;"><span>$ vim /etc/init.d/bacula-fd
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#! /bin/sh</span>
@@ -450,7 +454,8 @@ $ firewall-cmd --reload
             <section class="page__aside">
                 <div class="aside__about">
 <div class="aside__about">
-    <img class="about__logo" src="https://armanroot.com/images/avatar.jpeg" alt="Logo">
+    <span class="about__logo" role="img">images/avatar.jpeg</span>&nbsp;
+    
 <h1 class="about__title">Armando Uch</h1>
 <p class="about__description">An Accidental Engineer<br>• Lazy #Programmer • #TacOps 🌮 • #BOFH<br> 🎸⚾️🍺☕️</p>
 </div>
@@ -482,28 +487,12 @@ $ firewall-cmd --reload
         </p>
     
 
+    
+
                 </div>
             </section>
 
-            <footer class="page__footer"><p>
-    
-    
-    
-    
-    
-    
-      
-    
-      
-    
-      
-    
-      
-    
-    
-    
-</p>
-<br /><br />
+            <footer class="page__footer">
 <p class="copyright">© Armando Uch | Copyright All Rights Reserved</p>
 <p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
 </footer>

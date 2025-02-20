@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>php on Blog de Armando</title>
+    <title>Php on Blog de Armando</title>
     <link>https://armanroot.com/tags/php/</link>
-    <description>Recent content in php on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Php on Blog de Armando</description>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Sat, 07 Feb 2015 10:54:38 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/php/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Feb 2015 10:54:38 -0500</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/php/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Configurar NGINX y PHP-FPM en CentOS 7</title>
       <link>https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/</link>
       <pubDate>Sat, 07 Feb 2015 10:54:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2015/configurar-nginx-y-php-fpm-en-centos-7/</guid>
-      <description>Este manual nos permitira configurar un servicio HTTP usando NGINX y con soporte PHP usando PHP-FPM.
-Las configuraciones presentadas funcionan bajo el esquema de seguridad SELINUX.
-Instalemos el servicio NGINX desde los reposotorios EPEL.
-$ sudo yum install nginx --enablerepo epel Si no tiene el repositorio EPEL configurado hagalo desde aquí
-Ahora vamos a habilitar el servicio en el inicio de sistema con el comando enable y despues iniciamos el servicio (start).</description>
+      <description>&lt;p&gt;Este manual nos permitira configurar un servicio &lt;strong&gt;HTTP&lt;/strong&gt; usando &lt;em&gt;NGINX&lt;/em&gt; y con soporte &lt;strong&gt;PHP&lt;/strong&gt; usando &lt;em&gt;PHP-FPM&lt;/em&gt;.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Las configuraciones presentadas funcionan bajo el esquema de seguridad &lt;strong&gt;SELINUX&lt;/strong&gt;.&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;Instalemos el servicio &lt;em&gt;NGINX&lt;/em&gt; desde los reposotorios &lt;em&gt;EPEL&lt;/em&gt;.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ sudo yum install nginx --enablerepo epel&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;&#xA;&lt;p&gt;Si no tiene el repositorio &lt;em&gt;EPEL&lt;/em&gt; configurado hagalo desde &lt;a href=&#34;http://www.cyberciti.biz/faq/installing-rhel-epel-repo-on-centos-redhat-7-x/&#34;&gt;aquí&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;Ahora vamos a habilitar el servicio en el inicio de sistema con el comando &lt;code&gt;enable&lt;/code&gt; y despues iniciamos el servicio (&lt;code&gt;start&lt;/code&gt;).&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

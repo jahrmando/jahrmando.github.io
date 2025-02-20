@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>django on Blog de Armando</title>
+    <title>Django on Blog de Armando</title>
     <link>https://armanroot.com/tags/django/</link>
-    <description>Recent content in django on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Django on Blog de Armando</description>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Tue, 15 Oct 2013 10:00:00 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/django/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Oct 2013 10:00:00 -0500</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/django/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Configurando DJANGO stack en CentOS6</title>
       <link>https://armanroot.com/posts/2013/configurando-django-stack-en-centos6/</link>
       <pubDate>Tue, 15 Oct 2013 10:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2013/configurando-django-stack-en-centos6/</guid>
-      <description>Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR
-preinstalacion Instalamos los siguientes paquetes para compilaciones. Es de utilidad en algunos paquetes que instalemos dentro de PIP y los archivos de desarrollo de python.
-$ yum install gcc make python-devel pip, virtualenv Instalamos PIP desde los repositorios EPEL
-$ yum -y install python-pip --enablerepo epel Instalamos virtualenvwrapper desde PIP, este instalara como dependencia a virtualenv.
-$ pip install virtualenvwrapper Creamos nuestras variables de sistema para virtualenv y lo alojamos en el archivo de configuración bash del usuario unix.</description>
+      <description>&lt;p&gt;Configuración de Django en CentOS6.x con NGINX, GUNICORN, VIRTUALENV y SUPERVISOR&lt;/p&gt;&#xA;&lt;h2 id=&#34;preinstalacion&#34;&gt;preinstalacion&lt;/h2&gt;&#xA;&lt;p&gt;Instalamos los siguientes paquetes para compilaciones. Es de utilidad en algunos paquetes que instalemos dentro de PIP y los archivos de desarrollo de python.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ yum install gcc make python-devel&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;pip-virtualenv&#34;&gt;pip, virtualenv&lt;/h2&gt;&#xA;&lt;p&gt;Instalamos PIP desde los repositorios EPEL&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ yum -y install python-pip --enablerepo epel&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Instalamos virtualenvwrapper desde PIP, este instalara como dependencia a virtualenv.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ pip install virtualenvwrapper&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Creamos nuestras variables de sistema para virtualenv y lo alojamos en el archivo de configuración bash del usuario unix.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>pureftp on Blog de Armando</title>
+    <title>Pureftp on Blog de Armando</title>
     <link>https://armanroot.com/tags/pureftp/</link>
-    <description>Recent content in pureftp on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Pureftp on Blog de Armando</description>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Mon, 28 Apr 2014 16:00:00 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/pureftp/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Apr 2014 16:00:00 -0500</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/pureftp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Instalación de Pure-FTP sobre TLS con antivirus ClamAV</title>
       <link>https://armanroot.com/posts/2014/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/</link>
       <pubDate>Mon, 28 Apr 2014 16:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2014/instalaci%C3%B3n-de-pure-ftp-sobre-tls-con-antivirus-clamav/</guid>
-      <description>Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV
-Repositorios Instalación de repositorio RPM Fusión (En caso de no tenerlo instalado)
-Arquitecturas:
-i686 x86_64 En este ejemplo de instalación usamos el repositorio de x86_64
-$ wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm $ rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt $ rpm -K rpmforge-release-0.5.2-2.el6.rf.*.rpm rpmforge-release-0.5.2-2.el6.rf.i686.rpm: (sha1) dsa sha1 md5 gpg BIEN Instalacion Instalamos pure-ftp desde el repositorio RPM Forge.
-$ yum install pure-ftpd -y --enablerepo rpmforge Configuración Siga la siguiente configuración.</description>
+      <description>&lt;p&gt;Pure-FTP configurado el transporte con TLS y un servicio de Antivirus opensource conocido el ClamAV&lt;/p&gt;&#xA;&lt;h2 id=&#34;repositorios&#34;&gt;Repositorios&lt;/h2&gt;&#xA;&lt;p&gt;Instalación de repositorio RPM Fusión (En caso de no tenerlo instalado)&lt;/p&gt;&#xA;&lt;p&gt;Arquitecturas:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.i686.rpm&#34;&gt;i686&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm&#34;&gt;x86_64&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;En este ejemplo de instalación usamos el repositorio de &lt;strong&gt;x86_64&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ rpm -K rpmforge-release-0.5.2-2.el6.rf.*.rpm&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rpmforge-release-0.5.2-2.el6.rf.i686.rpm: &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;sha1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; dsa sha1 md5 gpg BIEN&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;instalacion&#34;&gt;Instalacion&lt;/h2&gt;&#xA;&lt;p&gt;Instalamos pure-ftp desde el repositorio RPM Forge.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ yum install pure-ftpd -y --enablerepo rpmforge&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configuración&#34;&gt;Configuración&lt;/h2&gt;&#xA;&lt;p&gt;Siga la siguiente configuración.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

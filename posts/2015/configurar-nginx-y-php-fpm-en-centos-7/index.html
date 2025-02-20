@@ -9,23 +9,33 @@
 
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
 <link rel="stylesheet" href="https://armanroot.com/css/palettes/base16-dark.css">
 <link rel="stylesheet" href="https://armanroot.com/css/risotto.css">
 <link rel="stylesheet" href="https://armanroot.com/css/custom.css">
+
+
+
+
+
+
+
+
+
+
 </head>
 
     <body>
         <div class="page">
 
-            <header class="page__header"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1>
-<nav class="page__nav main-nav">
+            <header class="page__header"><nav class="page__nav main-nav">
     <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://armanroot.com/" class="page__logo-inner">Blog de Armando</a></h1></li>
     
     
     <li class="main-nav__item"><a class="nav-main-item" href="https://armanroot.com/about/" title="">Acerca de</a></li>
@@ -48,13 +58,11 @@
     <div class="content__body">
         <p>Este manual nos permitira configurar un servicio <strong>HTTP</strong> usando <em>NGINX</em> y con soporte <strong>PHP</strong> usando <em>PHP-FPM</em>.</p>
 <blockquote>
-<p>Las configuraciones presentadas funcionan bajo el esquema de seguridad <strong>SELINUX</strong>.</p>
-</blockquote>
+<p>Las configuraciones presentadas funcionan bajo el esquema de seguridad <strong>SELINUX</strong>.</p></blockquote>
 <p>Instalemos el servicio <em>NGINX</em> desde los reposotorios <em>EPEL</em>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ sudo yum install nginx --enablerepo epel
 </span></span></code></pre></div><blockquote>
-<p>Si no tiene el repositorio <em>EPEL</em> configurado hagalo desde <a href="http://www.cyberciti.biz/faq/installing-rhel-epel-repo-on-centos-redhat-7-x/">aquí</a></p>
-</blockquote>
+<p>Si no tiene el repositorio <em>EPEL</em> configurado hagalo desde <a href="http://www.cyberciti.biz/faq/installing-rhel-epel-repo-on-centos-redhat-7-x/">aquí</a></p></blockquote>
 <p>Ahora vamos a habilitar el servicio en el inicio de sistema con el comando <code>enable</code> y despues iniciamos el servicio (<code>start</code>).</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ sudo systemctl enable nginx.service
 </span></span><span style="display:flex;"><span>$ sudo systemctl start nginx.service
@@ -69,8 +77,7 @@
 <p><em>Ejemplo</em>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ ln -s /etc/nginx/conf.d/misitio.conf /etc/nginx/sites-enabled/misitio.conf
 </span></span></code></pre></div><blockquote>
-<p>De esta manera nos es mas facil desactivar sitios sin borrar sus archivos de configuracion.</p>
-</blockquote>
+<p>De esta manera nos es mas facil desactivar sitios sin borrar sus archivos de configuracion.</p></blockquote>
 <p>Antes de iniciar la edicion del archivo principal de configuracion de <em>NGINX</em> respaldamos la configuracion inicial.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
 </span></span></code></pre></div><p>Configuramos de la siguiente manera, siga las instruccion de los comentarios del archivo.</p>
@@ -156,8 +163,7 @@
 </span></span><span style="display:flex;"><span>open_basedir <span style="color:#f92672">=</span> /home/www/
 </span></span></code></pre></div><blockquote>
 <p>Para esta prueba no desabilitamos <strong>phpinfo</strong> en la variable <strong>disable_functions</strong> para poder realizar la prueba, recomiendo agregarlo una vez terminada las pruebas.
-Estas opciones las puede ajustar a su criterio.</p>
-</blockquote>
+Estas opciones las puede ajustar a su criterio.</p></blockquote>
 <p>Habilitamos el servicio en el inicio de sistema e iniciamos el servicio.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ systemctl enable php-fpm.service
 </span></span><span style="display:flex;"><span>$ systemctl start php-fpm.service
@@ -224,8 +230,7 @@ Estas opciones las puede ajustar a su criterio.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>	$ semanage fcontext -a -t httpd_sys_content_t <span style="color:#e6db74">&#34;/home/www(.*)&#34;</span>
 </span></span><span style="display:flex;"><span>	$ restorecon -R -v /home/www/
 </span></span></code></pre></div><blockquote>
-<p>No olvide asignar los permisos que se mencionan anteriormente para cada proyecto <em>PHP</em> que configure.</p>
-</blockquote>
+<p>No olvide asignar los permisos que se mencionan anteriormente para cada proyecto <em>PHP</em> que configure.</p></blockquote>
 <p>Reiniciamos el servicio para cargar todo</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ systemctl restart nginx.service
 </span></span></code></pre></div>
@@ -237,7 +242,8 @@ Estas opciones las puede ajustar a su criterio.</p>
             <section class="page__aside">
                 <div class="aside__about">
 <div class="aside__about">
-    <img class="about__logo" src="https://armanroot.com/images/avatar.jpeg" alt="Logo">
+    <span class="about__logo" role="img">images/avatar.jpeg</span>&nbsp;
+    
 <h1 class="about__title">Armando Uch</h1>
 <p class="about__description">An Accidental Engineer<br>• Lazy #Programmer • #TacOps 🌮 • #BOFH<br> 🎸⚾️🍺☕️</p>
 </div>
@@ -269,28 +275,12 @@ Estas opciones las puede ajustar a su criterio.</p>
         </p>
     
 
+    
+
                 </div>
             </section>
 
-            <footer class="page__footer"><p>
-    
-    
-    
-    
-    
-    
-      
-    
-      
-    
-      
-    
-      
-    
-    
-    
-</p>
-<br /><br />
+            <footer class="page__footer">
 <p class="copyright">© Armando Uch | Copyright All Rights Reserved</p>
 <p class="advertisement">Powered by <a href="https://gohugo.io/">hugo</a> and <a href="https://github.com/joeroe/risotto">risotto</a>.</p>
 </footer>

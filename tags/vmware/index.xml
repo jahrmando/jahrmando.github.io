@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>vmware on Blog de Armando</title>
+    <title>Vmware on Blog de Armando</title>
     <link>https://armanroot.com/tags/vmware/</link>
-    <description>Recent content in vmware on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Vmware on Blog de Armando</description>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Mon, 20 Feb 2017 10:00:00 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 20 Feb 2017 10:00:00 -0500</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Aplicar un update a VMware ESXi 5</title>
       <link>https://armanroot.com/posts/2017/aplicar-un-update-a-vmware-esxi-5/</link>
       <pubDate>Mon, 20 Feb 2017 10:00:00 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2017/aplicar-un-update-a-vmware-esxi-5/</guid>
-      <description>Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.
-Este proceso se hace por medio de SSH. Se tiene que activar desde el VMware vShepere Client:
-Server&amp;gt;Configuration&amp;gt;SecurityProfiles&amp;gt;Services&amp;gt;Properties Apagar todas las maquinas virtuales Antes de entrar a modo de mantenimiento es necesario apagar todas las maquinas virtuales o migrarlos si es posible.</description>
+      <description>&lt;p&gt;Aplicar parches a nuestros sistemas ó servicios es parte del dia a dia de un administrador, esta publicacion les mostrara un modo de aplicar parches en su VMWare.&lt;/p&gt;&#xA;&lt;p&gt;Este proceso se hace por medio de SSH. Se tiene que activar desde el VMware vShepere Client:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Server&amp;gt;Configuration&amp;gt;SecurityProfiles&amp;gt;Services&amp;gt;Properties&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;apagar-todas-las-maquinas-virtuales&#34;&gt;Apagar todas las maquinas virtuales&lt;/h2&gt;&#xA;&lt;p&gt;Antes de entrar a modo de mantenimiento es necesario apagar todas las maquinas virtuales o migrarlos si es posible.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

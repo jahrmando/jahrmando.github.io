@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rvm on Blog de Armando</title>
+    <link>https://armanroot.com/tags/rvm/</link>
+    <description>Recent content in Rvm on Blog de Armando</description>
+    <generator>Hugo</generator>
+    <language>es-mx</language>
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
+    <lastBuildDate>Thu, 20 Feb 2025 11:33:54 -0600</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/rvm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Instalar Ruby 3.2.x con RVM en MacOs 15.x ARM</title>
+      <link>https://armanroot.com/posts/2025/instalar-ruby-3.2.x-con-rvm-en-macos-15.x-arm/</link>
+      <pubDate>Thu, 20 Feb 2025 11:33:54 -0600</pubDate>
+      <guid>https://armanroot.com/posts/2025/instalar-ruby-3.2.x-con-rvm-en-macos-15.x-arm/</guid>
+      <description>&lt;p&gt;Arreglar el error &lt;code&gt;Error running &#39;__rvm_make -j8&#39;&lt;/code&gt; al instalar Ruby 3.2.x con RVM en MacOS 15.x ARM.&lt;/p&gt;&#xA;&lt;h2 id=&#34;problema&#34;&gt;Problema&lt;/h2&gt;&#xA;&lt;p&gt;Al intentar instalar Ruby 3.2.x con RVM en MacOS 15.x ARM, puedes encontrar el siguiente error:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Error running &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;__rvm_make -j8&amp;#39;&lt;/span&gt;,&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;please read /Users/username/.rvm/log/1645320000_ruby-3.2.0/make.log&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;There has been an error &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; running make. Halting the installation.&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;solución&#34;&gt;Solución&lt;/h2&gt;&#xA;&lt;p&gt;Para corregir este error, debes instalar OpenSSL 1.1.1 manualmente antes de instalar Ruby 3.2.x.&lt;/p&gt;&#xA;&lt;p&gt;Aquí te explico cómo hacerlo:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>shorewall on Blog de Armando</title>
+    <title>Shorewall on Blog de Armando</title>
     <link>https://armanroot.com/tags/shorewall/</link>
-    <description>Recent content in shorewall on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Shorewall on Blog de Armando</description>
+    <generator>Hugo</generator>
     <language>es-mx</language>
     <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
-    <lastBuildDate>Tue, 28 Jan 2014 10:00:38 -0500</lastBuildDate><atom:link href="https://armanroot.com/tags/shorewall/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Jan 2014 10:00:38 -0500</lastBuildDate>
+    <atom:link href="https://armanroot.com/tags/shorewall/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bloquear conexiones HTTPS usando DNS</title>
       <link>https://armanroot.com/posts/2014/bloquear-conexiones-https-usando-dns/</link>
       <pubDate>Tue, 28 Jan 2014 10:00:38 -0500</pubDate>
-      
       <guid>https://armanroot.com/posts/2014/bloquear-conexiones-https-usando-dns/</guid>
-      <description>En este caso ejemplificaremos el bloqueo del sitio facebook.com. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.
-En teoría este método consiste en otorgarle al cliente cuando solicite la dirección facebook.com una IP no válida ó bloqueada, con esto rechazaremos las conexiones hacia ese dominio.
-Pero si lo que queremos es controlar quienes pueden acceder, podemos controlar que IP publica válida resolver para el dominio ya que el servicio facebook.</description>
+      <description>&lt;p&gt;En este caso ejemplificaremos el bloqueo del sitio &lt;em&gt;&lt;strong&gt;facebook.com&lt;/strong&gt;&lt;/em&gt;. Existen muchas formas validas de bloquear conexiones https, en este caso explicaremos este método.&lt;/p&gt;&#xA;&lt;p&gt;En teoría este método consiste en otorgarle al cliente cuando solicite la dirección &lt;em&gt;&lt;strong&gt;facebook.com&lt;/strong&gt;&lt;/em&gt; una IP no válida ó bloqueada, con esto rechazaremos las conexiones hacia ese dominio.&lt;/p&gt;&#xA;&lt;p&gt;Pero si lo que queremos es controlar quienes pueden acceder, podemos controlar que IP publica válida resolver para el dominio ya que el servicio &lt;em&gt;&lt;strong&gt;facebook.com&lt;/strong&gt;&lt;/em&gt; posee un balanceo de carga de peticiones, esto significa que cada que hacemos una petición al dominio nos es otorgado diferentes IPs, esto nos hace casi imposible bloquear efectivamente a &lt;em&gt;&lt;strong&gt;facebook.com&lt;/strong&gt;&lt;/em&gt; desde el firewall.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

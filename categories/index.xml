@@ -4,8 +4,9 @@
     <title>Categories on Blog de Armando</title>
     <link>https://armanroot.com/categories/</link>
     <description>Recent content in Categories on Blog de Armando</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>es-mx</language>
-    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright><atom:link href="https://armanroot.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>© Armando Uch | Copyright All Rights Reserved</copyright>
+    <atom:link href="https://armanroot.com/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
